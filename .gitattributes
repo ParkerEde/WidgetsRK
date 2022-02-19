@@ -1,0 +1,21 @@
+# Quelltexte liegen im Arbeitsverzeichnis als ISO-8859-1 (Latin-1) mit CRLF vor,
+# so wie sie auf dem Sender laufen. Im Repo werden sie als UTF-8 gespeichert,
+# damit GitHub die Umlaute korrekt anzeigt.
+*.lua  text eol=crlf working-tree-encoding=ISO-8859-1
+*.txt  text eol=crlf working-tree-encoding=ISO-8859-1
+# RK-Settings.lua ist bereits UTF-8
+RK-Settings/RK-Settings.lua  text eol=crlf -working-tree-encoding
+
+*.md            text eol=lf
+.gitattributes  text eol=lf
+.gitignore      text eol=lf
+
+*.wav   binary
+*.docx  binary
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.emf   binary
+*.luac  binary
+*.zip   binary

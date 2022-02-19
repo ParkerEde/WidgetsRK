@@ -1,0 +1,4 @@
+# vom Sender erzeugter Bytecode
+*.luac
+# Installations-/Update-Pakete liegen als Assets an den GitHub Releases
+*.zip

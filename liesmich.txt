@@ -1,0 +1,75 @@
+Voraussetzung:
+==============
+
+- FrSky Horus X10(S) oder Horus X12(S) mit OpenTx 2.3.7 oder neuer
+- ein logischer Schalter, der zum resetten benutzt wird (standardmäßig wird auf LS61 reagiert, ist aber änderbar)
+- die Verzeichnisse RK01, RK02 und RK03 müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
+- aus dem Verzeichnis "SOUNDS de Sprachdateien" müssen die WAV Dateien auf die SD Karte ins Verzeichnis "SOUNDS\de" kopiert werden
+- die drei Widgets RK01, RK02 und RK03 müssen jeweils einem Vollbildscreen zugewiesen werden
+
+
+Sensoreinrichtung:
+==================
+
+1. Unisens-E Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden
+2. den "A4" Sensor editieren und auf die Einheit "mAh" ändern
+3. als Vario Quelle "VSpd" auswählen
+4. GPS Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden
+5. den "GSpd" Sensor editieren und auf die Einheit "kmh" ändern
+6. den "GAlt" Sensor kopieren, dann editieren und aus "GAlt" "GAl2" machen und den Haken bei "Auto Offset" setzen
+
+HINWEIS: es können natürlich auch andere Sensoren angeschlossen werden. Hier die Liste, mit welchen Sensornamen die Widgets arbeiten:
+RSSI, RxBt, VFAS, Curr, A4, Alt, VSpd, GPS, GAlt, GAl2, GSpd
+
+
+Features RK01, RK02, RK03 Widgets:
+==================================
+- es werden übersichtlich die Momentanwerte und min/max Werte angezeigt von:
+		RK01: RxBat, VFAS, errechnete durchschnittliche Zellenspannung, Curr, errechnet Watt
+		RK02: RxBat, ALT, VSpd (m/s und kmh), VSpd steigen max (m/s und kmh), VSpd sinken max (m/s und kmh)
+		RK03: GSpd, GPS ALT NN, GPS ALT über Grund, Distanz zum Modell über Grund, Distanz zum Modell Luftlinie
+		
+- automatische Telemetrieansagen durch Schalter auslösbar
+		im Standard werden folgende Schalterstellungen für Ansagen benutzt:
+		
+		Schalter "SC" nach "oben" = aktuelle Höhe (Alt), wird alle 30 Sekunden wiederholt
+		Schalter "SC" in der "Mitte" = keine Ansagen
+		Schalter "SC" nach "unten" = aktuell verbrauchte Kapazität (A4), wird alle 30 Sekunden wiederholt
+
+		Schalter "SD" nach "oben" = maximalster Strom (Curr) (nur wenn Daten vorhanden!) und danach minimalste durchschnittliche Einzelzellenspannung (wird aus "VFAS" ermittelt), wird alle 30 Sekunden wiederholt
+		Schalter "SD" in der "Mitte" = keine Ansagen
+		Schalter "SD" nach "unten" = Momentanwert für Strom (Curr) (nur wenn Daten vorhanden!) und danach durchschnittliche Einzelzellenspannung (wird aus "VFAS" ermittelt), wird alle 30 Sekunden wiederholt
+	
+	> Schalter "SC" und "SD" im Konfigurationsteil der jeweiligen RK01\main.lua bzw. RK02\main.lua änderbar
+	> die Wiederholzeit (standard 30 Sekunden) ist per "Widget Einstellungen" einstellbar
+
+- automatische LiPo Zellenzahl Ermittlung bis 12S
+
+- Anzeige der durchschnittlichen Einzelzellenspannung, sobald VFAS vorhanden ist
+
+- automatischer Alarm, wenn weniger als durchschnittlich 3,4V pro Zelle erreicht wurden. Alarm kommt nur akustisch und nur einmal
+
+- Farben für Schrift der "aktiven Daten" und für "keine Daten" per "Widget Einstellungen" einstellbar
+
+- wenn kein Kapazitätssensor verfügbar ist, kann die Kapazität "mAh" anhand des "Curr" Sensors errechnet werden. "UseCapacitySensor" per "Widget Einstellungen" einstellbar
+
+- Entfernung zum Modell über Grund und Luftlinie wird automatisch errechnet, sofern mit GPS Sensor gearbeitet wird
+
+- die aufgenommene elektrische Leistung in Watt wird automatisch berechnet, sobald VFAS und Curr vorhanden ist
+
+- alle max/min Daten ablesbar, auch wenn das Modell ausgeschaltet wurde
+
+- Reset durch Modellwechsel (anhand der RxID) oder durch LS61 (änderbar im Konfigurationsteil)
+
+- Steig- und Sinkraten werden sowohl in m/s, als auch in "kmh" angezeigt
+
+- Die Kopfzeile der 3 Widgets zeigen Modellname, LipoZellenzahl, Timer 1, EmpfängerID (RxID)
+
+- auf kleinste Bildschirmzelle (1 Feld Widget) zeigt RK01 "mAh", RK02 "RSSI" und RK03 "RSSI-" (geeignet für die Kopfleiste)
+
+- auf halber Bildschirmgröße zeigt RK03 die GPS Koordinaten vom Startpunkt und der momentanen Modellposition, auch wenn das Modell keine Daten mehr sendet
+
+
+		
+
+
