@@ -85,8 +85,8 @@ local function getSensors(wgt)
 	GSpd = getValue("GSpd")
 	GAlt = getValue("GAlt")
 	RSSImin = getValue("RSSI-")
-	Sats = getValue("Tmp1")
-	PDOP = getValue("Tmp2")
+	Sats = getValue("Tmp1") -100
+	PDOP = getValue("Tmp2") /10
 	Track_switch = getValue(activate_tracking_switch)
 	Track_switch_pos = activate_tracking_switch_position
 	-- print("Track_switch: " .. Track_switch)
