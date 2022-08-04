@@ -207,8 +207,8 @@ local function refreshZoneTiny(wgt)
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   
   if nodataRSSI == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+0, "RSSI", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+15, round(RSSI,0), MIDSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-1, "RSSI", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+10, round(RSSI,0), MIDSIZE + CUSTOM_COLOR)
 end
 
 --- Size is 160x32 1/8th
@@ -261,7 +261,7 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+05, wgt.zone.y, Modelname.name, SMLSIZE + INVERS + CUSTOM_COLOR)
   lcd.drawText(wgt.zone.x+130, wgt.zone.y, "Zellen: "..cellcount, SMLSIZE + INVERS + CUSTOM_COLOR)
   mytimer1=model.getTimer(0).value
-  lcd.drawText(wgt.zone.x+205, wgt.zone.y,"Motor:  ", SMLSIZE + INVERS + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+205, wgt.zone.y,"Motor:   ", SMLSIZE + INVERS + CUSTOM_COLOR)
   lcd.drawTimer(wgt.zone.x+253, wgt.zone.y,mytimer1, SMLSIZE + INVERS + CUSTOM_COLOR)
   lcd.drawText(wgt.zone.x+390, wgt.zone.y,"RxID: " .. ModelRxIDVorher, SMLSIZE + INVERS + CUSTOM_COLOR + RIGHT)
   --lcd.drawLine(45, 72, 435, 72, 255, 0)
@@ -274,11 +274,11 @@ local function refreshZoneXLarge(wgt)
     
   if nodataRXBat == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if RXBatminsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+17, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+17, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+15, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+15, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+17, round(RXBat,1), DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+17, round(RXBatminsave,1), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+15, round(RXBat,1), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+15, round(RXBatminsave,1), DBLSIZE + CUSTOM_COLOR + RIGHT)
   end
   lcd.drawText(wgt.zone.x+201, wgt.zone.y+20, "V", SMLSIZE + CUSTOM_COLOR)
   lcd.drawText(wgt.zone.x+356, wgt.zone.y+20, "V", SMLSIZE + CUSTOM_COLOR)
@@ -291,11 +291,11 @@ local function refreshZoneXLarge(wgt)
     
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if Altmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+47, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+47, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+43, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+43, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+47, round(Alt,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+47, round(Altmaxsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+43, round(Alt,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+43, round(Altmaxsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
   end
   lcd.drawText(wgt.zone.x+201, wgt.zone.y+50, "m", SMLSIZE + CUSTOM_COLOR)
   lcd.drawText(wgt.zone.x+356, wgt.zone.y+50, "m", SMLSIZE + CUSTOM_COLOR)
@@ -308,14 +308,14 @@ local function refreshZoneXLarge(wgt)
     
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if Altmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+78, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+78, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+72, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+72, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+78, round(VSpd,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+78, round(mskmh(VSpd),0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+72, round(VSpd,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+72, round(mskmh(VSpd),0), DBLSIZE + CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+201, wgt.zone.y+81, "m/s", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+81, "km/h", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+201, wgt.zone.y+79, "m/s", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+356, wgt.zone.y+79, "km/h", SMLSIZE + CUSTOM_COLOR)
  
   -- 4. SENSOR Zeile ===============================================================================
   -- ===============================================================================================
@@ -324,14 +324,14 @@ local function refreshZoneXLarge(wgt)
     
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end  
   if Altmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+109, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+109, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+101, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+101, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+109, round(VSpdmaxsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+109, round(mskmh(VSpdmaxsave),0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+101, round(VSpdmaxsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+101, round(mskmh(VSpdmaxsave),0), DBLSIZE + CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+201, wgt.zone.y+112, "m/s", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+112, "km/h", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+201, wgt.zone.y+108, "m/s", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+356, wgt.zone.y+108, "km/h", SMLSIZE + CUSTOM_COLOR)
   
   -- 5. SENSOR Zeile ===============================================================================
   -- ===============================================================================================
@@ -340,14 +340,14 @@ local function refreshZoneXLarge(wgt)
     
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end  
   if Altmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+140, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+140, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+130, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+130, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+140, round(VSpdminsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+140, round(mskmh(VSpdminsave),0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+130, round(VSpdminsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+355, wgt.zone.y+130, round(mskmh(VSpdminsave),0), DBLSIZE + CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+201, wgt.zone.y+143, "m/s", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+143, "km/h", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+201, wgt.zone.y+137, "m/s", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+356, wgt.zone.y+137, "km/h", SMLSIZE + CUSTOM_COLOR)
   
   -- ===============================================================================================
   -- ===============================================================================================
