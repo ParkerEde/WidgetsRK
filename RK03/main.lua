@@ -69,6 +69,7 @@ local Track = 0
 local Track_switch = 0
 local Track_switch_pos = 0
 
+local Sats = 0
 local Satssave = 0
 local PDOPsave = 0
 
@@ -213,6 +214,7 @@ local function resetvalues(wgt)
 			DisGmaxsave = 0	
 			gpsfixmessagedone = 0
 			Track = 0
+			Sats = 0
 			Sats_seen = 0
 		end
 	end
