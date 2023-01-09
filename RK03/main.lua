@@ -334,8 +334,8 @@ local function refreshZoneTiny(wgt)
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   
   if nodataRSSI == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-1, "RSSI-", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+10, round(RSSIminsave,0), MIDSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+0, "RSSI-", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+14, round(RSSIminsave,0), MIDSIZE + CUSTOM_COLOR)
 end
 
 --- Size is 160x32 1/8th
