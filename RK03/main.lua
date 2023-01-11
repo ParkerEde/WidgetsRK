@@ -45,6 +45,11 @@ local nodataRSSI = 1
 local RSSImin = 0
 local RSSIminsave = 0
 
+local nodataVFR = 1
+local VFR = 0
+local VFRmin = 0
+local VFRminsave = 0
+
 local GSpd = 0
 local GSpdmaxsave = 0
 
@@ -86,6 +91,8 @@ local function getSensors(wgt)
 	GSpd = getValue("GSpd")
 	GAlt = getValue("GAlt")
 	RSSImin = getValue("RSSI-")
+	VFR = getValue("VFR")
+	VFRmin = getValue("VFR-")
 	Sats = getValue("Tmp1") -100
 	PDOP = getValue("Tmp2") /10
 	Track_switch = getValue(activate_tracking_switch)
@@ -203,6 +210,7 @@ local function resetvalues(wgt)
 			gpsValuelat3 = "no Data"
 			gpsValuelon3 = "no Data"
 			RSSIminsave = 0	
+			VFRminsave = 0	
 			cellcount = 0
 			cellcountinit = 0
 			GSpdmaxsave = 0
@@ -315,6 +323,13 @@ local function savevalues(wgt)
 		nodataRSSI = 1
     end
 	
+	if VFRmin ~= 0 then
+		VFRminsave = VFRmin
+		nodataVFR = 0
+	else
+		nodataVFR = 1
+    end
+	
 
 end
 
@@ -355,36 +370,49 @@ end
 --- Size is 192x152 1/2
 local function refreshZoneLarge(wgt)
   -- print("large 1/2")
+    offsetx=5
+	offsety=45
 	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+05, wgt.zone.y-000,  "GPS Pos Start:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+05, wgt.zone.y+045, "GPS Pos Modell:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+05, wgt.zone.y+090, "Strecke:", SMLSIZE + CUSTOM_COLOR)    
+	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-045, "ValidFrameRate:", SMLSIZE + CUSTOM_COLOR)
+	-- lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-025, "ValidFrameRate:", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety-000,  "Start-Position:", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+045, "Modell-Position:", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+090, "geflogene Strecke:", SMLSIZE + CUSTOM_COLOR)    
 	if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+
 
 	if gpsValuelat1 ~= "no Data" 
 		then
-		-- lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-		lcd.drawText(wgt.zone.x+105, wgt.zone.y-000, gpsValuelat1..",", CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+105, wgt.zone.y+020, gpsValuelon1, CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+105, wgt.zone.y+045, gpsValuelat2..",",   CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+105, wgt.zone.y+065, gpsValuelon2, CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+105, wgt.zone.y+090, round(Track,0) .. "m", CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-000, gpsValuelat1..",", CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+020, gpsValuelon1, CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+045, gpsValuelat2..",",   CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+065, gpsValuelon2, CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+090, round(Track,0) .. "m", CUSTOM_COLOR)
 		else
-		-- lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
-		lcd.drawText(wgt.zone.x+105, wgt.zone.y-000, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+105, wgt.zone.y+045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+105, wgt.zone.y+090, "keine Daten", SMLSIZE + CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-000, "keine Daten", SMLSIZE + CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+090, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 	end
+
+if VFRminsave > 0 
+  then
+    if nodataVFR == 0 then lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
+	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, round(VFR,0).."%", CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-025, round(VFRminsave,0).."% minimum", CUSTOM_COLOR)
+	lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
+  else
+    lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
+  end
 
   if Sats > 0 or Sats_seen == 1
 	then
 	Sats_seen = 1
 	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+05, wgt.zone.y+110, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+05, wgt.zone.y+130, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+110, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+130, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
 	if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-	lcd.drawText(wgt.zone.x+105, wgt.zone.y+110, Satssave, CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+105, wgt.zone.y+130, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)  	
+	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+110, Satssave, CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+130, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)  	
   end
   
 end
