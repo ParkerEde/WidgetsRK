@@ -15,7 +15,6 @@ local options = {
   { "VoiceRepeatTime", VALUE, 30, 1, 120}
   }
 
-
 local function update(wgt, options)
   if (wgt==nil) then
     print("update(nil)")
@@ -28,7 +27,6 @@ local function create(zone, options)
   local wgt  = { zone=zone, options=options}
   return wgt
 end
-
 
 local nodataRXBat = 1
 local RXBat = 0
@@ -66,6 +64,7 @@ local voicecycletime_sc = 20
 local voicecycletime_sd = 20
 local voicecycletime_activ = 3000
 
+local timestamprefresh = 0
 
 local function round(num, decimal)
 	if     decimal == 0 then return (string.format("%.0f", num))
@@ -158,6 +157,13 @@ local function resetvalues(wgt)
 end
 
 local function savevalues(wgt)
+ newtimerefresh = math.floor(getTime()/100)
+ if newtimerefresh ~= timestamprefresh then
+ -- print("timestamprefresh: " .. timestamprefresh)
+ -- print("newtimerefresh: " .. newtimerefresh)
+ -- print("------------------------")
+ timestamprefresh = newtimerefresh
+ 
   getSensors(wgt)  
 
   if RXBatmin ~= 0
@@ -196,14 +202,12 @@ local function savevalues(wgt)
 	  else
 	  nodataRSSI = 1
     end
-
+ end
 end
 ------------------------------------------------------------
 
 -- This size is for top bar wgts
 local function refreshZoneTiny(wgt)
-  savevalues(wgt)
-  resetvalues(wgt)	
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   
   if nodataRSSI == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
@@ -236,25 +240,6 @@ end
 --- Size is 390x172 1/1
 --- Size is 460x252 1/1 (no sliders/trim/topbar)
 local function refreshZoneXLarge(wgt)
-  
-  -- MinMax Werte im Vordergrund sichern ===========================================================
-  -- ===============================================================================================
-  savevalues(wgt)
-  
-  -- Anzahl Zellen im Vordergrund ermitteln ========================================================
-  -- ===============================================================================================
-  cellcountdetect(wgt)
-  
-  -- RESET nach "LS61" oder Modellwechsel eigener Screen ============================================
-  -- ===============================================================================================
-  resetvalues(wgt)
-
-  -- Sprachausgabe Werte ===========================================================================
-  -- ===============================================================================================
-  voiceoutput(wgt)  
-  
-  -- 1. Zeile Modellname , Rx ID ===================================================================
-  -- ===============================================================================================
   
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   Modelname = model.getInfo()
@@ -365,7 +350,24 @@ function refresh(wgt)
     print("refresh(wgt.options=nil)")
     return
   end
+  -- MinMax Werte im Vordergrund sichern ===========================================================
+  -- ===============================================================================================
+  savevalues(wgt)
   
+  -- Anzahl Zellen im Vordergrund ermitteln ========================================================
+  -- ===============================================================================================
+  cellcountdetect(wgt)
+  
+  -- RESET nach "LS61" oder Modellwechsel eigener Screen ============================================
+  -- ===============================================================================================
+  resetvalues(wgt)
+
+  -- Sprachausgabe Werte ===========================================================================
+  -- ===============================================================================================
+  voiceoutput(wgt)  
+  
+  -- 1. Zeile Modellname , Rx ID ===================================================================
+  -- ===============================================================================================
 
   if     wgt.zone.w  > 380 and wgt.zone.h > 165 then refreshZoneXLarge(wgt)
   elseif wgt.zone.w  > 180 and wgt.zone.h > 145 then refreshZoneLarge(wgt)

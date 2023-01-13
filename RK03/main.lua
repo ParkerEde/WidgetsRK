@@ -18,7 +18,6 @@ local options = {
   { "NoDataColor", COLOR, BLACK }
   }
 
-
 local function update(wgt, options)
   if (wgt==nil) then
     print("update(nil)")
@@ -77,6 +76,8 @@ local Track_switch_pos = 0
 local Sats = 0
 local Satssave = 0
 local PDOPsave = 0
+
+local timestamprefresh = 0
 
 local function round(num, decimal)
 	if     decimal == 0 then return (string.format("%.0f", num))
@@ -153,6 +154,10 @@ local function getTelemetryId(name)
 end
 
 local function GetGPSData(wgt)
+ newtimegps = math.floor(getTime()/100)
+ if newtimegps ~= timestampgps then
+ timestampgps = newtimegps
+
 	local gpsId = getTelemetryId("GPS")
 	gpsLatLon = getValue(gpsId)
 	if (type(gpsLatLon) == "table") then
@@ -173,6 +178,7 @@ local function GetGPSData(wgt)
 			end
 		end
 	end
+ end
 end  
 
 local function calcDisG(lat1, lon1, lat2, lon2)
@@ -231,9 +237,12 @@ local function resetvalues(wgt)
 end
 
 local function savevalues(wgt)
-	getSensors(wgt)  
+  newtimerefresh = math.floor(getTime()/100)
 
-  
+  if newtimerefresh ~= timestamprefresh then
+	timestamprefresh = newtimerefresh
+  	getSensors(wgt) 
+
 	if GSpd > GSpdmaxsave and GSpd < 1000 then 
 		GSpdmaxsave = GSpd
 	end
@@ -256,8 +265,6 @@ local function savevalues(wgt)
 		end
     end
 
--- print("GAl2: " .. GAl2)
--- print("GAltOffset: " .. GAltOffset)
 	if GAltOffsetdone == 0 and GAlt > 0 then
 		GAltOffset = GAlt
 		GAltOffsetdone = 1
@@ -276,47 +283,7 @@ local function savevalues(wgt)
 	if GAl2 > GAl2maxsave and GAl2 < 10000 then
 		GAl2maxsave = GAl2
     end
-	
-	newtime = math.floor(getTime()/100)
-	-- print("newtime: " .. newtime)
-	if newtime ~= timestamp then
-		-- print("timestamp: " .. timestamp)
-		if calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2) < 10000 then
-			DisG = rnd(calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2),0)
-			if DisG > DisGmaxsave then
-				DisGmaxsave = DisG
-			end
-		end
-		if calcDisM(DisG,GAl2) < 10000	then
-			DisM = rnd(calcDisM(DisG,GAl2), 0)
-			if DisM > DisMmaxsave then
-				DisMmaxsave = DisM
-			end
-		end
-	
-		if trackswitchcondition then
-			if gpsValuelat2 ~= "no Data" and gpsValuelon2 ~= "no Data" and gpsValuelat3 ~= "no Data" and gpsValuelon3 ~= "no Data" then
-				-- print("Track vorher: " .. Track)
-				local lat = math.cos((gpsValuelat3 + gpsValuelat2) / 2 * 0.01745)
-				local dx = math.abs(111.3 * lat * (gpsValuelon3 - gpsValuelon2))
-				local dy = math.abs(111.3 * (gpsValuelat3 - gpsValuelat2))
-				local Tracknew = math.sqrt(dx*dx + dy*dy) * 1000
-				if Tracknew < 1000 then
-					Track = Track + Tracknew
-				end
-				gpsValuelat3 = gpsValuelat2
-				gpsValuelon3 = gpsValuelon2
-				-- print("Track nachher: " .. Track)
-				
-			end
-		else
-			gpsValuelat3 = "no Data"
-			gpsValuelon3 = "no Data"
-		end
-		timestamp = newtime
-	end
-	  
-	if RSSImin ~= 0 then
+		if RSSImin ~= 0 then
 		RSSIminsave = RSSImin
 		nodataRSSI = 0
 	else
@@ -329,8 +296,39 @@ local function savevalues(wgt)
 	else
 		nodataVFR = 1
     end
-	
 
+	if calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2) < 10000 then
+		DisG = rnd(calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2),0)
+		if DisG > DisGmaxsave then
+			DisGmaxsave = DisG
+		end
+	end
+	if calcDisM(DisG,GAl2) < 10000	then
+		DisM = rnd(calcDisM(DisG,GAl2), 0)
+		if DisM > DisMmaxsave then
+			DisMmaxsave = DisM
+		end
+	end
+	
+	if trackswitchcondition then
+		if gpsValuelat2 ~= "no Data" and gpsValuelon2 ~= "no Data" and gpsValuelat3 ~= "no Data" and gpsValuelon3 ~= "no Data" then
+			-- print("Track vorher: " .. Track)
+			local lat = math.cos((gpsValuelat3 + gpsValuelat2) / 2 * 0.01745)
+			local dx = math.abs(111.3 * lat * (gpsValuelon3 - gpsValuelon2))
+			local dy = math.abs(111.3 * (gpsValuelat3 - gpsValuelat2))
+			local Tracknew = math.sqrt(dx*dx + dy*dy) * 1000
+			if Tracknew < 1000 then
+				Track = Track + Tracknew
+			end
+			gpsValuelat3 = gpsValuelat2
+			gpsValuelon3 = gpsValuelon2
+			-- print("Track nachher: " .. Track)			
+		end
+	else
+		gpsValuelat3 = "no Data"
+		gpsValuelon3 = "no Data"
+	end
+  end
 end
 
 local function gpsfixmessage(wgt)
@@ -344,8 +342,6 @@ end
 
 -- This size is for top bar wgts
 local function refreshZoneTiny(wgt)
-  savevalues(wgt)
-  resetvalues(wgt)  
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   
   if nodataRSSI == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
@@ -374,12 +370,10 @@ local function refreshZoneLarge(wgt)
 	offsety=45
 	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
 	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-045, "ValidFrameRate:", SMLSIZE + CUSTOM_COLOR)
-	-- lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-025, "ValidFrameRate:", SMLSIZE + CUSTOM_COLOR)
 	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety-000,  "Start-Position:", SMLSIZE + CUSTOM_COLOR)
 	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+045, "Modell-Position:", SMLSIZE + CUSTOM_COLOR)
 	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+090, "geflogene Strecke:", SMLSIZE + CUSTOM_COLOR)    
 	if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-
 
 	if gpsValuelat1 ~= "no Data" 
 		then
@@ -394,26 +388,26 @@ local function refreshZoneLarge(wgt)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+090, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 	end
 
-if VFRminsave > 0 
-  then
-    if nodataVFR == 0 then lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
-	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, round(VFR,0).."%", CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-025, round(VFRminsave,0).."% minimum", CUSTOM_COLOR)
-	lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
-  else
-    lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-  end
-
-  if Sats > 0 or Sats_seen == 1
+	if VFRminsave > 0 
 	then
-	Sats_seen = 1
-	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+110, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+130, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
-	if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+110, Satssave, CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+130, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)  	
-  end
+		if nodataVFR == 0 then lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, round(VFR,0).."%", CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-025, round(VFRminsave,0).."% minimum", CUSTOM_COLOR)
+		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
+	else
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
+	end
+
+	if Sats > 0 or Sats_seen == 1
+	then
+		Sats_seen = 1
+		lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+		lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+110, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+130, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
+		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+110, Satssave, CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+130, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)  	
+	end
   
 end
 
@@ -421,29 +415,6 @@ end
 --- Size is 390x172 1/1
 --- Size is 460x252 1/1 (no sliders/trim/topbar)
 local function refreshZoneXLarge(wgt)
-  
-  -- MinMax Werte im Vordergrund sichern ===========================================================
-  -- ===============================================================================================
-  savevalues(wgt)
-  
-  -- Anzahl Zellen im Vordergrund ermitteln ========================================================
-  -- ===============================================================================================
-  cellcountdetect(wgt)
-  
-  -- RESET nach "LS61" oder Modellwechsel eigener Screen ============================================
-  -- ===============================================================================================
-  resetvalues(wgt)
-  
-  -- GPS Daten im Vordergrund ermitteln ============================================================
-  -- ===============================================================================================      
-  GetGPSData(wgt)
-  
-  -- GPS Fix Soundmessage ==========================================================================
-  -- ===============================================================================================  
-  gpsfixmessage(wgt)
-  
-  -- 1. Zeile Modellname , Rx ID ===================================================================
-  -- ===============================================================================================
   
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   Modelname = model.getInfo()
@@ -556,7 +527,30 @@ function refresh(wgt)
     print("refresh(wgt.options=nil)")
     return
   end
+
   
+  -- MinMax Werte im Vordergrund sichern ===========================================================
+  -- ===============================================================================================
+  savevalues(wgt)
+  
+  -- Anzahl Zellen im Vordergrund ermitteln ========================================================
+  -- ===============================================================================================
+  cellcountdetect(wgt)
+  
+  -- RESET nach "LS61" oder Modellwechsel eigener Screen ============================================
+  -- ===============================================================================================
+  resetvalues(wgt)
+  
+  -- GPS Daten im Vordergrund ermitteln ============================================================
+  -- ===============================================================================================      
+  GetGPSData(wgt)
+  
+  -- GPS Fix Soundmessage ==========================================================================
+  -- ===============================================================================================  
+  gpsfixmessage(wgt)
+  
+  -- 1. Zeile Modellname , Rx ID ===================================================================
+  -- ===============================================================================================  
 
   if     wgt.zone.w  > 380 and wgt.zone.h > 165 then refreshZoneXLarge(wgt)
   elseif wgt.zone.w  > 180 and wgt.zone.h > 145 then refreshZoneLarge(wgt)
