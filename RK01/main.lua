@@ -1,15 +1,11 @@
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
--- es müssen kleine Buchstaben verwendet werden! Die Angabe muss in Anführungszeichen eingefasst sein!
+settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
--- Schalter für die Ansage der Kapazität (mAh) (Schalter nach unten)
-local voiceoutputswitch_1 = "sc"
-
--- Schalter für die Ansage der min/max Werte Strom und Spannung (oben) und der momentan Werte Strom und Spannung (unten)
-local voiceoutputswitch_2 = "sd"
-
--- logischer Schalter, mit dem der Reset ausgelöst werden soll
-local resetswitch = "ls61"
-
+if (settings ~= nil) then
+     settings()
+  else
+     print(err)
+  end
 -- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++ 
 
 local options = {

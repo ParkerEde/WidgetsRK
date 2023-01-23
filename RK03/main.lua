@@ -1,16 +1,11 @@
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
--- es müssen kleine Buchstaben verwendet werden! Die Angabe muss in Anführungszeichen eingefasst sein!
+settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
--- logischer Schalter, mit dem der Reset ausgelöst werden soll
-local resetswitch = "ls61"
-
--- Schalter, mit dem die Berechnung der "geflogenen Strecke" gestartet werden soll (z.B. Motorschutzschalter default = "sb")
-local activate_tracking_switch = "sb"
--- Position angeben, bei dem berechnet werden soll: 1024 = unten ; 0 = mitte ; -1024 = oben
-local activate_tracking_switch_position = -1024
--- Wenn nur eine Schalterposition ausgeschlossen werden soll dann 1 (und auszuschließende Pos oben angeben), sonst 0
-local activate_tracking_switch_invers = 1
-
+if (settings ~= nil) then
+     settings()
+  else
+     print(err)
+  end
 -- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++ 
 
 local options = {

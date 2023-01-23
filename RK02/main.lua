@@ -1,12 +1,11 @@
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
--- es müssen kleine Buchstaben verwendet werden! Die Angabe muss in Anführungszeichen eingefasst sein!
+settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
--- Schalter für die Ansage der aktuellen Höhe (ALT) (Schalter nach oben)
-local voiceoutputswitch_1 = "sc"
-
--- logischer Schalter, mit dem der Reset ausgelöst werden soll
-local resetswitch = "ls61"
-
+if (settings ~= nil) then
+     settings()
+  else
+     print(err)
+  end
 -- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++ 
 
 local options = {

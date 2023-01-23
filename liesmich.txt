@@ -1,12 +1,12 @@
 Voraussetzung:
 ==============
 
-- FrSky Horus X10(S) oder Horus X12(S) mit OpenTx 2.3.7 oder neuer
-- ein logischer Schalter, der zum resetten benutzt wird (standardmäßig wird auf LS61 reagiert, ist aber änderbar)
-- die Verzeichnisse RK01, RK02 und RK03 müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
+- FrSky Horus X10(S) oder Horus X12(S) mit OpenTx 2.3.7 oder neuer. Auch EdgeTx wird unterstützt.
+- ein logischer Schalter, der zum resetten benutzt wird (standardmäßig wird auf LS61 reagiert, ist aber in der "RK-Settings\RK-Settings.lua" änderbar)
+- die Verzeichnisse "RK01", "RK02", "RK03" und "RK-Settings" müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
 - aus dem Verzeichnis "SOUNDS de Sprachdateien" müssen die WAV Dateien auf die SD Karte ins Verzeichnis "SOUNDS\de" kopiert werden
 - die drei Widgets RK01, RK02 und RK03 müssen jeweils einem Vollbildscreen zugewiesen werden
-
+- auf einer weiteren Seite eignet sich ein zwei Feld Bildschirm, indem eine Hälfte z.B. die Outputs und die andere Hälfte RK03 zugewiesen wird.
 
 Sensoreinrichtung:
 ==================
@@ -14,12 +14,11 @@ Sensoreinrichtung:
 1. Unisens-E Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden
 2. den "A4" Sensor editieren und auf die Einheit "mAh" ändern
 3. als Vario Quelle "VSpd" auswählen
-4. GPS Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden
+4. GPS Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden (u.U werden erst Sensoren gefunden, nachdem ein SATFix erfolgt ist)
 5. den "GSpd" Sensor editieren und auf die Einheit "kmh" ändern
-6. den "GAlt" Sensor kopieren, dann editieren und aus "GAlt" "GAl2" machen und den Haken bei "Auto Offset" setzen
 
 HINWEIS: es können natürlich auch andere Sensoren angeschlossen werden. Hier die Liste, mit welchen Sensornamen die Widgets arbeiten:
-RSSI, RxBt, VFAS, Curr, A4, Alt, VSpd, GPS, GAlt, GAl2, GSpd
+RSSI, RxBt, VFAS, Curr, A4, Alt, VSpd, GPS, GAlt, GSpd, VFR, Tmp1, Tmp2
 
 
 Features RK01, RK02, RK03 Widgets:
@@ -40,8 +39,8 @@ Features RK01, RK02, RK03 Widgets:
 		Schalter "SD" in der "Mitte" = keine Ansagen
 		Schalter "SD" nach "unten" = Momentanwert für Strom (Curr) (nur wenn Daten vorhanden!) und danach durchschnittliche Einzelzellenspannung (wird aus "VFAS" ermittelt), wird alle 30 Sekunden wiederholt
 	
-	> Schalter "SC" und "SD" im Konfigurationsteil der jeweiligen RK01\main.lua bzw. RK02\main.lua änderbar
-	> die Wiederholzeit (standard 30 Sekunden) ist per "Widget Einstellungen" einstellbar
+	> Schalter "SC" und "SD" im Konfigurationsteil der "RK-Settings\RK-Settings.lua" einstellbar
+	> die Telemetrieansagen-Wiederholzeit (Standard 30 Sekunden) ist per "Widget Einstellungen" einstellbar
 
 - automatische LiPo Zellenzahl Ermittlung bis 12S
 
@@ -55,11 +54,11 @@ Features RK01, RK02, RK03 Widgets:
 
 - Entfernung zum Modell über Grund und Luftlinie wird automatisch errechnet, sofern mit GPS Sensor gearbeitet wird
 
-- die aufgenommene elektrische Leistung in Watt wird automatisch berechnet, sobald VFAS und Curr vorhanden ist
+- die aufgenommene elektrische Leistung in Watt wird automatisch berechnet, sobald VFAS und Curr vorhanden sind
 
-- alle max/min Daten ablesbar, auch wenn das Modell ausgeschaltet wurde
+- alle min/max Daten ablesbar, auch wenn das Modell ausgeschaltet wurde
 
-- Reset durch Modellwechsel (anhand der RxID) oder durch LS61 (änderbar im Konfigurationsteil)
+- Reset durch Modellwechsel (anhand der RxID) oder durch LS61 (änderbar im Konfigurationsteil der "RK-Settings\RK-Settings.lua")
 
 - Steig- und Sinkraten werden sowohl in m/s, als auch in "kmh" angezeigt
 
@@ -67,7 +66,11 @@ Features RK01, RK02, RK03 Widgets:
 
 - auf kleinste Bildschirmzelle (1 Feld Widget) zeigt RK01 "mAh", RK02 "RSSI" und RK03 "RSSI-" (geeignet für die Kopfleiste)
 
-- auf halber Bildschirmgröße zeigt RK03 die GPS Koordinaten vom Startpunkt und der momentanen Modellposition, auch wenn das Modell keine Daten mehr sendet
+- auf halber Bildschirmgröße (Trimmer, Schieber und Flugphase deaktiviert) zeigt RK03:
+		> die GPS Koordinaten vom Startpunkt und der momentanen Modellposition, auch wenn das Modell keine Daten mehr sendet 
+		> die geflogene Strecke, sobald mit dem Motorschutzschalter* der Motor freiegegeben wurde. *(im Standard SB oben = gesichert; änderbar im Konfigurationsteil der "RK-Settings\RK-Settings.lua").
+		> sofern vorhanden, wird VFR (minimum und momentan) angezeigt
+		> sofern vorhanden, wird die Anzahl der Satelliten und PDOP angezeigt. Der GPS Sensor muss dazu die Sensoren "Tmp1" und "Tmp2" liefern (z.B.OpenX-Sensor)
 
 
 		
