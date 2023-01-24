@@ -1,12 +1,12 @@
 Voraussetzung:
 ==============
 
-- FrSky Horus X10(S) oder Horus X12(S) mit OpenTx 2.3.7 oder neuer. Auch EdgeTx wird unterstützt.
+- FrSky Horus X10(S) oder Horus X12(S) mit EdgeTx 2.9.0 oder neuer.
 - ein logischer Schalter, der zum resetten benutzt wird (standardmäßig wird auf LS61 reagiert, ist aber in der "RK-Settings\RK-Settings.lua" änderbar)
 - die Verzeichnisse "RK01", "RK02", "RK03" und "RK-Settings" müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
 - aus dem Verzeichnis "SOUNDS de Sprachdateien" müssen die WAV Dateien auf die SD Karte ins Verzeichnis "SOUNDS\de" kopiert werden
 - die drei Widgets RK01, RK02 und RK03 müssen jeweils einem Vollbildscreen zugewiesen werden
-- auf einer weiteren Seite eignet sich ein zwei Feld Bildschirm, indem eine Hälfte z.B. die Outputs und die andere Hälfte RK03 zugewiesen wird.
+- auf einer weiteren Seite eignet sich ein zwei Feld Bildschirm (Trimmer, Schieber und Flugphase deaktiviert), indem eine Hälfte z.B. die Outputs und die andere Hälfte RK03 zugewiesen wird.
 
 Sensoreinrichtung:
 ==================
@@ -14,7 +14,7 @@ Sensoreinrichtung:
 1. Unisens-E Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden
 2. den "A4" Sensor editieren und auf die Einheit "mAh" ändern
 3. als Vario Quelle "VSpd" auswählen
-4. GPS Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden (u.U werden erst Sensoren gefunden, nachdem ein SATFix erfolgt ist)
+4. GPS Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden (u.U. werden erst Sensoren gefunden, nachdem ein SATFix erfolgt ist)
 5. den "GSpd" Sensor editieren und auf die Einheit "kmh" ändern
 
 HINWEIS: es können natürlich auch andere Sensoren angeschlossen werden. Hier die Liste, mit welchen Sensornamen die Widgets arbeiten:
@@ -71,6 +71,7 @@ Features RK01, RK02, RK03 Widgets:
 		> die geflogene Strecke, sobald mit dem Motorschutzschalter* der Motor freiegegeben wurde. *(im Standard SB oben = gesichert; änderbar im Konfigurationsteil der "RK-Settings\RK-Settings.lua").
 		> sofern vorhanden, wird VFR (minimum und momentan) angezeigt
 		> sofern vorhanden, wird die Anzahl der Satelliten und PDOP angezeigt. Der GPS Sensor muss dazu die Sensoren "Tmp1" und "Tmp2" liefern (z.B.OpenX-Sensor)
+		> OpenTX bzw. EdgeTX Version und Version des RK-Widgets
 
 
 		

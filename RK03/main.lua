@@ -80,7 +80,7 @@ local function round(num, decimal)
 	elseif decimal == 2 then return (string.format("%.2f", num))
 	end
 end
-
+	
 local function getSensors(wgt)
 	RxBt = getValue("RxBt")
 	UBat = getValue("VFAS")
@@ -224,7 +224,7 @@ local function resetvalues(wgt)
 			gpsfixmessagedone = 0
 			Track = 0
 			Sats = 0
-			Sats_seen = 0
+			-- Sats_seen = 0
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -393,17 +393,19 @@ local function refreshZoneLarge(wgt)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 	end
 
-	if Sats > 0 or Sats_seen == 1
-	then
-		Sats_seen = 1
+	-- if Sats > 0 or Sats_seen == 1
+	-- then
+		-- Sats_seen = 1
 		lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-		lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+110, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+130, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+115, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+140, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
 		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+110, Satssave, CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+130, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)  	
-	end
-  
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, Satssave, CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)  	
+	-- end
+	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+165, "EdgeTX V" .. getVersion(), SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+165, "RK-Widgets V1.0.0", SMLSIZE + CUSTOM_COLOR)
 end
 
 
