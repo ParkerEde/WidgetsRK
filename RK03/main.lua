@@ -1,3 +1,4 @@
+local RKWidgetVersion = "1.0.1"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -224,7 +225,7 @@ local function resetvalues(wgt)
 			gpsfixmessagedone = 0
 			Track = 0
 			Sats = 0
-			-- Sats_seen = 0
+			Satssave = 0
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -365,19 +366,24 @@ local function refreshZoneLarge(wgt)
 	offsety=45
 	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
 	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-045, "ValidFrameRate:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety-000,  "Start-Position:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+045, "Modell-Position:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+090, "geflogene Strecke:", SMLSIZE + CUSTOM_COLOR)    
-	if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-000,  "Start-Position:", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+045, "Modell-Position:", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+090, "geflogene Strecke:", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+115, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+140, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+165, "EdgeTX V" .. getVersion(), SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+165, "RK-Widgets V" .. RKWidgetVersion, SMLSIZE + CUSTOM_COLOR)
 
 	if gpsValuelat1 ~= "no Data" 
 		then
+		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-000, gpsValuelat1..",", CUSTOM_COLOR)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+020, gpsValuelon1, CUSTOM_COLOR)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+045, gpsValuelat2..",",   CUSTOM_COLOR)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+065, gpsValuelon2, CUSTOM_COLOR)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+090, round(Track,0) .. "m", CUSTOM_COLOR)
 		else
+		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-000, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+090, "keine Daten", SMLSIZE + CUSTOM_COLOR)
@@ -385,27 +391,26 @@ local function refreshZoneLarge(wgt)
 
 	if VFRminsave > 0 
 	then
-		if nodataVFR == 0 then lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
+		if nodataVFR == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, round(VFR,0).."%", CUSTOM_COLOR)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-025, round(VFRminsave,0).."% minimum", CUSTOM_COLOR)
-		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
 	else
+		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 	end
 
-	-- if Sats > 0 or Sats_seen == 1
-	-- then
-		-- Sats_seen = 1
-		lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-		lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+115, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+140, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
-		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+	if Satssave > 0
+	then
+		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, Satssave, CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)  	
-	-- end
-	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+offsetx+05, wgt.zone.y+offsety+165, "EdgeTX V" .. getVersion(), SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+165, "RK-Widgets V1.0.0", SMLSIZE + CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)
+	else
+		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, "keine Daten", SMLSIZE + CUSTOM_COLOR)
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, "keine Daten", SMLSIZE + CUSTOM_COLOR)
+	end
+	
+
 end
 
 

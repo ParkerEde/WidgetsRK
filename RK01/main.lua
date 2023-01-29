@@ -316,9 +316,9 @@ local function refreshZoneTiny(wgt)
   if wgt.options.UseCapacitySensor == 0  
    then
     -- print("UseCapacitySensor no")
-    lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-1, "mAh", SMLSIZE + CUSTOM_COLOR)
+    lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-0, "mAh", CUSTOM_COLOR)
 	-- lcd.drawText(wgt.zone.x+ 35, wgt.zone.y+0, "(C)", SMLSIZE + CUSTOM_COLOR)
-    lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+10, round(mAhcalculate(Amp),0), MIDSIZE + CUSTOM_COLOR)
+    lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+14, round(mAhcalculate(Amp),0), MIDSIZE + CUSTOM_COLOR)
   end
    
 end

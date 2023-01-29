@@ -48,6 +48,8 @@ Features RK01, RK02, RK03 Widgets:
 
 - automatischer Alarm, wenn weniger als durchschnittlich 3,4V pro Zelle erreicht wurden. Alarm kommt nur akustisch und nur einmal
 
+- automatische Sprachansage, sobald ein GPSFix erfolgt ist
+
 - Farben für Schrift der "aktiven Daten" und für "keine Daten" per "Widget Einstellungen" einstellbar
 
 - wenn kein Kapazitätssensor verfügbar ist, kann die Kapazität "mAh" anhand des "Curr" Sensors errechnet werden. "UseCapacitySensor" per "Widget Einstellungen" einstellbar
