@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.0.1"
+local RKWidgetVersion = "1.0.2"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -71,6 +71,7 @@ local Track_switch_pos = 0
 
 local Sats = 0
 local Satssave = 0
+local PDOP = 0
 local PDOPsave = 0
 
 local timestamprefresh = 0
@@ -90,8 +91,29 @@ local function getSensors(wgt)
 	RSSImin = getValue("RSSI-")
 	VFR = getValue("VFR")
 	VFRmin = getValue("VFR-")
-	Sats = getValue("Tmp1") -100
-	PDOP = getValue("Tmp2") /10
+	
+	if getValue("Tmp1") > 0
+	then
+		Sats = getValue("Tmp1") -100
+	else
+		if SatsSensor == nil then
+			SatsSensor = getSourceIndex(CHAR_TELEMETRY.."5100")
+		else
+			Sats = getValue(SatsSensor) -100
+		end
+	end
+	
+	if getValue("Tmp2") > 0 
+	then
+		PDOP = getValue("Tmp2") /10
+	else
+		if PDOPSensor == nil then
+			PDOPSensor = getSourceIndex(CHAR_TELEMETRY.."5101")
+		else
+			PDOP = getValue(PDOPSensor) /10
+		end
+	end
+	
 	Track_switch = getValue(activate_tracking_switch)
 	Track_switch_pos = activate_tracking_switch_position
 	-- print("Track_switch: " .. Track_switch)
@@ -226,6 +248,8 @@ local function resetvalues(wgt)
 			Track = 0
 			Sats = 0
 			Satssave = 0
+			PDOP = 0
+			PDOPsave = 0
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -254,9 +278,7 @@ local function savevalues(wgt)
 	if GAlt > GAltmaxsave and GAlt < 10000 then
 		GAltmaxsave = GAlt
 	else
-		if GAltmaxsave > 0 then
-			nodataGAlt = 0
-		else
+		if GAltmaxsave == 0 then
 			nodataGAlt = 1
 		end
     end
@@ -264,6 +286,7 @@ local function savevalues(wgt)
 	if GAltOffsetdone == 0 and GAlt > 0 then
 		GAltOffset = GAlt
 		GAltOffsetdone = 1
+		nodataGAlt = 0
 	end
   
 	if GAltOffsetdone == 1 and RxBt > 0 then
@@ -403,10 +426,17 @@ local function refreshZoneLarge(wgt)
 	then
 		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, Satssave, CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)
 	else
 		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, "keine Daten", SMLSIZE + CUSTOM_COLOR)
+	end
+
+	if PDOPsave > 0
+	then
+		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
+		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)
+	else
+		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 	end
 	

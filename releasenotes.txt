@@ -1,0 +1,17 @@
+Version 1.0.2
+=============
+- die Anzahl Satelliten werden nun entweder aus "Tmp1" (oXs Arduino) oder "5100" (oXs RP2040) gelesen
+- PDOP wird nun entweder aus "Tmp2" (oXs Arduino) oder "5101" (oXs RP2040) gelesen
+- Satelliten und PDOP werden nun unabhängig voneinander für die Aktivfarbe behandelt
+- Aktivfarbe für GPS wird nun gesetzt, sobald GALT einen belibigen Wert liefert (Offset wurde gesetzt). 
+  Vorher wurde erst die Aktivfarbe gesetzt, wenn GALT einen höheren Wert liefert als der zuletzt gespeicherte Höchstwert war. 
+  Das führte zu Verzögerungen, wenn bei Satfix z.B. 80m kommt und dann erstmal der Wert niedriger wird, bis sich die Höhe eingependelt hat.
+
+Version 1.0.1
+=============
+- Farbsteuerung für Inaktiv- Aktivfarbe auf RK03 vereinfacht
+
+Version 1.0.0
+=============
+- Versionsnummer von EdgeTx und RK Widgets auf RK03 (Halbbildschirm)
+- Settings für Schalterbelegung Ansagen, Reset, Motorschutzschalter in RK Settings ausgelagert
