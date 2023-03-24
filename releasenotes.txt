@@ -1,3 +1,10 @@
+Version 1.0.3
+=============
+- alle Werte GPS betreffend wurden nicht wieder aktiv (weiß) gezeichnet, wenn Telemetrie einmal verloren ging und wieder hergestellt wurde.
+- die Berechnung für Anzahl Satelliten und PDOP werden nun nicht mehr direkt beim einlesen des Sensorwertes gemacht, sondern beim speichern in die Variable.
+  Somit kann die Anzeige auch schon aktiv geschaltet werden, auch wenn noch zuwenig Satelliten gefunden wurden => Man erhält dann eine aktive (weiße "0")
+  bzw. der PDOP Wert kann schon angezeigt werden, auch wenn kein Satfix vorliegt.
+
 Version 1.0.2
 =============
 - die Anzahl Satelliten werden nun entweder aus "Tmp1" (oXs Arduino) oder "5100" (oXs RP2040) gelesen

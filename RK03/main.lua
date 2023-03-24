@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.0.2"
+local RKWidgetVersion = "1.0.3"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -71,8 +71,10 @@ local Track_switch_pos = 0
 
 local Sats = 0
 local Satssave = 0
+local SatsSeen = 0
 local PDOP = 0
 local PDOPsave = 0
+local PDOPSeen = 0
 
 local timestamprefresh = 0
 
@@ -84,7 +86,7 @@ local function round(num, decimal)
 end
 	
 local function getSensors(wgt)
-	RxBt = getValue("RxBt")
+	RXBat = getValue("RxBt")
 	UBat = getValue("VFAS")
 	GSpd = getValue("GSpd")
 	GAlt = getValue("GAlt")
@@ -94,23 +96,23 @@ local function getSensors(wgt)
 	
 	if getValue("Tmp1") > 0
 	then
-		Sats = getValue("Tmp1") -100
+		Sats = getValue("Tmp1") 
 	else
 		if SatsSensor == nil then
 			SatsSensor = getSourceIndex(CHAR_TELEMETRY.."5100")
 		else
-			Sats = getValue(SatsSensor) -100
+			Sats = getValue(SatsSensor) 
 		end
 	end
 	
 	if getValue("Tmp2") > 0 
 	then
-		PDOP = getValue("Tmp2") /10
+		PDOP = getValue("Tmp2")
 	else
 		if PDOPSensor == nil then
 			PDOPSensor = getSourceIndex(CHAR_TELEMETRY.."5101")
 		else
-			PDOP = getValue(PDOPSensor) /10
+			PDOP = getValue(PDOPSensor)
 		end
 	end
 	
@@ -248,8 +250,10 @@ local function resetvalues(wgt)
 			Track = 0
 			Sats = 0
 			Satssave = 0
+			SatsSeen = 0
 			PDOP = 0
 			PDOPsave = 0
+			PDOPSeen = 0
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -267,12 +271,17 @@ local function savevalues(wgt)
 		GSpdmaxsave = GSpd
 	end
 	
-	if Sats > 0 and Sats < 100 then 
-		Satssave = Sats
+	if Sats > 0 and Sats < 1000 then 
+		Satssave = Sats - 100
+		if Satssave < 0 then
+			Satssave = 0
+		end
+		SatsSeen = 1
 	end
 
-	if PDOP > 0 and PDOP < 1000 then 
-		PDOPsave = PDOP
+	if PDOP > 0 and PDOP < 10000 then 
+		PDOPsave = PDOP /10
+		PDOPSeen = 1
 	end
 
 	if GAlt > GAltmaxsave and GAlt < 10000 then
@@ -289,14 +298,15 @@ local function savevalues(wgt)
 		nodataGAlt = 0
 	end
   
-	if GAltOffsetdone == 1 and RxBt > 0 then
+	if GAltOffsetdone == 1 and RXBat > 0 then
 		GAl2 = GAlt - GAltOffset
 	end	
-	if RxBt == 0 then
+	if RXBat == 0 then
 	GAl2 = 0
 	DisG = 0
 	DisM = 0
 	nodataGAlt = 1
+	GAltOffsetdone = 0
 	end
 	
 	if GAl2 > GAl2maxsave and GAl2 < 10000 then
@@ -393,7 +403,7 @@ local function refreshZoneLarge(wgt)
 	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+045, "Modell-Position:", SMLSIZE + CUSTOM_COLOR)
 	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+090, "geflogene Strecke:", SMLSIZE + CUSTOM_COLOR)
 	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+115, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+140, "PDOP (<2):", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+140, "PDOP (<2.00):", SMLSIZE + CUSTOM_COLOR)
 	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+165, "EdgeTX V" .. getVersion(), SMLSIZE + CUSTOM_COLOR)
 	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+165, "RK-Widgets V" .. RKWidgetVersion, SMLSIZE + CUSTOM_COLOR)
 
@@ -422,7 +432,7 @@ local function refreshZoneLarge(wgt)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 	end
 
-	if Satssave > 0
+	if SatsSeen == 1
 	then
 		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, Satssave, CUSTOM_COLOR)
@@ -431,7 +441,7 @@ local function refreshZoneLarge(wgt)
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, "keine Daten", SMLSIZE + CUSTOM_COLOR)
 	end
 
-	if PDOPsave > 0
+	if PDOPSeen == 1
 	then
 		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
 		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)
@@ -581,8 +591,7 @@ function refresh(wgt)
   -- ===============================================================================================  
   gpsfixmessage(wgt)
   
-  -- 1. Zeile Modellname , Rx ID ===================================================================
-  -- ===============================================================================================  
+ 
 
   if     wgt.zone.w  > 380 and wgt.zone.h > 165 then refreshZoneXLarge(wgt)
   elseif wgt.zone.w  > 180 and wgt.zone.h > 145 then refreshZoneLarge(wgt)
