@@ -32,6 +32,11 @@ local RXBat = 0
 local RXBatmin = 0
 local RXBatminsave = 0
 
+local nodataUBat = 1
+local UBat = 0
+local UBatmin = 0
+local UBatminsave = 0
+
 local nodataAlt =1
 local Alt = 0
 local Altmax = 0
