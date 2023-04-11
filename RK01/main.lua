@@ -51,10 +51,10 @@ local mAh = 0
 local mAhmax = 0
 local mAhmaxsave = 0
 
-local ModelRxID = 0
-local ModelRxID2 = 0
-local ModelRxIDVorher = 0
-local ModelRxIDNachher = 0
+local ModelRxID = -1
+local ModelRxID2 = -1
+local ModelRxIDVorher = -1
+local ModelRxIDNachher = -1
 local Modelname = 0
 local cellcountinit = 0
 local cellcount = 0
@@ -230,7 +230,7 @@ end
 local function resetvalues(wgt)
 	ModelRxID2 = model.getModule(0)
 	ModelRxIDNachher = ModelRxID2.modelId
-	if ModelRxIDVorher ~= 0 then
+	if ModelRxIDVorher ~= -1 then
 		local reset = getValue(resetswitch)
 		if reset > 0 or ModelRxIDVorher ~= ModelRxIDNachher then
 			UBatminsave = 0

@@ -16,7 +16,7 @@ Sensoreinrichtung:
 1. Unisens-E Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden
 2. den "A4" Sensor editieren und auf die Einheit "mAh" ändern
 3. als Vario Quelle "VSpd" auswählen
-4. GPS Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden (u.U. werden erst Sensoren gefunden, nachdem ein SATFix erfolgt ist)
+4. GPS Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden (u.U. werden erst Sensoren gefunden, nachdem ein GPS-Fix erfolgt ist)
 5. den "GSpd" Sensor editieren und auf die Einheit "kmh" ändern
 
 HINWEIS: es können natürlich auch andere Sensoren angeschlossen werden. Hier die Liste, mit welchen Sensornamen die Widgets arbeiten:
@@ -65,7 +65,7 @@ Features RK01, RK02, RK03 Widgets:
 
 - automatischer Alarm, wenn weniger als durchschnittlich 3,4V pro Zelle erreicht wurden. Alarm kommt nur akustisch und nur einmal
 
-- automatische Sprachansage, sobald ein GPSFix erfolgt ist
+- automatische Sprachansage, sobald ein GPS-Fix erfolgt ist
 
 - Farben für Schrift der "aktiven Daten" und für "keine Daten" per "Widget Einstellungen" einstellbar
 

@@ -1,3 +1,7 @@
+Version 1.0.5
+=============
+- In RK01-03 Nun funktioniert auch ein Reset, wenn die RxID 0 ist
+
 Version 1.0.4
 =============
 - In RK02 waren die UBAT Variablen nicht initialisiert. Somit konnte es u.U. zum Crash der RK02 beim starten des Senders kommen, wenn kein VFAS Sensor vorhanden ist.
