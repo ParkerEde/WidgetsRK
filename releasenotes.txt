@@ -1,6 +1,10 @@
+Version 1.0.6
+=============
+- RK01-03: Wenn vom int. Modul eine RxID 0 gelesen wird, wird nun versucht vom ext. Modul die RxID zu lesen
+
 Version 1.0.5
 =============
-- In RK01-03 Nun funktioniert auch ein Reset, wenn die RxID 0 ist
+- RK01-03: Nun funktioniert auch ein Reset, wenn die RxID 0 ist
 
 Version 1.0.4
 =============

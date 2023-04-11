@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.0.5"
+local RKWidgetVersion = "1.0.6"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -225,6 +225,9 @@ end
 
 local function resetvalues(wgt)
 	ModelRxID2 = model.getModule(0)
+	if ModelRxID2.modelId == 0 then
+		ModelRxID2 = model.getModule(1)
+	end
 	ModelRxIDNachher = ModelRxID2.modelId
 	if ModelRxIDVorher ~= -1 then
 		local reset = getValue(resetswitch)
@@ -257,6 +260,9 @@ local function resetvalues(wgt)
 		end
 	end
 	ModelRxID = model.getModule(0)
+	if ModelRxID.modelId == 0 then
+		ModelRxID = model.getModule(1)
+	end
 	ModelRxIDVorher = ModelRxID.modelId
 end
 
