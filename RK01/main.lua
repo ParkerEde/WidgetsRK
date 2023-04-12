@@ -142,7 +142,7 @@ end
 
 local function mAhcalculate(current)
     newtime = math.floor(getTime()/100)
-	if Amp > 0 then
+	if Amp > 0 and UBat > 0 or mAhmaxsave > 0 and UBat > 0 then
 		if newtime ~= timestamp then
 			mAhcalc = (current / 3.6) + mAhcalc
 			-- mAhcalc = 1 + mAhcalc
