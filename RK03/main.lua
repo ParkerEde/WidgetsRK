@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.0.7"
+local RKWidgetVersion = "1.0.8"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -75,6 +75,8 @@ local SatsSeen = 0
 local PDOP = 0
 local PDOPsave = 0
 local PDOPSeen = 0
+local SatsSensor = -1
+local PDOPSensor = -1
 
 local timestamprefresh = 0
 
@@ -98,10 +100,10 @@ local function getSensors(wgt)
 	then
 		Sats = getValue("Tmp1") 
 	else
-		if SatsSensor == nil then
+		if SatsSensor == -1 then
 			SatsSensor = getSourceIndex(CHAR_TELEMETRY.."5100")
 		else
-			Sats = getValue(SatsSensor) 
+			if SatsSensor ~= nil then Sats = getValue(SatsSensor) end
 		end
 	end
 	
@@ -109,10 +111,10 @@ local function getSensors(wgt)
 	then
 		PDOP = getValue("Tmp2")
 	else
-		if PDOPSensor == nil then
+		if PDOPSensor == -1 then
 			PDOPSensor = getSourceIndex(CHAR_TELEMETRY.."5101")
 		else
-			PDOP = getValue(PDOPSensor)
+			if PDOPSensor ~= nil then PDOP = getValue(PDOPSensor) end
 		end
 	end
 	
@@ -257,6 +259,8 @@ local function resetvalues(wgt)
 			PDOP = 0
 			PDOPsave = 0
 			PDOPSeen = 0
+			SatsSensor = -1
+			PDOPSensor = -1
 		end
 	end
 	ModelRxID = model.getModule(0)

@@ -1,6 +1,11 @@
+Version 1.0.8
+=============
+- RK03: SatsSensor und PDOPSensor werden nun auf "-1" statt "nil" abgefragt und werden nun auch resettet.
+- RK01: der Kapazitätsensor kann nun entweder "A4" oder "EscC" heißen (für die neueste Unisens-E Firmware 1.21).
+
 Version 1.0.7
 =============
-- RK01 wenn die verbrauchte Kapazität berechnet wird, dann wurde der Wert immer wieder schwarz (inaktiv) gezeichnet, sobald der Strom auf 0A gefallen ist.
+- RK01: wenn die verbrauchte Kapazität berechnet wird, dann wurde der Wert immer wieder schwarz (inaktiv) gezeichnet, sobald der Strom auf 0A gefallen ist.
 
 Version 1.0.6
 =============

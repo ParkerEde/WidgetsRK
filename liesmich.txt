@@ -14,13 +14,13 @@ Sensoreinrichtung:
 ==================
 
 1. Unisens-E Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden
-2. den "A4" Sensor editieren und auf die Einheit "mAh" ändern
+2. den "A4" Sensor editieren und auf die Einheit "mAh" ändern. Nutzt man die neueste Firmware 1.21 des Unisens-E ist der Sensor EscC automatisch auf "mAh" eingestellt
 3. als Vario Quelle "VSpd" auswählen
 4. GPS Sensor anschließen und Sensorsuche starten, einen Moment warten und wieder beenden (u.U. werden erst Sensoren gefunden, nachdem ein GPS-Fix erfolgt ist)
 5. den "GSpd" Sensor editieren und auf die Einheit "kmh" ändern
 
 HINWEIS: es können natürlich auch andere Sensoren angeschlossen werden. Hier die Liste, mit welchen Sensornamen die Widgets arbeiten:
-RSSI, RxBt, VFR, VFAS, Curr, A4, Alt, VSpd, GPS, GAlt, GSpd, Tmp1 oder 5100, Tmp2 oder 5101
+RSSI, RxBt, VFR, VFAS, Curr, A4 oder EscC, Alt, VSpd, GPS, GAlt, GSpd, Tmp1 oder 5100, Tmp2 oder 5101
 
 
 RSSI = RSSI, Received Signal Strength Indication (Empfänger)
@@ -28,8 +28,8 @@ RxBt = Empfänger Spannungsversorgung (Empfänger)
 VFR  = ValidFrameRate (Empfänger)
 VFAS = Flugakku gesamt Spannung (separater Sensor oder A2 aus Empfänger. Dann muss A2 in VFAS umbenannt werden)
 Curr = Strom aus Flugakku (separater Sensor)
-A4   = entnommene Kapazität aus Flugakku (separater Sensor)
-ALT  = Flughöhe (separater Sensor oder Empfänger mit int. Höhenmesser)
+A4 oder EscC = entnommene Kapazität aus Flugakku (separater Sensor)
+ALT = Flughöhe (separater Sensor oder Empfänger mit int. Höhenmesser)
 VSpd = VerticalSpeed, Steig- und Sinkgeschwindigkeit (separater Sensor oder Empfänger mit int. Höhenmesser)
 GPS  = GPS Koordinaten (separater Sensor)
 GALT = GPS Höhe (separater Sensor)
@@ -50,7 +50,7 @@ Features RK01, RK02, RK03 Widgets:
 		
 		Schalter "SC" nach "oben" = aktuelle Höhe (Alt), wird alle 30 Sekunden wiederholt
 		Schalter "SC" in der "Mitte" = keine Ansagen
-		Schalter "SC" nach "unten" = aktuell verbrauchte Kapazität (A4), wird alle 30 Sekunden wiederholt
+		Schalter "SC" nach "unten" = aktuell verbrauchte Kapazität (A4 oder EscC), wird alle 30 Sekunden wiederholt
 
 		Schalter "SD" nach "oben" = maximalster Strom (Curr) (nur wenn Daten vorhanden!) und danach minimalste durchschnittliche Einzelzellenspannung (wird aus "VFAS" ermittelt), wird alle 30 Sekunden wiederholt
 		Schalter "SD" in der "Mitte" = keine Ansagen

@@ -46,10 +46,12 @@ local Ampmaxsave = 0
 
 local Wattmaxsave = 0
 
-local nodatamAh =1
+local nodatamAh = 1
 local mAh = 0
 local mAhmax = 0
 local mAhmaxsave = 0
+local capasensorcheckA4 = 0
+local capasensorcheckEscC = 0
 
 local ModelRxID = -1
 local ModelRxID2 = -1
@@ -93,8 +95,21 @@ local function getSensors(wgt)
 	Ampmax = getValue("Curr+")
 	RXBat = getValue("RxBt")
 	RXBatmin = getValue("RxBt-")
-	mAh = getValue("A4")
-	mAhmax = getValue("A4+")
+	
+	if getValue("A4") ~= 0 or capasensorcheckA4 == 1
+		then
+			capasensorcheckA4 = 1
+			mAh = getValue("A4")
+			mAhmax = getValue("A4+")
+			-- print("A4: " .. mAh)
+		end
+	if getValue("EscC") ~= 0 or capasensorcheckEscC == 1
+		then
+			capasensorcheckEscC = 1
+			mAh = getValue("EscC")
+			mAhmax = getValue("EscC+")
+			-- print("EscC: " .. mAh)
+		end
 end
 
 local function cellcountdetect(wgt)
@@ -127,7 +142,6 @@ end
 local function batlow(wgt)
 	 if cellcount > 1 and alertdone == 0 and cellaverage(UBatminsave) ~= 0 and cellaverage(UBatminsave) < 3.40
 	 then
-	  -- print("kackspannung: " ..cellaverage(UBatminsave))
 	  -- print("cellcount: " ..cellcount)
 	   playFile("achtun.wav") -- Achtung
 	   playFile("SYSTEM/0003.wav") -- 3
@@ -145,7 +159,6 @@ local function mAhcalculate(current)
 	if Amp > 0 and UBat > 0 or mAhmaxsave > 0 and UBat > 0 then
 		if newtime ~= timestamp then
 			mAhcalc = (current / 3.6) + mAhcalc
-			-- mAhcalc = 1 + mAhcalc
 			mAhmaxsave = mAhcalc
 			nodatamAh = 0
 			timestamp = newtime
@@ -242,11 +255,13 @@ local function resetvalues(wgt)
 			Wattmaxsave = 0
 			RXBatminsave = 0
 			mAhmaxsave = 0	
+			mAhcalc = 0			
 			cellcount = 0
 			cellcountinit = 0
 			alertdone = 0
 			timestamp = 0
-			mAhcalc = 0
+			capasensorcheckA4 = 0
+			capasensorcheckEscC = 0
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -295,12 +310,16 @@ local function savevalues(wgt)
 		nodataRXBat = 1	  
     end
 		
-	if mAhcalc == 0 then
-		if mAh ~= 0 then
-			mAhmaxsave = mAhmax
-			nodatamAh = 0
-		else
+	if UseCapacitySensor == nil then print("UseCapacitySensor = nil")
+	elseif UseCapacitySensor == 1 then
+		if mAhcalc == 0 then
+			if mAh ~= 0 then
+				print("mAh~=0: " .. mAh)
+				mAhmaxsave = mAhmax
+				nodatamAh = 0
+			else
 			nodatamAh = 1
+			end
 		end
 	end
  end
@@ -316,12 +335,14 @@ local function refreshZoneTiny(wgt)
   
   if wgt.options.UseCapacitySensor ~= 0
    then
-   -- print("UseCapacitySensor yes")
+    UseCapacitySensor = 1
+	-- print("UseCapacitySensor yes")
     lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-0, "mAh", CUSTOM_COLOR)
     lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+14, round(mAhmaxsave,0), MIDSIZE + CUSTOM_COLOR)
   end
   if wgt.options.UseCapacitySensor == 0  
    then
+    UseCapacitySensor = 0
     -- print("UseCapacitySensor no")
     lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-0, "mAh", CUSTOM_COLOR)
 	-- lcd.drawText(wgt.zone.x+ 35, wgt.zone.y+0, "(C)", SMLSIZE + CUSTOM_COLOR)
