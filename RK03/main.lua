@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.0.8"
+local RKWidgetVersion = "1.0.9"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 

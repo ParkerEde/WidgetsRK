@@ -9,9 +9,11 @@ if (settings ~= nil) then
 -- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++ 
 
 local options = {
+
   { "TextColor", COLOR, WHITE },
   { "NoDataColor", COLOR, BLACK },
-  { "VoiceRepeatTime", VALUE, 30, 1, 120}
+  { "VoiceRepeatTime", VALUE, 30, 1, 120},
+  { "RSSIWarning", BOOL, 1}
   }
 
 local function update(wgt, options)
@@ -61,12 +63,12 @@ local ModelRxIDNachher = -1
 local Modelname = 0
 local cellcountinit = 0
 local cellcount = 0
-
 local lasttime_sc = 0
 local lasttime_sd = 0
-local voicecycletime_sc = 20
-local voicecycletime_sd = 20
-local voicecycletime_activ = 3000
+local RSSIlow_warn = 0
+local RSSIlow_crit = 0
+local lasttime_rssi_warn = 0
+local lasttime_rssi_crit = 0
 
 local timestamprefresh = 0
 
@@ -113,32 +115,66 @@ local function cellcountdetect(wgt)
 end
 
 local function voiceoutput(wgt)
-    
 	local voiceoutput_sc_switch = getValue(voiceoutputswitch_1)
-	local timenow_sc = getTime()
-
+	local timenow_sc = getTime() + 10000
+	-- print ("gettimeSC:" .. timenow_sc)
    	if wgt.options.VoiceRepeatTime ~= nil then
-		if wgt.options.VoiceRepeatTime == 0 then
-			wgt.options.VoiceRepeatTime = 30
-		end
-		voicecycletime_activ = (wgt.options.VoiceRepeatTime * 100)	
-	else
+		voicecycletime = (wgt.options.VoiceRepeatTime * 100)	
+		-- print ("voicecycletime RK02: " .. voicecycletime)
 	end
-	
     if voiceoutput_sc_switch == 0 then 
-		voicecycletime_sc = 20 
+		lasttime_sc = 0
 	end
-    if ((timenow_sc - lasttime_sc) > voicecycletime_sc) then
-		lasttime_sc = timenow_sc
+    if ((timenow_sc - lasttime_sc) >= voicecycletime) then
 		if voiceoutput_sc_switch == -1024 then --SC oben
-			voicecycletime_sc = voicecycletime_activ
+			lasttime_sc = timenow_sc
 			if nodataAlt == 1 then 
 				playFile("nodata.wav")
 			else
 				playNumber(Alt, 9)
 			end
-	   end
+		end
 	end  
+end
+
+local function rssiwarning(wgt)
+  if wgt.options.RSSIWarning ~= 0 then 
+	-- print ("RSSIWarning activ: " .. wgt.options.RSSIWarning)	
+
+	if RSSI > 0 and RSSI < 35 then 
+		if RSSI > 0 and RSSI < 32 then
+			if RSSIlow_crit == 0 then
+				startRSSIdelaycrit = math.floor(getTime()/100)
+				RSSIlow_crit = 1
+			end
+			if (math.floor(getTime()/100) - startRSSIdelaycrit) >= 1 then
+				local timenow_rssi_crit = math.floor(getTime()/100)
+				if ((timenow_rssi_crit - lasttime_rssi_crit)) >= 5 then
+					lasttime_rssi_crit = timenow_rssi_crit
+					-- print ("RSSI < 32: " .. RSSI)
+					playFile("system/rssi_red.wav")
+				end
+			end
+		else
+			if RSSIlow_warn == 0 then
+				startRSSIdelaywarn = math.floor(getTime()/100)
+				RSSIlow_warn = 1
+			end
+			if (math.floor(getTime()/100) - startRSSIdelaywarn) >= 1 then
+				local timenow_rssi_warn = math.floor(getTime()/100)
+				if ((timenow_rssi_warn - lasttime_rssi_warn)) >= 10 then
+					lasttime_rssi_warn = timenow_rssi_warn
+					-- print ("RSSI < 35: " .. RSSI .. " " .. lasttime_rssi_warn)
+					playFile("system/rssi_org.wav")
+				end
+			end	
+		end	
+	
+	else 
+		RSSIlow_warn = 0
+		if RSSI == 0 then RSSIlow_crit = 0 end
+	end
+  end
 end
 
 local function resetvalues(wgt)
@@ -379,6 +415,10 @@ function refresh(wgt)
   -- 1. Zeile Modellname , Rx ID ===================================================================
   -- ===============================================================================================
 
+  -- RSSI Warnung ==================================================================================
+  -- ===============================================================================================
+  rssiwarning(wgt)
+  
   if     wgt.zone.w  > 380 and wgt.zone.h > 165 then refreshZoneXLarge(wgt)
   elseif wgt.zone.w  > 180 and wgt.zone.h > 145 then refreshZoneLarge(wgt)
   elseif wgt.zone.w  > 170 and wgt.zone.h >  65 then refreshZoneMedium(wgt)
@@ -404,6 +444,10 @@ local function background(wgt)
   -- Sprachausgabe Werte ===========================================================================
   -- ===============================================================================================
   voiceoutput(wgt)
+  
+  -- RSSI Warnung ==================================================================================
+  -- ===============================================================================================
+  rssiwarning(wgt)
 end
 
 return { name="RK02", options=options, create=create, update=update, refresh=refresh, background=background}

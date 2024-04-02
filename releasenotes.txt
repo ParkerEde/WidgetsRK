@@ -1,3 +1,15 @@
+Version 1.0.9
+=============
+- RK02: 
+Die RSSI Warnung (nur für Frsky Empfänger sinnvoll) wird nun per Standard vom RK02 Widget ausgegeben. 
+Wird der RSSI Wert von 35dB für eine Sekunde oder länger unterschritten, wird erst die "Empfang niedrig" Meldung ausgegeben. 
+Wird der RSSI Wert von 32dB für eine Sekunde oder länger unterschritten, erfolgt die "Empfang Kritisch" Meldung. Wird der Wert von 32dB erneut unterschritten, kommt die "Empfang Kritisch" Meldung sofort.
+Dies verhindert, dass schon beim Einschalten oder kurzzeitigem (<1Sek.) unterschreiten unnötig verwirrende Meldungen ausgegeben werden. 
+Um keine doppelten Meldungen zu bekommen, müssen in den Modelleinstellungen, auf der "Telemetrie"-Seite die Schwellwerte für "niedrig" und "kritisch" auf "1" gesetzt werden!
+Diese Funktion kann in den Widget Einstellungen komplett deaktiviert werden. Dann greifen wieder wie gewohnt die Schwellwerte aus den Modelleinstellungen / "Telemetrie"-Seite.
+
+- RK01 und RK02: Die Funktion zur Sprachausgabe für ALT, mAh, Spannung und Strom überarbeitet und verbessert.
+
 Version 1.0.8
 =============
 - RK03: SatsSensor und PDOPSensor werden nun auf "-1" statt "nil" abgefragt und werden nun auch resettet.

@@ -64,12 +64,8 @@ local alertdone = 0
 local timestamp = 0
 local mAhcalc = 0
 local newtime = 0
-
 local lasttime_sc = 0
 local lasttime_sd = 0
-local voicecycletime_sc = 20
-local voicecycletime_sd = 20
-local voicecycletime_activ = 3000
 local timestamprefresh = 0
 
 
@@ -175,40 +171,35 @@ end
 
 local function voiceoutput(wgt)
 	local voiceoutput_sc_switch = getValue(voiceoutputswitch_1)
-	local timenow_sc = getTime()
+	local timenow_sc = getTime() + 10000
+	-- print ("gettimeSC:" .. timenow_sc)
    	if wgt.options.VoiceRepeatTime ~= nil then
-		if wgt.options.VoiceRepeatTime == 0	then
-			wgt.options.VoiceRepeatTime = 30
-		end
-		voicecycletime_activ = (wgt.options.VoiceRepeatTime * 100)
-	else
+		voicecycletime = (wgt.options.VoiceRepeatTime * 100)
+		-- print ("voicecycletime RK01: " .. voicecycletime)
 	end
-	
 	if voiceoutput_sc_switch == 0 then 
-		voicecycletime_sc = 20 
+		lasttime_sc = 0
 	end
-    if ((timenow_sc - lasttime_sc) > voicecycletime_sc) then
-		lasttime_sc = timenow_sc
+    if ((timenow_sc - lasttime_sc) >= voicecycletime) then
 		if voiceoutput_sc_switch == 1024 then --SC unten
-			voicecycletime_sc = voicecycletime_activ
+			lasttime_sc = timenow_sc
 			if nodatamAh == 1 then 
 				playFile("nodata.wav")
 			else
 				playNumber(mAhmaxsave, 14)
 			end
 		end
-	end  
-
+	end
 
 	local voiceoutput_sd_switch = getValue(voiceoutputswitch_2)
-	local timenow_sd = getTime()
+	local timenow_sd = getTime() + 10000
+	-- print ("gettimeSD:" .. timenow_sd)
     if voiceoutput_sd_switch == 0 then 
-		voicecycletime_sd = 20
+		lasttime_sd = 0
 	end
-    if ((timenow_sd - lasttime_sd) > voicecycletime_sd) then
-		lasttime_sd = timenow_sd
+    if ((timenow_sd - lasttime_sd) >= voicecycletime) then
 		if voiceoutput_sd_switch == -1024 then --SD oben
-			voicecycletime_sd = voicecycletime_activ	   
+			lasttime_sd = timenow_sd
 			if nodataAmp == 1 and nodataUBat == 1 then 
 				playFile("nodata.wav")
 			else
@@ -223,7 +214,7 @@ local function voiceoutput(wgt)
 			end
 		end
 		if voiceoutput_sd_switch == 1024 then --SD unten
-			voicecycletime_sd = voicecycletime_activ
+			lasttime_sd = timenow_sd
 			if nodataAmp == 1 and nodataUBat == 1 then 
 				playFile("nodata.wav")
 			else
@@ -314,7 +305,7 @@ local function savevalues(wgt)
 	elseif UseCapacitySensor == 1 then
 		if mAhcalc == 0 then
 			if mAh ~= 0 then
-				print("mAh~=0: " .. mAh)
+				-- print("mAh~=0: " .. mAh)
 				mAhmaxsave = mAhmax
 				nodatamAh = 0
 			else
