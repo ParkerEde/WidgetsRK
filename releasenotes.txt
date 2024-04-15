@@ -1,3 +1,7 @@
+Version 1.0.10
+=============
+- RK02: RSSI Warnung refaktoriert und kleinen Bugfix
+
 Version 1.0.9
 =============
 - RK02: 

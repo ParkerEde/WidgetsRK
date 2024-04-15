@@ -144,12 +144,12 @@ local function rssiwarning(wgt)
 	if RSSI > 0 and RSSI < 35 then 
 		if RSSI > 0 and RSSI < 32 then
 			if RSSIlow_crit == 0 then
-				startRSSIdelaycrit = math.floor(getTime()/100)
+				startRSSIdelaycrit = getTime()
 				RSSIlow_crit = 1
 			end
-			if (math.floor(getTime()/100) - startRSSIdelaycrit) >= 1 then
-				local timenow_rssi_crit = math.floor(getTime()/100)
-				if ((timenow_rssi_crit - lasttime_rssi_crit)) >= 5 then
+			if (getTime() - startRSSIdelaycrit) >= 100 then
+				local timenow_rssi_crit = getTime()
+				if (timenow_rssi_crit - lasttime_rssi_crit) >= 500 then
 					lasttime_rssi_crit = timenow_rssi_crit
 					-- print ("RSSI < 32: " .. RSSI)
 					playFile("system/rssi_red.wav")
@@ -157,12 +157,12 @@ local function rssiwarning(wgt)
 			end
 		else
 			if RSSIlow_warn == 0 then
-				startRSSIdelaywarn = math.floor(getTime()/100)
+				startRSSIdelaywarn = getTime()
 				RSSIlow_warn = 1
 			end
-			if (math.floor(getTime()/100) - startRSSIdelaywarn) >= 1 then
-				local timenow_rssi_warn = math.floor(getTime()/100)
-				if ((timenow_rssi_warn - lasttime_rssi_warn)) >= 10 then
+			if (getTime() - startRSSIdelaywarn) >= 100 then
+				local timenow_rssi_warn = getTime()
+				if (timenow_rssi_warn - lasttime_rssi_warn) >= 1000 then
 					lasttime_rssi_warn = timenow_rssi_warn
 					-- print ("RSSI < 35: " .. RSSI .. " " .. lasttime_rssi_warn)
 					playFile("system/rssi_org.wav")
@@ -172,7 +172,9 @@ local function rssiwarning(wgt)
 	
 	else 
 		RSSIlow_warn = 0
+		lasttime_rssi_warn = 0
 		if RSSI == 0 then RSSIlow_crit = 0 end
+		lasttime_rssi_crit = 0
 	end
   end
 end
