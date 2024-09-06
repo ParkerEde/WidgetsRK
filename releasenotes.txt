@@ -1,3 +1,9 @@
+Version 1.0.11
+=============
+"Tmp1" und "Tmp2" werden nun nicht mehr als Satellitenanzahl und PDOP verwendet. 
+Nun müssen die Sensoren entweder "5100" oder "Sats" für die Satellitenanzahl und "5101" oder "PDOP" für PDOP heißen.
+
+
 Version 1.0.10
 =============
 - RK02: RSSI Warnung refaktoriert und kleinen Bugfix

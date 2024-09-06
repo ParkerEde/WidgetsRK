@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.0.10"
+local RKWidgetVersion = "1.0.11"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -96,9 +96,9 @@ local function getSensors(wgt)
 	VFR = getValue("VFR")
 	VFRmin = getValue("VFR-")
 	
-	if getValue("Tmp1") > 0
+	if getValue("Sats") > 0
 	then
-		Sats = getValue("Tmp1") 
+		Sats = getValue("Sats") 
 	else
 		if SatsSensor == -1 then
 			SatsSensor = getSourceIndex(CHAR_TELEMETRY.."5100")
@@ -107,9 +107,9 @@ local function getSensors(wgt)
 		end
 	end
 	
-	if getValue("Tmp2") > 0 
+	if getValue("PDOP") > 0 
 	then
-		PDOP = getValue("Tmp2")
+		PDOP = getValue("PDOP")
 	else
 		if PDOPSensor == -1 then
 			PDOPSensor = getSourceIndex(CHAR_TELEMETRY.."5101")
