@@ -28,14 +28,14 @@ RxBt = Empfänger Spannungsversorgung (Empfänger)
 VFR  = ValidFrameRate (Empfänger)
 VFAS = Flugakku gesamt Spannung (separater Sensor oder A2 aus Empfänger. Dann muss A2 in VFAS umbenannt werden)
 Curr = Strom aus Flugakku (separater Sensor)
-A4 oder EscC = entnommene Kapazität aus Flugakku (separater Sensor)
+A4, EscC ,Capa oder 5123= entnommene Kapazität aus Flugakku (separater Sensor)
 ALT = Flughöhe (separater Sensor oder Empfänger mit int. Höhenmesser)
 VSpd = VerticalSpeed, Steig- und Sinkgeschwindigkeit (separater Sensor oder Empfänger mit int. Höhenmesser)
 GPS  = GPS Koordinaten (separater Sensor)
 GALT = GPS Höhe (separater Sensor)
 GSpd = GPS Geschwindigkeit (separater Sensor)
-Tmp1 oder 5100 = Anzahl Satelliten
-Tmp2 oder 5101 = PDOP, GPS Signalqualität
+Sats oder 5100 = Anzahl Satelliten (Tmp1 ab 1.0.11 nicht mehr)
+PDOP oder 5101 = PDOP, GPS Signalqualität (Tmp2 ab 1.0.11 nicht mehr)
 
 
 Features RK01, RK02, RK03 Widgets:

@@ -48,10 +48,14 @@ local Wattmaxsave = 0
 
 local nodatamAh = 1
 local mAh = 0
-local mAhmax = 0
+-- local mAhmax = 0
 local mAhmaxsave = 0
-local capasensorcheckA4 = 0
-local capasensorcheckEscC = 0
+
+local CapaSensorisA4 = 0
+local CapaSensorisEscC = 0
+local CapaSensorisCapa = 0
+local CapaSensoris5123 = 0
+local CapaSensor = -1
 
 local ModelRxID = -1
 local ModelRxID2 = -1
@@ -92,20 +96,34 @@ local function getSensors(wgt)
 	RXBat = getValue("RxBt")
 	RXBatmin = getValue("RxBt-")
 	
-	if getValue("A4") ~= 0 or capasensorcheckA4 == 1
+	if getValue("A4") ~= 0 or CapaSensorisA4 == 1
 		then
-			capasensorcheckA4 = 1
+			CapaSensorisA4 = 1
 			mAh = getValue("A4")
-			mAhmax = getValue("A4+")
-			-- print("A4: " .. mAh)
-		end
-	if getValue("EscC") ~= 0 or capasensorcheckEscC == 1
+			-- print("A4: " .. mah)
+		
+	elseif getValue("EscC") ~= 0 or CapaSensorisEscC == 1
 		then
-			capasensorcheckEscC = 1
+			CapaSensorisEscC = 1
 			mAh = getValue("EscC")
-			mAhmax = getValue("EscC+")
 			-- print("EscC: " .. mAh)
-		end
+	
+	elseif getValue("Capa") ~= 0 or CapaSensorisCapa == 1
+		then
+			CapaSensorisCapa = 1
+			mAh = getValue("Capa")
+			-- print("Capa: " .. mAh)			
+			
+	elseif getSourceIndex(CHAR_TELEMETRY.."5123") ~= 0 or CapaSensoris5123 == 1
+		then
+			CapaSensoris5123 = 1
+			if CapaSensor == -1 then
+				CapaSensor = getSourceIndex(CHAR_TELEMETRY.."5123")
+			else
+				if CapaSensor ~= nil then mAh = getValue(CapaSensor) end
+			end
+			-- print("5123: " .. mAh)
+	end
 end
 
 local function cellcountdetect(wgt)
@@ -251,8 +269,11 @@ local function resetvalues(wgt)
 			cellcountinit = 0
 			alertdone = 0
 			timestamp = 0
-			capasensorcheckA4 = 0
-			capasensorcheckEscC = 0
+			CapaSensorisA4 = 0
+			CapaSensorisEscC = 0
+			CapaSensorisCapa = 0
+			CapaSensoris5123 = 0
+			CapaSensor = -1			
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -306,7 +327,7 @@ local function savevalues(wgt)
 		if mAhcalc == 0 then
 			if mAh ~= 0 then
 				-- print("mAh~=0: " .. mAh)
-				mAhmaxsave = mAhmax
+				mAhmaxsave = mAh
 				nodatamAh = 0
 			else
 			nodatamAh = 1
