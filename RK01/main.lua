@@ -12,7 +12,8 @@ local options = {
   { "TextColor", COLOR, WHITE },
   { "NoDataColor", COLOR, BLACK },
   { "UseCapacitySensor", BOOL, 1},
-  { "VoiceRepeatTime", VALUE, 30, 1, 120}
+  { "VoiceRepeatTime", VALUE, 30, 1, 120},
+  { "SmoothVFAS", VALUE, 1, 1, 10}
   }
 
 
@@ -72,6 +73,30 @@ local lasttime_sc = 0
 local lasttime_sd = 0
 local timestamprefresh = 0
 
+local UBATValuecount=1
+local UBATValue={}
+
+local function add_value(new_value)
+    -- Füge den neuen Wert zur Liste hinzu
+    table.insert(UBATValue, new_value)
+    if SmoothVFAS ~= nil then
+		UBATValuecount = SmoothVFAS
+	else
+		UBATValuecount = 1
+	end
+    -- print ("==========UBATValuecount: " .. UBATValuecount)
+	-- Entferne den ältesten Wert, wenn die Fenstergröße überschritten wird
+	if #UBATValue > UBATValuecount then
+        table.remove(UBATValue, 1)
+    end
+    -- Berechne den Durchschnitt
+    local sum = 0
+    for i = 1, #UBATValue do
+        sum = sum + UBATValue[i]
+    end
+    -- Rückgabe des geglätteten Wertes
+    return sum / #UBATValue
+end
 
 local function round(num, decimal)
 	if     decimal == 0 then return (string.format("%.0f", num))
@@ -294,8 +319,10 @@ local function savevalues(wgt)
 	getSensors(wgt)  
 	if UBatmin ~= 0 or UBat ~= 0 then
 		nodataUBat = 0
-		if UBat < UBatminsave then
-			UBatminsave = UBat
+		UBatsmooth = add_value(UBat)
+		if UBatsmooth < UBatminsave then
+			UBatminsave = UBatsmooth
+		-- UBatminsave = add_value(UBat)			
 		end
 	  	if UBatminsave < 6.1 then
 			UBatminsave = UBat
@@ -335,6 +362,7 @@ local function savevalues(wgt)
 		end
 	end
  end
+SmoothVFAS = wgt.options.SmoothVFAS
 end
 ------------------------------------------------------------
 
