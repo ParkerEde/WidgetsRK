@@ -1,3 +1,8 @@
+Version 1.1.01
+=============
+RK01 RK02 und RK03 so umgebaut, dass nun mehr Daten auf den Screen passen. Nun wird auch Tmp1 und RPM, als auch die verbrauchte Kapazität auf RK01 mit angezeigt.
+TOP Bar Widgets werden icht mehr unterstützt, nur noch Vollbild
+
 Version 1.0.13
 =============
 in RK01 in den Widgeteinstellungen kann nun der VFAS Wert geglättet werden. Der Wert "SmoothVFAS" kann zwischen 1 und 10 liegen. 1 bedeutet keine Glättung, 

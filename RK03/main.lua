@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.0.13"
+local RKWidgetVersion = "1.1.01"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -35,15 +35,6 @@ local Modelname = 0
 local UBat = 0
 local cellcountinit = 0
 local cellcount = 0
-
-local nodataRSSI = 1
-local RSSImin = 0
-local RSSIminsave = 0
-
-local nodataVFR = 1
-local VFR = 0
-local VFRmin = 0
-local VFRminsave = 0
 
 local GSpd = 0
 local GSpdmaxsave = 0
@@ -92,9 +83,6 @@ local function getSensors(wgt)
 	UBat = getValue("VFAS")
 	GSpd = getValue("GSpd")
 	GAlt = getValue("GAlt")
-	RSSImin = getValue("RSSI-")
-	VFR = getValue("VFR")
-	VFRmin = getValue("VFR-")
 	
 	if getValue("Sats") > 0
 	then
@@ -239,9 +227,7 @@ local function resetvalues(wgt)
 			gpsValuelat2 = "no Data"
 			gpsValuelon2 = "no Data"
 			gpsValuelat3 = "no Data"
-			gpsValuelon3 = "no Data"
-			RSSIminsave = 0	
-			VFRminsave = 0	
+			gpsValuelon3 = "no Data"	
 			cellcount = 0
 			cellcountinit = 0
 			GSpdmaxsave = 0
@@ -322,20 +308,7 @@ local function savevalues(wgt)
 	if GAl2 > GAl2maxsave and GAl2 < 10000 then
 		GAl2maxsave = GAl2
     end
-		if RSSImin ~= 0 then
-		RSSIminsave = RSSImin
-		nodataRSSI = 0
-	else
-		nodataRSSI = 1
-    end
 	
-	if VFRmin ~= 0 then
-		VFRminsave = VFRmin
-		nodataVFR = 0
-	else
-		nodataVFR = 1
-    end
-
 	if calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2) < 10000 then
 		DisG = rnd(calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2),0)
 		if DisG > DisGmaxsave then
@@ -382,10 +355,7 @@ end
 -- This size is for top bar wgts
 local function refreshZoneTiny(wgt)
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  
-  if nodataRSSI == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+0, "RSSI-", CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+14, round(RSSIminsave,0), MIDSIZE + CUSTOM_COLOR)
+  lcd.drawText (wgt.zone.x, wgt.zone.y, "nur Vollbild", SMLSIZE + CUSTOM_COLOR)
 end
 
 --- Size is 160x32 1/8th
@@ -405,60 +375,8 @@ end
 --- Size is 192x152 1/2
 local function refreshZoneLarge(wgt)
   -- print("large 1/2")
-    offsetx=5
-	offsety=45
-	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-045, "ValidFrameRate:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-000,  "Start-Position:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+045, "Modell-Position:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+090, "geflogene Strecke:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+115, "Satelliten:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+140, "PDOP (<2.00):", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+165, "EdgeTX V" .. getVersion(), SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+165, "RK-Widgets V" .. RKWidgetVersion, SMLSIZE + CUSTOM_COLOR)
-
-	if gpsValuelat1 ~= "no Data" 
-		then
-		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-000, gpsValuelat1..",", CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+020, gpsValuelon1, CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+045, gpsValuelat2..",",   CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+065, gpsValuelon2, CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+090, round(Track,0) .. "m", CUSTOM_COLOR)
-		else
-		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-000, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+090, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-	end
-
-	if VFRminsave > 0 
-	then
-		if nodataVFR == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, round(VFR,0).."%", CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-025, round(VFRminsave,0).."% minimum", CUSTOM_COLOR)
-	else
-		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-	end
-
-	if SatsSeen == 1
-	then
-		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, Satssave, CUSTOM_COLOR)
-	else
-		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+115, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-	end
-
-	if PDOPSeen == 1
-	then
-		if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR)
-	else
-		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety+140, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-	end
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  lcd.drawText (wgt.zone.x, wgt.zone.y, "nur Vollbild", SMLSIZE + CUSTOM_COLOR)
 	
 
 end
@@ -470,102 +388,182 @@ local function refreshZoneXLarge(wgt)
   
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   Modelname = model.getInfo()
-  lcd.drawText(wgt.zone.x+05, wgt.zone.y, Modelname.name, SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y, "Zellen: "..cellcount, SMLSIZE + INVERS + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+00, wgt.zone.y, Modelname.name, SMLSIZE + INVERS + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+105, wgt.zone.y, "Zellen: "..cellcount, SMLSIZE + INVERS + CUSTOM_COLOR)
   mytimer1=model.getTimer(0).value
-  lcd.drawText(wgt.zone.x+205, wgt.zone.y,"Motor:   ", SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawTimer(wgt.zone.x+253, wgt.zone.y,mytimer1, SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y,"RxID: " .. ModelRxIDVorher, SMLSIZE + INVERS + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+175, wgt.zone.y,"Motor:   ", SMLSIZE + INVERS + CUSTOM_COLOR)
+  lcd.drawTimer(wgt.zone.x+223, wgt.zone.y,mytimer1, SMLSIZE + INVERS + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+325, wgt.zone.y,"RxID: " .. ModelRxIDVorher, SMLSIZE + INVERS + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y,"V" .. RKWidgetVersion, SMLSIZE + INVERS + CUSTOM_COLOR + RIGHT)
+  
   --lcd.drawLine(45, 72, 435, 72, 255, 0)
   
-  
-  -- 1. SENSOR Zeile ===============================================================================
-  -- ===============================================================================================
+  -- 1. SENSOR Zeile 1.Spalte ===============================================================================
+  -- =============================================================================================== 
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+05, wgt.zone.y+22, "GSpd", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+005, wgt.zone.y+20, "GSpd", CUSTOM_COLOR)
     
   if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+15, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+15, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+15, round(GSpd,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+15, round(GSpdmaxsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+20, round(GSpd,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+20, round(GSpdmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+201, wgt.zone.y+20, "km/h", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+20, "km/h", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+33, "max", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+101, wgt.zone.y+18, "km/h", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+18, "km/h", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+27, "max", SMLSIZE + CUSTOM_COLOR)
   
-  -- 2. SENSOR Zeile ===============================================================================
+  -- 1. SENSOR Zeile 2.Spalte ======================================================================
+  -- =============================================================================================== 
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+20, "Start-Position", SMLSIZE + CUSTOM_COLOR)
+    
+  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+  if gpsValuelat1 == "no Data" then
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+35, "- - ", CUSTOM_COLOR + RIGHT)
+  else
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+20, gpsValuelat1, SMLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+35, gpsValuelon1, SMLSIZE + CUSTOM_COLOR + RIGHT)
+  end
+  -- lcd.drawText(wgt.zone.x+291, wgt.zone.y+18, "", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+18, "", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+27, "", SMLSIZE + CUSTOM_COLOR)
+    
+  -- 2. SENSOR Zeile 1.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+05, wgt.zone.y+52, "GAlt NN", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+005, wgt.zone.y+50, "GAlt NN", CUSTOM_COLOR)
     
   if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+43, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+43, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+50, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+50, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+43, round(GAlt,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+43, round(GAltmaxsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+50, round(GAlt,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+50, round(GAltmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+201, wgt.zone.y+50, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+50, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+63, "max", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+101, wgt.zone.y+48, "m", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+48, "m", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+57, "max", SMLSIZE + CUSTOM_COLOR)
   
-  -- 3. SENSOR Zeile ===============================================================================
+  -- 2. SENSOR Zeile 2.Spalte ======================================================================
+  -- ===============================================================================================
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+50, "Modell-Position", SMLSIZE + CUSTOM_COLOR)
+    
+  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+  if gpsValuelat1 == "no Data" then
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+50, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+65, "- - ", CUSTOM_COLOR + RIGHT)
+  else
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+50, gpsValuelat2, SMLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+65, gpsValuelon2, SMLSIZE + CUSTOM_COLOR + RIGHT)
+  end
+  -- lcd.drawText(wgt.zone.x+291, wgt.zone.y+48, "", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+48, "", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+57, "", SMLSIZE + CUSTOM_COLOR)
+
+  -- 3. SENSOR Zeile 1.Spalte ======================================================================
+  -- ===============================================================================================
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  lcd.drawText(wgt.zone.x+005, wgt.zone.y+80,"GAlt Gnd", CUSTOM_COLOR)
+  
+  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+  if GAltmaxsave == 0 then
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
+  else
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+80, round(GAl2,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+80, round(GAl2maxsave,0), CUSTOM_COLOR + RIGHT)
+  end
+  lcd.drawText(wgt.zone.x+101, wgt.zone.y+78, "m", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+78, "m", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+87, "max", SMLSIZE + CUSTOM_COLOR)
+  
+  -- 3. SENSOR Zeile 2.Spalte ======================================================================
+  -- ===============================================================================================
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+80, "geflogene Strecke", SMLSIZE + CUSTOM_COLOR)
+  
+  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+  if GAltmaxsave == 0 and UseCapacitySensor ~=0 then
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
+  else
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+80, round(Track,0), CUSTOM_COLOR + RIGHT)
+  end
+  lcd.drawText(wgt.zone.x+376, wgt.zone.y+78, "m", SMLSIZE + CUSTOM_COLOR)
+  
+  -- 4. SENSOR Zeile 1.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)  
-  lcd.drawText(wgt.zone.x+05, wgt.zone.y+83, "GAlt Gnd", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+005, wgt.zone.y+110, "Dist Gnd", CUSTOM_COLOR)
     
   if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+72, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+72, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+72, round(GAl2,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+72, round(GAl2maxsave,0), DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+110, DisG, CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+110, DisGmaxsave, CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+201, wgt.zone.y+79, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+79, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+92, "max", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+101, wgt.zone.y+108, "m", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+108, "m", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+117, "max", SMLSIZE + CUSTOM_COLOR)
   
-  -- 4. SENSOR Zeile ===============================================================================
+  -- 4. SENSOR Zeile 2.Spalte ======================================================================
+  -- =============================================================================================== 
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+110, "Satelliten", SMLSIZE + CUSTOM_COLOR)
+    
+  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+  if SatsSeen ~= 1 then
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
+  else
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+110, Satssave, CUSTOM_COLOR + RIGHT)
+  end
+  -- lcd.drawText(wgt.zone.x+291, wgt.zone.y+108, "", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+108, "", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+117, "", SMLSIZE + CUSTOM_COLOR)
+  
+  -- 5. SENSOR Zeile 1.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)  
-  lcd.drawText(wgt.zone.x+05, wgt.zone.y+114, "Dist Gnd", CUSTOM_COLOR)
-  
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end  
+  lcd.drawText(wgt.zone.x+05, wgt.zone.y+140, "Dist Mod", CUSTOM_COLOR)
+    
+  if nodataGAlt == 1 or nodataAmp ==1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+101, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+101, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+140, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+140, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+101, DisG, DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+101, DisGmaxsave, DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+100, wgt.zone.y+140, DisM, CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+155, wgt.zone.y+140, DisMmaxsave, CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+201, wgt.zone.y+108, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+108, "m", SMLSIZE + CUSTOM_COLOR)  
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+121, "max", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+101, wgt.zone.y+138, "m", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+138, "m", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+156, wgt.zone.y+147, "max", SMLSIZE + CUSTOM_COLOR)
   
-  -- 5. SENSOR Zeile ===============================================================================
+  -- 5. SENSOR Zeile 2.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+05, wgt.zone.y+145, "Dist Mod", CUSTOM_COLOR)
-  
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+140, "PDOP (ideal <2.00)", SMLSIZE + CUSTOM_COLOR)
+    
   if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+130, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+130, "- - ", DBLSIZE + CUSTOM_COLOR + RIGHT)
+  if PDOPSeen ~= 1 then
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+140, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+130, DisM, DBLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+355, wgt.zone.y+130, DisMmaxsave, DBLSIZE + CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+375, wgt.zone.y+140, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+201, wgt.zone.y+137, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+137, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+150, "max", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+291, wgt.zone.y+138, "", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+138, "", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+147, "", SMLSIZE + CUSTOM_COLOR)
+
   -- ===============================================================================================
   -- ===============================================================================================
-   
+
+
 end
 
 function refresh(wgt)
