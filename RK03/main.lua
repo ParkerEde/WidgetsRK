@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.01"
+local RKWidgetVersion = "1.1.02"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -32,9 +32,6 @@ local ModelRxID2 = -1
 local ModelRxIDVorher = -1
 local ModelRxIDNachher = -1
 local Modelname = 0
-local UBat = 0
-local cellcountinit = 0
-local cellcount = 0
 
 local GSpd = 0
 local GSpdmaxsave = 0
@@ -119,23 +116,7 @@ local function getSensors(wgt)
 	
 end
 
-local function cellcountdetect(wgt)
-    cellcountinit = 0
-	if      UBat >  2.0 and UBat <=  4.4 then cellcountinit =  1
-	 elseif UBat >  4.4 and UBat <=  8.6 then cellcountinit =  2
-	 elseif UBat >  8.6 and UBat <= 12.8 then cellcountinit =  3
-	 elseif UBat > 12.8 and UBat <= 17.1 then cellcountinit =  4
-	 elseif UBat > 17.1 and UBat <= 21.3 then cellcountinit =  5
-	 elseif UBat > 21.3 and UBat <= 25.6 then cellcountinit =  6
-	 elseif UBat > 25.6 and UBat <= 29.8 then cellcountinit =  7
-	 elseif UBat > 29.8 and UBat <= 34.1 then cellcountinit =  8
-	 elseif UBat > 34.1 and UBat <= 38.3 then cellcountinit =  9
-	 elseif UBat > 38.3 and UBat <= 42.6 then cellcountinit = 10
-	 elseif UBat > 42.6 and UBat <= 46.8 then cellcountinit = 11
-	 elseif UBat > 46.8 and UBat <= 51.1 then cellcountinit = 12
-	end
-	if cellcount == 0 or cellcountinit > cellcount then cellcount = cellcountinit end
-end
+
 
   -- GPS Daten ermitteln und DisG und DisM berechnen ========================================
   -- <BEGIN> ================================================================================
@@ -227,9 +208,7 @@ local function resetvalues(wgt)
 			gpsValuelat2 = "no Data"
 			gpsValuelon2 = "no Data"
 			gpsValuelat3 = "no Data"
-			gpsValuelon3 = "no Data"	
-			cellcount = 0
-			cellcountinit = 0
+			gpsValuelon3 = "no Data"
 			GSpdmaxsave = 0
 			GAltmaxsave = 0
 			GAltOffsetdone = 0
@@ -385,20 +364,21 @@ end
 --- Size is 390x172 1/1
 --- Size is 460x252 1/1 (no sliders/trim/topbar)
 local function refreshZoneXLarge(wgt)
-  
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  Modelname = model.getInfo()
-  lcd.drawText(wgt.zone.x+00, wgt.zone.y, Modelname.name, SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+105, wgt.zone.y, "Zellen: "..cellcount, SMLSIZE + INVERS + CUSTOM_COLOR)
-  mytimer1=model.getTimer(0).value
-  lcd.drawText(wgt.zone.x+175, wgt.zone.y,"Motor:   ", SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawTimer(wgt.zone.x+223, wgt.zone.y,mytimer1, SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+325, wgt.zone.y,"RxID: " .. ModelRxIDVorher, SMLSIZE + INVERS + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y,"V" .. RKWidgetVersion, SMLSIZE + INVERS + CUSTOM_COLOR + RIGHT)
-  
+	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+	lcd.drawFilledRectangle(wgt.zone.x+00, wgt.zone.y, 109, 19, CUSTOM_COLOR)
+	Modelname = model.getInfo()
+	lcd.drawText(wgt.zone.x+00, wgt.zone.y, Modelname.name, SMLSIZE + INVERS + CUSTOM_COLOR)
+	mytimer1=model.getTimer(0).value
+	lcd.drawText(wgt.zone.x+115, wgt.zone.y,"Motor:   ", SMLSIZE + INVERS + CUSTOM_COLOR)
+	lcd.drawTimer(wgt.zone.x+160, wgt.zone.y,mytimer1, SMLSIZE + INVERS + CUSTOM_COLOR)
+	lcd.drawFilledRectangle(wgt.zone.x+199, wgt.zone.y, 49, 19, CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+199, wgt.zone.y,"RxID: " .. ModelRxIDVorher, SMLSIZE + INVERS + CUSTOM_COLOR)
+	lcd.drawFilledRectangle(wgt.zone.x+252, wgt.zone.y, 140, 19, CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+254, wgt.zone.y,"RK03-Widget V" .. RKWidgetVersion, SMLSIZE + INVERS + CUSTOM_COLOR)
   --lcd.drawLine(45, 72, 435, 72, 255, 0)
   
-  -- 1. SENSOR Zeile 1.Spalte ===============================================================================
+  lcd.drawFilledRectangle(wgt.zone.x+194, wgt.zone.y+22, 2, 150, CUSTOM_COLOR)
+  -- 1. SENSOR Zeile 1.Spalte ======================================================================
   -- =============================================================================================== 
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   lcd.drawText(wgt.zone.x+005, wgt.zone.y+20, "GSpd", CUSTOM_COLOR)
@@ -583,10 +563,6 @@ function refresh(wgt)
   -- ===============================================================================================
   savevalues(wgt)
   
-  -- Anzahl Zellen im Vordergrund ermitteln ========================================================
-  -- ===============================================================================================
-  cellcountdetect(wgt)
-  
   -- RESET nach "LS61" oder Modellwechsel eigener Screen ============================================
   -- ===============================================================================================
   resetvalues(wgt)
@@ -614,10 +590,6 @@ local function background(wgt)
   -- MinMax Werte im Hintergrund speichern =========================================================
   -- ===============================================================================================   
   savevalues(wgt)  
-
-  -- Anzahl Zellen im Hintergrund ermitteln ========================================================
-  -- ===============================================================================================
-  cellcountdetect(wgt)
   
   -- RESET nach "LS61" wenn im Hintergrund ==========================================================
   -- ===============================================================================================

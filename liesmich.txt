@@ -1,13 +1,12 @@
 Voraussetzung:
 ==============
 
-- FrSky Horus X10(S) oder Horus X12(S) mit EdgeTx 2.9.0 oder neuer.
+- FrSky Horus X10(S) oder Horus X12(S) mit EdgeTx 2.10.0 oder neuer.
 - ein logischer Schalter, der zum resetten benutzt wird (standardmäßig wird auf LS61 reagiert, ist aber in der "RK-Settings\RK-Settings.lua" über PC änderbar)
 - das int. oder ext. HF Modul muss aktiv sein und die Empfänger ID darf nicht 0 sein, damit der manuelle Reset bzw. der Autoreset (beim Modellwechsel) funktioniert
 - die Verzeichnisse "RK01", "RK02", "RK03" und "RK-Settings" müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
 - aus dem Verzeichnis "SOUNDS de Sprachdateien" müssen die WAV Dateien auf die SD Karte ins Verzeichnis "SOUNDS\de" kopiert werden
 - die drei Widgets RK01, RK02 und RK03 müssen jeweils einem Vollbildscreen zugewiesen werden
-- auf einer weiteren Seite eignet sich ein zwei Feld Bildschirm (Trimmer, Schieber und Flugphase deaktiviert), indem eine Hälfte z.B. die Outputs und die andere Hälfte RK03 zugewiesen wird.
 
 
 Sensoreinrichtung:
@@ -20,7 +19,7 @@ Sensoreinrichtung:
 5. den "GSpd" Sensor editieren und auf die Einheit "kmh" ändern
 
 HINWEIS: es können natürlich auch andere Sensoren angeschlossen werden. Hier die Liste, mit welchen Sensornamen die Widgets arbeiten:
-RSSI, RxBt, VFR, VFAS, Curr, A4 oder EscC, Alt, VSpd, GPS, GAlt, GSpd, Tmp1 oder 5100, Tmp2 oder 5101
+RSSI, RxBt, VFR, VFAS, Curr, A4 oder EscC oder Capa oder 5123, Alt, VSpd, GPS, GAlt, GSpd, Tmp1, RPM, Sats oder 5100, PDOP oder 5101
 
 
 RSSI = RSSI, Received Signal Strength Indication (Empfänger)
@@ -59,7 +58,7 @@ Features RK01, RK02, RK03 Widgets:
 	> Schalter "SC" und "SD" im Konfigurationsteil der "RK-Settings\RK-Settings.lua" einstellbar
 	> die Telemetrieansagen-Wiederholzeit (Standard 30 Sekunden) ist per "Widget Einstellungen" einstellbar
 
-- automatische LiPo Zellenzahl Ermittlung bis 12S
+- automatische LiPo Zellenzahl Ermittlung bis 12S (ab 1.1.02 nur wenn der Motorschutzschalter gesichert ist, damit im Flug bei Spannungspsitzen die Zellenzahl nicht plötzlich höher wird)
 
 - Anzeige der durchschnittlichen Einzelzellenspannung, sobald VFAS vorhanden ist
 

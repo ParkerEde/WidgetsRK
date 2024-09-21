@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.01"
+local RKWidgetVersion = "1.1.02"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 if (settings ~= nil) then
@@ -82,6 +82,9 @@ local newtime = 0
 local lasttime_sc = 0
 local lasttime_sd = 0
 local timestamprefresh = 0
+
+local Track_switch = 0
+local Track_switch_pos = 0
 
 local UBATValuecount=1
 local UBATValue={}
@@ -168,21 +171,34 @@ local function getSensors(wgt)
 end
 
 local function cellcountdetect(wgt)
-    cellcountinit = 0
-	if      UBat >  2.0 and UBat <=  4.4 then cellcountinit =  1
-	 elseif UBat >  4.4 and UBat <=  8.6 then cellcountinit =  2
-	 elseif UBat >  8.6 and UBat <= 12.8 then cellcountinit =  3
-	 elseif UBat > 12.8 and UBat <= 17.1 then cellcountinit =  4
-	 elseif UBat > 17.1 and UBat <= 21.3 then cellcountinit =  5
-	 elseif UBat > 21.3 and UBat <= 25.6 then cellcountinit =  6
-	 elseif UBat > 25.6 and UBat <= 29.8 then cellcountinit =  7
-	 elseif UBat > 29.8 and UBat <= 34.1 then cellcountinit =  8
-	 elseif UBat > 34.1 and UBat <= 38.3 then cellcountinit =  9
-	 elseif UBat > 38.3 and UBat <= 42.6 then cellcountinit = 10
-	 elseif UBat > 42.6 and UBat <= 46.8 then cellcountinit = 11
-	 elseif UBat > 46.8 and UBat <= 51.1 then cellcountinit = 12
+	Track_switch = getValue(activate_tracking_switch)
+	Track_switch_pos = activate_tracking_switch_position
+	-- print("Track_switch: " .. Track_switch)
+	-- print("Track_switch_pos: " .. Track_switch_pos)
+  
+	if activate_tracking_switch_invers == 0 then
+		trackswitchcondition = Track_switch == Track_switch_pos
+	else
+		trackswitchcondition = Track_switch ~= Track_switch_pos
 	end
+	-- print(trackswitchcondition)
+	if not trackswitchcondition then
+		cellcountinit = 0
+		if	   UBat >  2.0 and UBat <=  4.4 then cellcountinit =  1
+		elseif UBat >  4.4 and UBat <=  8.6 then cellcountinit =  2
+		elseif UBat >  8.6 and UBat <= 12.8 then cellcountinit =  3
+		elseif UBat > 12.8 and UBat <= 17.1 then cellcountinit =  4
+		elseif UBat > 17.1 and UBat <= 21.3 then cellcountinit =  5
+		elseif UBat > 21.3 and UBat <= 25.6 then cellcountinit =  6
+		elseif UBat > 25.6 and UBat <= 29.8 then cellcountinit =  7
+		elseif UBat > 29.8 and UBat <= 34.1 then cellcountinit =  8
+		elseif UBat > 34.1 and UBat <= 38.3 then cellcountinit =  9
+		elseif UBat > 38.3 and UBat <= 42.6 then cellcountinit = 10
+		elseif UBat > 42.6 and UBat <= 46.8 then cellcountinit = 11
+		elseif UBat > 46.8 and UBat <= 51.1 then cellcountinit = 12
+		end
 	if cellcount == 0 or cellcountinit > cellcount then cellcount = cellcountinit end
+	end
 end
 
 local function cellaverage(voltage)
@@ -423,56 +439,29 @@ end
 --- Size is 192x152 1/2
 local function refreshZoneLarge(wgt)
   -- print("large 1/2")
-	offsetx=5
-	offsety=45
-	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-045, "RPM:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety-000, "Tmp1:", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+045, "", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+090, "", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+115, "", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+140, "", SMLSIZE + CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+offsetx+005, wgt.zone.y+offsety+165, "", SMLSIZE + CUSTOM_COLOR)
-	
-	if RPMmaxsave > 0 
-	then
-		if nodataRPM == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
-		lcd.drawText(wgt.zone.x+offsetx+100, wgt.zone.y+offsety-045, round(RPM,0).." U/min", CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+100, wgt.zone.y+offsety-025, round(RPMmaxsave,0).." U/min max", CUSTOM_COLOR)
-	else
-		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-045, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-	end
-	
-	if Tmp1maxsave > 0 
-	then
-		if nodataTmp1 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) else lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor) end
-		lcd.drawText(wgt.zone.x+offsetx+100, wgt.zone.y+offsety-000, round(Tmp1,0).." Grad C", CUSTOM_COLOR)
-		lcd.drawText(wgt.zone.x+offsetx+100, wgt.zone.y+offsety+020, round(Tmp1maxsave,0).." Grad C max", CUSTOM_COLOR)
-	else
-		lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor)
-		lcd.drawText(wgt.zone.x+offsetx+115, wgt.zone.y+offsety-000, "keine Daten", SMLSIZE + CUSTOM_COLOR)
-	end
-	
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  lcd.drawText (wgt.zone.x, wgt.zone.y, "nur Vollbild", SMLSIZE + CUSTOM_COLOR)
 end
 
 
 --- Size is 390x172 1/1
 --- Size is 460x252 1/1 (no sliders/trim/topbar)
 local function refreshZoneXLarge(wgt)
-  
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  Modelname = model.getInfo()
-  lcd.drawText(wgt.zone.x+00, wgt.zone.y, Modelname.name, SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+105, wgt.zone.y, "Zellen: "..cellcount, SMLSIZE + INVERS + CUSTOM_COLOR)
-  mytimer1=model.getTimer(0).value
-  lcd.drawText(wgt.zone.x+175, wgt.zone.y,"Motor:   ", SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawTimer(wgt.zone.x+223, wgt.zone.y,mytimer1, SMLSIZE + INVERS + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+325, wgt.zone.y,"RxID: " .. ModelRxIDVorher, SMLSIZE + INVERS + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y,"V" .. RKWidgetVersion, SMLSIZE + INVERS + CUSTOM_COLOR + RIGHT)
+	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+	lcd.drawFilledRectangle(wgt.zone.x+00, wgt.zone.y, 109, 19, CUSTOM_COLOR)
+	Modelname = model.getInfo()
+	lcd.drawText(wgt.zone.x+00, wgt.zone.y, Modelname.name, SMLSIZE + INVERS + CUSTOM_COLOR)
+	mytimer1=model.getTimer(0).value
+	lcd.drawText(wgt.zone.x+115, wgt.zone.y,"Motor:   ", SMLSIZE + INVERS + CUSTOM_COLOR)
+	lcd.drawTimer(wgt.zone.x+160, wgt.zone.y,mytimer1, SMLSIZE + INVERS + CUSTOM_COLOR)
+	lcd.drawFilledRectangle(wgt.zone.x+199, wgt.zone.y, 49, 19, CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+199, wgt.zone.y,"RxID: " .. ModelRxIDVorher, SMLSIZE + INVERS + CUSTOM_COLOR)
+	lcd.drawFilledRectangle(wgt.zone.x+252, wgt.zone.y, 140, 19, CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+254, wgt.zone.y,"RK01-Widget V" .. RKWidgetVersion, SMLSIZE + INVERS + CUSTOM_COLOR)
   --lcd.drawLine(45, 72, 435, 72, 255, 0)
   
-  -- 1. SENSOR Zeile 1.Spalte ===============================================================================
+	lcd.drawFilledRectangle(wgt.zone.x+194, wgt.zone.y+22, 2, 150, CUSTOM_COLOR)
+  -- 1. SENSOR Zeile 1.Spalte ======================================================================
   -- =============================================================================================== 
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   lcd.drawText(wgt.zone.x+005, wgt.zone.y+20, "RxBat", CUSTOM_COLOR)
@@ -543,7 +532,7 @@ local function refreshZoneXLarge(wgt)
   -- 3. SENSOR Zeile 1.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+005, wgt.zone.y+80,"Zelle", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+005, wgt.zone.y+80,"LiPo/"..cellcount, CUSTOM_COLOR)
   
   if nodataUBat == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if UBatminsave == 0 then
@@ -560,7 +549,7 @@ local function refreshZoneXLarge(wgt)
   -- 3. SENSOR Zeile 2.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+80, "Kapa", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+80, "Verbrauch", CUSTOM_COLOR)
   
   if nodatamAh == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if mAhmaxsave == 0 and UseCapacitySensor ~=0 then

@@ -1,3 +1,7 @@
+Version 1.1.02
+=============
+Die Zellenermittlung gibt es nur noch auf RK01. Diese wird auch nur noch ausgeführt, wenn der Motor gesichert ist. InversZeile überarbeitet
+
 Version 1.1.01
 =============
 RK01 RK02 und RK03 so umgebaut, dass nun mehr Daten auf den Screen passen. Nun wird auch Tmp1 und RPM, als auch die verbrauchte Kapazität auf RK01 mit angezeigt.
