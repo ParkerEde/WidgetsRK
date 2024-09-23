@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.02"
+local RKWidgetVersion = "1.1.03"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -34,10 +34,12 @@ local ModelRxIDNachher = -1
 local Modelname = 0
 
 local GSpd = 0
+local GSpdraw = 0
 local GSpdmaxsave = 0
 
 local nodataGAlt = 1
 local GAlt = 0
+local GAltraw = 0
 local GAltmaxsave = 0
 local GAltOffsetdone = 0
 local GAltOffset = 0
@@ -58,9 +60,11 @@ local Track_switch = 0
 local Track_switch_pos = 0
 
 local Sats = 0
+local Satsraw = 0
 local Satssave = 0
 local SatsSeen = 0
 local PDOP = 0
+local PDOPraw = 0
 local PDOPsave = 0
 local PDOPSeen = 0
 local SatsSensor = -1
@@ -76,32 +80,36 @@ local function round(num, decimal)
 end
 	
 local function getSensors(wgt)
-	RXBat = getValue("RxBt")
-	UBat = getValue("VFAS")
-	GSpd = getValue("GSpd")
-	GAlt = getValue("GAlt")
+	RSSI = getValue("RSSI")
+	GSpdraw = getValue("GSpd")
+	if GSpdraw < 300 then GSpd = GSpdraw end
+	
+	GAltraw = getValue("GAlt")
+	if GAltraw < 10000 then GAlt = GAltraw end
 	
 	if getValue("Sats") > 0
 	then
-		Sats = getValue("Sats") 
+		Satsraw = getValue("Sats") 
 	else
 		if SatsSensor == -1 then
 			SatsSensor = getSourceIndex(CHAR_TELEMETRY.."5100")
 		else
-			if SatsSensor ~= nil then Sats = getValue(SatsSensor) end
+			if SatsSensor ~= nil then Satsraw = getValue(SatsSensor) end
 		end
 	end
+	if Satsraw < 10000 then Sats = Satsraw end
 	
 	if getValue("PDOP") > 0 
 	then
-		PDOP = getValue("PDOP")
+		PDOPraw = getValue("PDOP")
 	else
 		if PDOPSensor == -1 then
 			PDOPSensor = getSourceIndex(CHAR_TELEMETRY.."5101")
 		else
-			if PDOPSensor ~= nil then PDOP = getValue(PDOPSensor) end
+			if PDOPSensor ~= nil then PDOPraw = getValue(PDOPSensor) end
 		end
 	end
+	if PDOPraw < 10000 then PDOP = PDOPraw end
 	
 	Track_switch = getValue(activate_tracking_switch)
 	Track_switch_pos = activate_tracking_switch_position
@@ -242,11 +250,11 @@ local function savevalues(wgt)
 	timestamprefresh = newtimerefresh
   	getSensors(wgt) 
 
-	if GSpd > GSpdmaxsave and GSpd < 1000 then 
+	if GSpd > GSpdmaxsave then 
 		GSpdmaxsave = GSpd
 	end
 	
-	if Sats > 0 and Sats < 1000 then 
+	if Sats > 0 then 
 		Satssave = Sats - 100
 		if Satssave < 0 then
 			Satssave = 0
@@ -254,12 +262,12 @@ local function savevalues(wgt)
 		SatsSeen = 1
 	end
 
-	if PDOP > 0 and PDOP < 10000 then 
+	if PDOP > 0 then 
 		PDOPsave = PDOP /10
 		PDOPSeen = 1
 	end
 
-	if GAlt > GAltmaxsave and GAlt < 10000 then
+	if GAlt > GAltmaxsave then
 		GAltmaxsave = GAlt
 	else
 		if GAltmaxsave == 0 then
@@ -273,10 +281,10 @@ local function savevalues(wgt)
 		nodataGAlt = 0
 	end
   
-	if GAltOffsetdone == 1 and RXBat > 0 then
+	if GAltOffsetdone == 1 and RSSI > 0 then
 		GAl2 = GAlt - GAltOffset
 	end	
-	if RXBat == 0 then
+	if RSSI == 0 then
 	GAl2 = 0
 	DisG = 0
 	DisM = 0
@@ -469,7 +477,7 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+200, wgt.zone.y+80, "geflogene Strecke", SMLSIZE + CUSTOM_COLOR)
   
   if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if GAltmaxsave == 0 and UseCapacitySensor ~=0 then
+  if GAltmaxsave == 0 then
   lcd.drawText(wgt.zone.x+375, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
   else
   lcd.drawText(wgt.zone.x+375, wgt.zone.y+80, round(Track,0), CUSTOM_COLOR + RIGHT)

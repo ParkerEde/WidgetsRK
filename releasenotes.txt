@@ -1,3 +1,8 @@
+Version 1.1.03
+=============
+RK01, RK02 und RK03 prüfen nun die gelesenen Sensordaten auf Plausibilität, bevor sie als min/max gespeichert werden. 
+Bugfix aus 1.1.01, die Kapazität wurde nur berechnet, wenn RK01 im Vordergrund war. 
+
 Version 1.1.02
 =============
 Die Zellenermittlung gibt es nur noch auf RK01. Diese wird auch nur noch ausgeführt, wenn der Motor gesichert ist. InversZeile überarbeitet

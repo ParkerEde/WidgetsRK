@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.02"
+local RKWidgetVersion = "1.1.03"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -32,11 +32,13 @@ end
 
 local nodataAlt =1
 local Alt = 0
+local Altraw = 0
 local Altmax = 0
 local Altmaxsave = 0
 
 local nodataVSpd =1
 local VSpd = 0
+local VSpdraw = 0
 local VSpdmax = 0
 local VSpdmaxsave = 0
 local VSpdmin = 0
@@ -80,11 +82,11 @@ local function mskmh(nummskmh)
 end
 
 local function getSensors(wgt)
-	Alt = getValue("Alt")
+	Altraw = getValue("Alt")
+	if Altraw < 1000 then Alt = Altraw end
 	Altmax = getValue("Alt+")
-	VSpd = getValue("VSpd")
-	VSpdmax = getValue("VSpd+")
-	VSpdmin = getValue("VSpd-")
+	VSpdraw = getValue("VSpd")
+	if VSpdraw > -1000 and VSpdraw < 1000 then VSpd = VSpdraw end
 	RSSI = getValue("RSSI")
 	RSSImin = getValue("RSSI-")
 	VFR = getValue("VFR")
@@ -187,35 +189,26 @@ local function savevalues(wgt)
  -- print("------------------------")
  timestamprefresh = newtimerefresh
  
-  getSensors(wgt)  
-
-  if RXBatmin ~= 0
+  getSensors(wgt)
+  if Altmax ~= 0 
     then
-      RXBatminsave = RXBatmin
-      nodataRXBat = 0
-	  else
-	  nodataRXBat = 1	  
-    end
-
-  if Altmax ~= 0
-    then
-	  Altmaxsave = Altmax
+	  if Alt > Altmaxsave then Altmaxsave = Alt end
 	  nodataAlt = 0
 	  else
 	  nodataAlt = 1
     end
 
-  if VSpdmax > 0
+  if VSpd > 0 
     then
-      VSpdmaxsave = VSpdmax
+      if VSpd > VSpdmaxsave then VSpdmaxsave = VSpd end
 	  nodataVSpd = 0
 	  else
 	  nodataVSpd = 1
     end
   
-  if VSpdmin < 0
+  if VSpd < 0 
     then
-      VSpdminsave = VSpdmin
+      if VSpd < VSpdminsave then VSpdminsave = VSpd end
 	end
   	  
 	if RSSImin ~= 0

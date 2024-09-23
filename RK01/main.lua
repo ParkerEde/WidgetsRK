@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.02"
+local RKWidgetVersion = "1.1.03"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 if (settings ~= nil) then
@@ -32,26 +32,31 @@ end
 
 local nodataRXBat = 1
 local RXBat = 0
+local RXBatraw = 0
 local RXBatmin = 0
 local RXBatminsave = 0
 
 local nodataUBat = 1
 local UBat = 0
+local UBatraw = 0
 local UBatmin = 0
 local UBatminsave = 0
 
 local nodataAmp = 1
 local Amp = 0
+local Ampraw = 0
 local Ampmax = 0
 local Ampmaxsave = 0
 
 local nodataTmp1 = 1
 local Tmp1 = 0
+local Tmp1raw = 0
 local Tmp1max = 0
 local Tmp1maxsave = 0
 
 local nodataRPM = 1
 local RPM = 0
+local RPMraw = 0
 local RPMmax = 0
 local RPMmaxsave = 0
 
@@ -59,7 +64,7 @@ local Wattmaxsave = 0
 
 local nodatamAh = 1
 local mAh = 0
--- local mAhmax = 0
+local mAhraw = 0
 local mAhmaxsave = 0
 
 local CapaSensorisA4 = 0
@@ -118,6 +123,25 @@ local function round(num, decimal)
 	end
 end
 
+local function mAhcalculate(current)
+    newtime = math.floor(getTime()/100)
+	if Amp > 0 and UBat > 0 or mAhmaxsave > 0 and UBat > 0 then
+		if newtime ~= timestamp then
+			mAhcalc = (current / 3.6) + mAhcalc
+			mAhmaxsave = mAhcalc
+			nodatamAh = 0
+			timestamp = newtime
+			return mAhmaxsave
+		else
+			nodatamAh = 0
+			return mAhmaxsave
+		end
+	else
+		nodatamAh = 1
+		return mAhmaxsave
+	end
+end
+
 local function mskmh(nummskmh)
     return (nummskmh * 3.6)
 end
@@ -127,46 +151,52 @@ local function calcWatt(volt, amps)
 end
 
 local function getSensors(wgt)
-	UBat = getValue("VFAS")
+	UBatraw = getValue("VFAS")
+	if UBatraw < 1000 then UBat = UBatraw end
 	UBatmin = getValue("VFAS-")
-	Amp = getValue("Curr")
+	Ampraw = getValue("Curr")
+	if Ampraw < 1000 then Amp = Ampraw end
 	Ampmax = getValue("Curr+")
-	RXBat = getValue("RxBt")
+	RXBatraw = getValue("RxBt")
+	if RXBatraw < 1000 then RXBat = RXBatraw end
 	RXBatmin = getValue("RxBt-")
-	Tmp1 = getValue("Tmp1")
+	Tmp1raw = getValue("Tmp1")
+	if Tmp1raw < 1000 then Tmp1 = Tmp1raw end
 	Tmp1max = getValue("Tmp1+")
-	RPM = getValue("RPM")
+	RPMraw = getValue("RPM")
+	if RPMraw < 100000 then RPM = RPMraw end
 	RPMmax = getValue("RPM+")
 	
 	if wgt.options.UseCapacitySensor == 1 then
-	if getValue("A4") ~= 0 or CapaSensorisA4 == 1
-		then
-			CapaSensorisA4 = 1
-			mAh = getValue("A4")
-			-- print("A4: " )
-		
-	elseif getValue("EscC") ~= 0 or CapaSensorisEscC == 1
-		then
-			CapaSensorisEscC = 1
-			mAh = getValue("EscC")
-			-- print("EscC: " )
-	
-	elseif getValue("Capa") ~= 0 or CapaSensorisCapa == 1
-		then
-			CapaSensorisCapa = 1
-			mAh = getValue("Capa")
-			-- print("Capa: " )			
+		if getValue("A4") ~= 0 or CapaSensorisA4 == 1
+			then
+				CapaSensorisA4 = 1
+				mAhraw = getValue("A4")
+				-- print("A4: " )
 			
-	elseif getSourceIndex(CHAR_TELEMETRY.."5123") ~= 0 or CapaSensoris5123 == 1
-		then
-			CapaSensoris5123 = 1
-			if CapaSensor == -1 then
-				CapaSensor = getSourceIndex(CHAR_TELEMETRY.."5123")
-			else
-				if CapaSensor ~= nil then mAh = getValue(CapaSensor) end
-			end
-			-- print("5123: " )
-	end
+		elseif getValue("EscC") ~= 0 or CapaSensorisEscC == 1
+			then
+				CapaSensorisEscC = 1
+				mAhraw = getValue("EscC")
+				-- print("EscC: " )
+		
+		elseif getValue("Capa") ~= 0 or CapaSensorisCapa == 1
+			then
+				CapaSensorisCapa = 1
+				mAhraw = getValue("Capa")
+				-- print("Capa: " )			
+				
+		elseif getSourceIndex(CHAR_TELEMETRY.."5123") ~= 0 or CapaSensoris5123 == 1
+			then
+				CapaSensoris5123 = 1
+				if CapaSensor == -1 then
+					CapaSensor = getSourceIndex(CHAR_TELEMETRY.."5123")
+				else
+					if CapaSensor ~= nil then mAhraw = getValue(CapaSensor) end
+				end
+				-- print("5123: " )
+		end
+		if mAhraw < 100000 then mAh = mAhraw end
 	end
 end
 
@@ -223,25 +253,6 @@ local function batlow(wgt)
 	   playFile("quland.wav") -- sofortige Landung empfohlen
 	   alertdone = 1
 	 end
-end
-
-local function mAhcalculate(current)
-    newtime = math.floor(getTime()/100)
-	if Amp > 0 and UBat > 0 or mAhmaxsave > 0 and UBat > 0 then
-		if newtime ~= timestamp then
-			mAhcalc = (current / 3.6) + mAhcalc
-			mAhmaxsave = mAhcalc
-			nodatamAh = 0
-			timestamp = newtime
-			return mAhmaxsave
-		else
-			nodatamAh = 0
-			return mAhmaxsave
-		end
-	else
-		nodatamAh = 1
-		return mAhmaxsave
-	end
 end
 
 local function voiceoutput(wgt)
@@ -343,75 +354,75 @@ local function resetvalues(wgt)
 end
 
 local function savevalues(wgt)
- newtimerefresh = math.floor(getTime()/100)
- if newtimerefresh ~= timestamprefresh then
- -- print("timestamprefresh: " .. timestamprefresh)
- -- print("newtimerefresh: " .. newtimerefresh)
- -- print("------------------------")
- timestamprefresh = newtimerefresh
- 
-	getSensors(wgt)  
-	if UBatmin ~= 0 or UBat ~= 0 then
-		nodataUBat = 0
-		UBatsmooth = add_value(UBat)
-		if UBatsmooth < UBatminsave then
-			UBatminsave = UBatsmooth
-		-- UBatminsave = add_value(UBat)			
+	newtimerefresh = math.floor(getTime()/100)
+	if newtimerefresh ~= timestamprefresh then
+		-- print("timestamprefresh: " .. timestamprefresh)
+		-- print("newtimerefresh: " .. newtimerefresh)
+		-- print("------------------------")
+		timestamprefresh = newtimerefresh
+		getSensors(wgt)  
+		if UBatmin ~= 0 or UBat ~= 0 then
+			nodataUBat = 0
+			UBatsmooth = add_value(UBat)
+			if UBatsmooth < UBatminsave then
+				UBatminsave = UBatsmooth
+				-- UBatminsave = add_value(UBat)			
+			end
+			if UBatminsave < 6.1 then
+				UBatminsave = UBat
+			end
+		else
+			nodataUBat = 1
 		end
-	  	if UBatminsave < 6.1 then
-			UBatminsave = UBat
+	
+		if Ampmax ~= 0 then
+			if Amp > Ampmaxsave then Ampmaxsave = Amp end
+			nodataAmp = 0
+		else
+			nodataAmp = 1
 		end
-	else
-		nodataUBat = 1
-	end
 	
-	if Ampmax ~= 0 then
-		Ampmaxsave = Ampmax
-		nodataAmp = 0
-	else
-		nodataAmp = 1
-	end
+		if Tmp1max ~= 0 then
+			if Tmp1 > Tmp1maxsave then Tmp1maxsave = Tmp1 end
+			nodataTmp1 = 0
+		else
+			nodataTmp1 = 1
+		end
 	
-	if Tmp1max ~= 0 then
-		Tmp1maxsave = Tmp1max
-		nodataTmp1 = 0
-	else
-		nodataTmp1 = 1
-	end
+		if RPMmax ~= 0 then
+			if RPM > RPMmaxsave then RPMmaxsave = RPM end
+			nodataRPM = 0
+		else
+			nodataRPM = 1
+		end
 	
-	if RPMmax ~= 0 then
-		RPMmaxsave = RPMmax
-		nodataRPM = 0
-	else
-		nodataRPM = 1
-	end
+		if calcWatt(UBat,Amp) > Wattmaxsave then 
+			Wattmaxsave = calcWatt(UBat,Amp)
+		end
 	
-	if calcWatt(UBat,Amp) > Wattmaxsave then 
-		Wattmaxsave = calcWatt(UBat,Amp)
-	end
-
-	if RXBatmin ~= 0 then
-		RXBatminsave = RXBatmin
-		nodataRXBat = 0
-	else
-		nodataRXBat = 1	  
-    end
+		if RXBatmin ~= 0 then
+			RXBatminsave = RXBatmin
+			nodataRXBat = 0
+		else
+			nodataRXBat = 1	  
+		end
 		
-	if UseCapacitySensor == nil then print("UseCapacitySensor = nil")
-	elseif UseCapacitySensor == 1 then
-		if mAhcalc == 0 then
-			if mAh ~= 0 then
-				-- print("mAh~=0: " .. mAh)
-				mAhmaxsave = mAh
-				nodatamAh = 0
-			else
-			nodatamAh = 1
+		if UseCapacitySensor == nil then print("UseCapacitySensor = nil")
+		elseif UseCapacitySensor == 1 then
+			if mAhcalc == 0 then
+				if mAh ~= 0 then
+					-- print("mAh~=0: " .. mAh)
+					if mAh > mAhmaxsave then mAhmaxsave = mAh end
+					nodatamAh = 0
+				else
+				nodatamAh = 1
+				end
 			end
 		end
 	end
- end
-SmoothVFAS = wgt.options.SmoothVFAS
-UseCapacitySensor = wgt.options.UseCapacitySensor
+	SmoothVFAS = wgt.options.SmoothVFAS
+	UseCapacitySensor = wgt.options.UseCapacitySensor
+	if wgt.options.UseCapacitySensor ~= 1 then mAhcalculate(Amp) end	
 end
 ------------------------------------------------------------
 
@@ -555,16 +566,7 @@ local function refreshZoneXLarge(wgt)
   if mAhmaxsave == 0 and UseCapacitySensor ~=0 then
   lcd.drawText(wgt.zone.x+355, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  	if UseCapacitySensor ~= 0 then
-		UseCapacitySensor = 1
-		-- print("UseCapacitySensor yes")
-		lcd.drawText(wgt.zone.x+ 355, wgt.zone.y+80, round(mAhmaxsave,0), CUSTOM_COLOR + RIGHT)
-	end
-	if UseCapacitySensor == 0 then
-		UseCapacitySensor = 0
-		-- print("UseCapacitySensor no")
-		lcd.drawText(wgt.zone.x+ 355, wgt.zone.y+80, round(mAhcalculate(Amp),0), CUSTOM_COLOR + RIGHT)
-	end
+  lcd.drawText(wgt.zone.x+ 355, wgt.zone.y+80, round(mAhmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
   lcd.drawText(wgt.zone.x+291, wgt.zone.y+78, "", SMLSIZE + CUSTOM_COLOR)
   lcd.drawText(wgt.zone.x+356, wgt.zone.y+78, "mAh", SMLSIZE + CUSTOM_COLOR)
