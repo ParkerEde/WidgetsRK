@@ -1,3 +1,7 @@
+Version 1.1.04
+=============
+RK04 neu eingeführt für TOP-Bar. Hiermit kann RSSI und optional VFR angezeigt werden. Der RSSI Alarm wird nur noch vom RK04 ausgeführt.
+
 Version 1.1.03
 =============
 RK01, RK02 und RK03 prüfen nun die gelesenen Sensordaten auf Plausibilität, bevor sie als min/max gespeichert werden. 
