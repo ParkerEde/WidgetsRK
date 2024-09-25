@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.04"
+local RKWidgetVersion = "1.1.05"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 if (settings ~= nil) then
@@ -7,6 +7,42 @@ if (settings ~= nil) then
      print(err)
   end
 -- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++ 
+local function printTable( t )
+ 
+    local printTable_cache = {}
+ 
+    local function sub_printTable( t, indent )
+ 
+        if ( printTable_cache[tostring(t)] ) then
+            print( indent .. "*" .. tostring(t) )
+        else
+            printTable_cache[tostring(t)] = true
+            if ( type( t ) == "table" ) then
+                for pos,val in pairs( t ) do
+                    if ( type(val) == "table" ) then
+                        print( indent .. "[" .. pos .. "] => " .. tostring( t ).. " {" )
+                        sub_printTable( val, indent .. string.rep( " ", string.len(pos)+8 ) )
+                        print( indent .. string.rep( " ", string.len(pos)+6 ) .. "}" )
+                    elseif ( type(val) == "string" ) then
+                        print( indent .. "[" .. pos .. '] => "' .. val .. '"' )
+                    else
+                        print( indent .. "[" .. pos .. "] => " .. tostring(val) )
+                    end
+                end
+            else
+                print( indent..tostring(t) )
+            end
+        end
+    end
+ 
+    if ( type(t) == "table" ) then
+        print( tostring(t) .. " {" )
+        sub_printTable( t, "  " )
+        print( "}" )
+    else
+        sub_printTable( t, "  " )
+    end
+end
 
 local options = {
   { "TextColor", COLOR, WHITE },
@@ -29,6 +65,7 @@ local function create(zone, options)
   local wgt  = { zone=zone, options=options}
   return wgt
 end
+
 
 local nodataRXBat = 1
 local RXBat = 0
@@ -343,7 +380,7 @@ local function resetvalues(wgt)
 			CapaSensorisEscC = 0
 			CapaSensorisCapa = 0
 			CapaSensoris5123 = 0
-			CapaSensor = -1			
+			CapaSensor = -1
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -419,10 +456,26 @@ local function savevalues(wgt)
 				end
 			end
 		end
+		
+		if not trackswitchcondition and RK04readysaved == 1 then
+			local file, err = io.open(filename, "a")
+			if file then
+				io.write(file, "RXBatmin (V)           : " .. round(RXBatminsave,2) .. "\nAnzahl Zellen          : " .. cellcount .. "\nUBatmin (V)            : " .. round(UBatminsave,2) .. "\nVolt pro Zelle (V)     : " .. round(cellaverage(UBatminsave),2) .. "\nAmpmax (A)             : " .. round(Ampmaxsave,2) .. "\nWattmax (W)            : " .. round(Wattmaxsave,0) .. "\nVerbrauch (mAh)        : " .. round(mAhmaxsave,0) .. "\nTMP1max (°C)           : " .. round(Tmp1maxsave,0) .. "\nRPMmax (U/min)         : " .. round(RPMmaxsave,0) .. "\n")
+				io.close(file)
+				RK01readysaved = 1
+				RK02readysaved = 0
+				RK03readysaved = 0
+				RK04readysaved = 0
+				-- print("Datei erfolgreich gespeichert: " .. filename)
+			else
+				print("Fehler beim Öffnen der Datei: " .. tostring(err))
+			end
+		end
 	end
 	SmoothVFAS = wgt.options.SmoothVFAS
 	UseCapacitySensor = wgt.options.UseCapacitySensor
-	if wgt.options.UseCapacitySensor ~= 1 then mAhcalculate(Amp) end	
+	if wgt.options.UseCapacitySensor ~= 1 then mAhcalculate(Amp) end
+	
 end
 ------------------------------------------------------------
 
@@ -692,7 +745,6 @@ function refresh(wgt)
 end
 
 local function background(wgt)
-
     -- MinMax Werte im Hintergrund speichern =========================================================
     -- ===============================================================================================   
     savevalues(wgt)  

@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.04"
+local RKWidgetVersion = "1.1.05"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -8,6 +8,42 @@ if (settings ~= nil) then
      print(err)
   end
 -- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++ 
+local function printTable( t )
+ 
+    local printTable_cache = {}
+ 
+    local function sub_printTable( t, indent )
+ 
+        if ( printTable_cache[tostring(t)] ) then
+            print( indent .. "*" .. tostring(t) )
+        else
+            printTable_cache[tostring(t)] = true
+            if ( type( t ) == "table" ) then
+                for pos,val in pairs( t ) do
+                    if ( type(val) == "table" ) then
+                        print( indent .. "[" .. pos .. "] => " .. tostring( t ).. " {" )
+                        sub_printTable( val, indent .. string.rep( " ", string.len(pos)+8 ) )
+                        print( indent .. string.rep( " ", string.len(pos)+6 ) .. "}" )
+                    elseif ( type(val) == "string" ) then
+                        print( indent .. "[" .. pos .. '] => "' .. val .. '"' )
+                    else
+                        print( indent .. "[" .. pos .. "] => " .. tostring(val) )
+                    end
+                end
+            else
+                print( indent..tostring(t) )
+            end
+        end
+    end
+ 
+    if ( type(t) == "table" ) then
+        print( tostring(t) .. " {" )
+        sub_printTable( t, "  " )
+        print( "}" )
+    else
+        sub_printTable( t, "  " )
+    end
+end
 
 local options = {
   { "TextColor", COLOR, WHITE },
@@ -327,6 +363,19 @@ local function savevalues(wgt)
 		gpsValuelat3 = "no Data"
 		gpsValuelon3 = "no Data"
 	end
+		if not trackswitchcondition and RK02readysaved == 1 then
+			local file, err = io.open(filename, "a")
+			if file then
+				io.write(file, "GSpdmax (km/h)         : " .. round(GSpdmaxsave,0) .. "\nGAltmax NN (m)         : " .. round(GAltmaxsave,0) .. "\nGAltmax Grund (m)      : " .. round(GAl2maxsave,0) .. "\nDistanz Grund (m)      : " .. DisGmaxsave .. "\nDistanz Modell (m)     : " .. DisMmaxsave .. "\nStart Position         : " .. gpsValuelat1 .. ", " .. gpsValuelon1 .. "\nModell Position        : " .. gpsValuelat2 .. ", " .. gpsValuelon2 .. "\ngeflogene Strecke (m)  : " .. round(Track,0) .. "\nAnzahl Satelliten      : " .. Satssave .. "\nPDOP (ideal <2.00)     : " .. round((PDOPsave/255)*25.5,2) .. "\n")
+				io.close(file)
+				RK01readysaved = 0
+				RK02readysaved = 0
+				RK03readysaved = 1
+				-- print("Datei erfolgreich gespeichert: " .. filename)
+			else
+				print("Fehler beim Öffnen der Datei: " .. tostring(err))
+			end
+		end
   end
 end
 

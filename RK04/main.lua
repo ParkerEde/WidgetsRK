@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.04"
+local RKWidgetVersion = "1.1.05"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -8,6 +8,42 @@ if (settings ~= nil) then
      print(err)
   end
 -- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++ 
+local function printTable( t )
+ 
+    local printTable_cache = {}
+ 
+    local function sub_printTable( t, indent )
+ 
+        if ( printTable_cache[tostring(t)] ) then
+            print( indent .. "*" .. tostring(t) )
+        else
+            printTable_cache[tostring(t)] = true
+            if ( type( t ) == "table" ) then
+                for pos,val in pairs( t ) do
+                    if ( type(val) == "table" ) then
+                        print( indent .. "[" .. pos .. "] => " .. tostring( t ).. " {" )
+                        sub_printTable( val, indent .. string.rep( " ", string.len(pos)+8 ) )
+                        print( indent .. string.rep( " ", string.len(pos)+6 ) .. "}" )
+                    elseif ( type(val) == "string" ) then
+                        print( indent .. "[" .. pos .. '] => "' .. val .. '"' )
+                    else
+                        print( indent .. "[" .. pos .. "] => " .. tostring(val) )
+                    end
+                end
+            else
+                print( indent..tostring(t) )
+            end
+        end
+    end
+ 
+    if ( type(t) == "table" ) then
+        print( tostring(t) .. " {" )
+        sub_printTable( t, "  " )
+        print( "}" )
+    else
+        sub_printTable( t, "  " )
+    end
+end
 
 local options = {
 
@@ -62,6 +98,23 @@ local function round(num, decimal)
 	end
 end
 
+local logsaved = 0
+local function getFormattedDateTime()
+    local year = getDateTime().year
+    local mon = getDateTime().mon
+    local day = getDateTime().day
+    local hour = getDateTime().hour
+    local min = getDateTime().min
+    local sec = getDateTime().sec
+    
+    -- Datum im Format YYYY-MM-DD
+    local formattedDate = string.format("%04d-%02d-%02d", year, mon, day)
+    -- Zeit im Format HH-MM-SS
+    -- local formattedTime = string.format("%02d-%02d-%02d", hour, min, sec)
+    local formattedTime = string.format("%02d%02d%02d", hour, min, sec)
+
+    return formattedDate, formattedTime
+end
 
 local function getSensors(wgt)
 	RSSI = getValue("RSSI")
@@ -152,6 +205,29 @@ local function savevalues(wgt)
 			nodataVFR = 0
 		else
 			nodataVFR = 1
+		end
+		
+		if trackswitchcondition then logsaved = logsaved +1 end
+		-- print("logsaved "..logsaved)
+		if not trackswitchcondition and logsaved < 30 then logsaved=0 end
+		if not trackswitchcondition and logsaved >= 30 then
+			logsaved=0
+			local modelInfo = model.getInfo()
+			local namemodel = modelInfo.name
+			local namefile = modelInfo.filename
+			-- print("Name vom Modell: " .. namemodel)		
+			-- print("Name von Datei: " .. namefile)		
+			local date, time = getFormattedDateTime()
+			filename = string.format("/LOGS/%s-%s-%s_RK-Widget.txt", namemodel, date, time)
+			local file, err = io.open(filename, "w")
+			if file then
+				io.write(file, "Modell                 : " .. namemodel .. "\nDateiname              : " .. namefile .. "\nRSSImin (dB)           : " .. round(RSSIminsave,0) .. "\nVFRmin (%)             : " .. round(VFRminsave,0) .. "\n")
+				io.close(file)
+				RK04readysaved = 1
+				-- print("Datei erfolgreich gespeichert: " .. filename)
+			else
+				print("Fehler beim Öffnen der Datei: " .. tostring(err))
+			end
 		end
 	end
 end

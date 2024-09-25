@@ -1,3 +1,10 @@
+Version 1.1.05
+=============
+RK04, RK01, RK02 und RK03 schreiben nun nacheinander in eine TXT-Datei mit allen ermittelten Daten, sobald der Motor gesichert wurde. 
+Der Motorschutzschalter muss daf체r mindestens 30 Sekunden frei gegeben gewesen sein. RK04 ist daf체r inital erforderlich, denn hier wird der Dateiname und Datum/Uhrzeit festgelegt.
+Das Schreiben erfolgt nacheinander. Erst RK04, dann RK01, dann RK02, dann RK03. 
+Wird ein Widget z.B. RK02 nicht genutzt (keinem Vollbildscreen zugewiesen), werden Daten von RK03 auch nicht in die TXT-Datei geschrieben auch wenn RK03 genutzt wird.
+
 Version 1.1.04
 =============
 RK04 neu eingef체hrt f체r TOP-Bar. Hiermit kann RSSI und optional VFR angezeigt werden. Der RSSI Alarm wird nur noch vom RK04 ausgef체hrt.
@@ -14,7 +21,7 @@ Die Zellenermittlung gibt es nur noch auf RK01. Diese wird auch nur noch ausgef�
 Version 1.1.01
 =============
 RK01 RK02 und RK03 so umgebaut, dass nun mehr Daten auf den Screen passen. Nun wird auch Tmp1 und RPM, als auch die verbrauchte Kapazit채t auf RK01 mit angezeigt.
-TOP Bar Widgets werden icht mehr unterst체tzt, nur noch Vollbild
+TOP Bar Widgets werden nicht mehr unterst체tzt, nur noch Vollbild
 
 Version 1.0.13
 =============
