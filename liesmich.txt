@@ -4,9 +4,9 @@ Voraussetzung:
 - FrSky Horus X10(S) oder Horus X12(S) mit EdgeTx 2.10.0 oder neuer.
 - ein logischer Schalter, der zum resetten benutzt wird (standardmäßig wird auf LS61 reagiert, ist aber in der "RK-Settings\RK-Settings.lua" über PC änderbar)
 - das int. oder ext. HF Modul muss aktiv sein und die Empfänger ID darf nicht 0 sein, damit der manuelle Reset bzw. der Autoreset (beim Modellwechsel) funktioniert
-- die Verzeichnisse "RK01", "RK02", "RK03" und "RK-Settings" müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
+- die Verzeichnisse "RK01", "RK02", "RK03", "RK04" und "RK-Settings" müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
 - aus dem Verzeichnis "SOUNDS de Sprachdateien" müssen die WAV Dateien auf die SD Karte ins Verzeichnis "SOUNDS\de" kopiert werden
-- die drei Widgets RK01, RK02 und RK03 müssen jeweils einem Vollbildscreen zugewiesen werden
+- die drei Widgets RK01, RK02 und RK03 müssen jeweils einem Vollbildscreen zugewiesen werden. RK04 2mal einem TOP-BAR Feld.
 
 
 Sensoreinrichtung:
@@ -19,7 +19,7 @@ Sensoreinrichtung:
 5. den "GSpd" Sensor editieren und auf die Einheit "kmh" ändern
 
 HINWEIS: es können natürlich auch andere Sensoren angeschlossen werden. Hier die Liste, mit welchen Sensornamen die Widgets arbeiten:
-RSSI, RxBt, VFR, VFAS, Curr, A4 oder EscC oder Capa oder 5123, Alt, VSpd, GPS, GAlt, GSpd, Tmp1, RPM, Sats oder 5100, PDOP oder 5101
+RSSI, RxBt, VFR, VFAS, Curr, A4 oder EscC oder Capa oder Kapa oder 5123, Alt, VSpd, GPS, GAlt, GSpd, Tmp1, RPM, Sats oder 5100, PDOP oder 5101
 
 
 RSSI = RSSI, Received Signal Strength Indication (Empfänger)
@@ -35,7 +35,8 @@ GALT = GPS Höhe (separater Sensor)
 GSpd = GPS Geschwindigkeit (separater Sensor)
 Sats oder 5100 = Anzahl Satelliten (Tmp1 ab 1.0.11 nicht mehr)
 PDOP oder 5101 = PDOP, GPS Signalqualität (Tmp2 ab 1.0.11 nicht mehr)
-
+RPM = Drehzal des Motors
+Tmp1 = Temperatur1 (z.B. vom ESC) 
 
 Features RK01, RK02, RK03 Widgets:
 ==================================
@@ -80,16 +81,23 @@ Features RK01, RK02, RK03 Widgets:
 
 - Steig- und Sinkraten werden sowohl in m/s, als auch in "kmh" angezeigt
 
-- Die Kopfzeile der 3 Widgets zeigen Modellname, LipoZellenzahl, Timer 1, EmpfängerID (RxID)
+- Die Kopfzeile der 3 Widgets zeigen Modellname, Timer 1, EmpfängerID (RxID), RK-Widget Version
 
-- auf kleinste Bildschirmzelle (1 Feld Widget) zeigt RK01 "mAh", RK02 "RSSI" und RK03 "RSSI-" (geeignet für die Kopfleiste)
+- auf kleinste Bildschirmzelle RK04 "RSSI", "RSSI-" und VFR, VFR- (geeignet für die Kopfleiste)
 
-- auf halber Bildschirmgröße (Trimmer, Schieber und Flugphase deaktiviert) zeigt RK03:
-		> die GPS Koordinaten vom Startpunkt und der momentanen Modellposition, auch wenn das Modell keine Daten mehr sendet 
-		> die geflogene Strecke, sobald mit dem Motorschutzschalter* der Motor freiegegeben wurde. *(im Standard SB oben = gesichert; änderbar im Konfigurationsteil der "RK-Settings\RK-Settings.lua").
-		> sofern vorhanden, wird VFR (minimum und momentan) angezeigt
-		> sofern vorhanden, wird die Anzahl der Satelliten und PDOP angezeigt. Der GPS Sensor muss dazu die Sensoren "Tmp1" und "Tmp2" liefern (z.B.OpenX-Sensor auf Arduino) oder "5100" und "5101" (z.B.OpenX-Sensor auf RP2040)
-		> EdgeTX Version und Version des RK-Widgets
+- die GPS Koordinaten vom Startpunkt und der momentanen Modellposition, auch wenn das Modell keine Daten mehr sendet 
+
+- die geflogene Strecke, sobald mit dem Motorschutzschalter* der Motor freiegegeben wurde. *(im Standard SB oben = gesichert; änderbar im Konfigurationsteil der "RK-Settings\RK-Settings.lua").
+
+- sofern vorhanden, wird VFR (minimum und momentan) angezeigt
+
+- sofern vorhanden, wird die Anzahl der Satelliten und PDOP angezeigt. Der GPS Sensor muss dazu die Sensoren "Tmp1" und "Tmp2" liefern (z.B.OpenX-Sensor auf Arduino) oder "5100" und "5101" (z.B.OpenX-Sensor auf RP2040)
+
+- Version des RK-Widgets
+
+- RSSI akustische Warnung
+
+- Speicherung der Min/Max Werte auf SD Karte ins LOG Verzeichnis
 
 
 		

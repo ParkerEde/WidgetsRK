@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.05"
+local RKWidgetVersion = "1.1.06"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -244,176 +244,159 @@ local function refreshZoneXLarge(wgt)
 	lcd.drawText(wgt.zone.x+254, wgt.zone.y,"RK02-Widget V" .. RKWidgetVersion, SMLSIZE + INVERS + CUSTOM_COLOR)
   --lcd.drawLine(45, 72, 435, 72, 255, 0)
 
-  lcd.drawFilledRectangle(wgt.zone.x+194, wgt.zone.y+22, 2, 150, CUSTOM_COLOR)
+	lcd.drawFilledRectangle(wgt.zone.x+194, wgt.zone.y+22, 2, 150, CUSTOM_COLOR)
+  	lcd.drawText(wgt.zone.x+140, wgt.zone.y+016, "min/max", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+070, wgt.zone.y+016, "momentan", SMLSIZE + CUSTOM_COLOR)	
+	lcd.drawText(wgt.zone.x+340, wgt.zone.y+016, "min/max", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+270, wgt.zone.y+016, "momentan", SMLSIZE + CUSTOM_COLOR)
+	
   -- 1. SENSOR Zeile 1.Spalte ======================================================================
   -- =============================================================================================== 
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+005, wgt.zone.y+20, "Alt", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+000, wgt.zone.y+030, "Alt (m)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if Altmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+100, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+155, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+030, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+030, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+100, wgt.zone.y+20, round(Alt,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+155, wgt.zone.y+20, round(Altmaxsave,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+030, round(Alt,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+030, round(Altmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+101, wgt.zone.y+18, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+156, wgt.zone.y+18, "m", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+156, wgt.zone.y+27, "max", SMLSIZE + CUSTOM_COLOR)
+
   
   -- 1. SENSOR Zeile 2.Spalte ======================================================================
   -- =============================================================================================== 
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+20, "", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+030, "", SMLSIZE + CUSTOM_COLOR)
     
   -- if nodataVFR == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   -- if VFRminsave == 0 then
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+345, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+030, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+345, wgt.zone.y+030, "- - ", CUSTOM_COLOR + RIGHT)
   -- else
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+20, round(VFR,0), CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+20, round(VFRminsave,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+030, round(VFR,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+030, round(VFRminsave,0), CUSTOM_COLOR + RIGHT)
   -- end
-  -- lcd.drawText(wgt.zone.x+291, wgt.zone.y+18, "%", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+18, "%", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+27, "min", SMLSIZE + CUSTOM_COLOR)
     
   -- 2. SENSOR Zeile 1.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+005, wgt.zone.y+50, "VSpd", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+000, wgt.zone.y+060+15, "VSpd (m/s)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if Altmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+100, wgt.zone.y+50, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+155, wgt.zone.y+50, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+060+15, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+052+15, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+068+15, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+100, wgt.zone.y+50, round(VSpd,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+155, wgt.zone.y+50, round(mskmh(VSpd),0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+060+15, round(VSpd,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+052+15, round(VSpdminsave,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+067+15, round(VSpdmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+101, wgt.zone.y+48, "m/s", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+156, wgt.zone.y+48, "km/h", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+156, wgt.zone.y+57, "max", SMLSIZE + CUSTOM_COLOR)
   
   -- 2. SENSOR Zeile 2.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+50, "", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+060, "", SMLSIZE + CUSTOM_COLOR)
     
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if Altmaxsave == 0 then
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+50, "- - ", CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+50, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+330, wgt.zone.y+060, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+390, wgt.zone.y+060, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+50, round(RPM,0), CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+50, round(RPMmaxsave,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+330, wgt.zone.y+060, round(RPM,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+390, wgt.zone.y+060, round(RPMmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+291, wgt.zone.y+48, "", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+48, "", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+57, "", SMLSIZE + CUSTOM_COLOR)
 
   -- 3. SENSOR Zeile 1.Spalte ======================================================================
   -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+005, wgt.zone.y+80,"steigen max", SMLSIZE + CUSTOM_COLOR)
+  -- lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  -- lcd.drawText(wgt.zone.x+000, wgt.zone.y+090,"VSpd (km/h)", SMLSIZE + CUSTOM_COLOR)
   
-  if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Altmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+100, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+155, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+100, wgt.zone.y+80, round(VSpdmaxsave,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+155, wgt.zone.y+80, round(mskmh(VSpdmaxsave),0), CUSTOM_COLOR + RIGHT)
-  end
-  lcd.drawText(wgt.zone.x+101, wgt.zone.y+78, "m/s", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+156, wgt.zone.y+78, "km/h", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+156, wgt.zone.y+87, "min", SMLSIZE + CUSTOM_COLOR)
+  -- if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+  -- if Altmaxsave == 0 then
+  -- lcd.drawText(wgt.zone.x+130, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+190, wgt.zone.y+082, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+190, wgt.zone.y+098, "- - ", CUSTOM_COLOR + RIGHT)
+  -- else
+  -- lcd.drawText(wgt.zone.x+130, wgt.zone.y+090, round(mskmh(VSpd),0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+190, wgt.zone.y+083, round(mskmh(VSpdminsave),0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+190, wgt.zone.y+098, round(mskmh(VSpdmaxsave),0), CUSTOM_COLOR + RIGHT)
+  -- end
   
   -- 3. SENSOR Zeile 2.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+80, "", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+090, "", SMLSIZE + CUSTOM_COLOR)
   
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if Altmaxsave == 0 and UseCapacitySensor ~=0 then
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+80, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+330, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+390, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+80, round(VSpdmaxsave,0), CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+80, round(mskmh(VSpdmaxsave),0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+330, wgt.zone.y+090, round(VSpdmaxsave,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+390, wgt.zone.y+090, round(mskmh(VSpdmaxsave),0), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+291, wgt.zone.y+78, "", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+78, "", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+87, "", SMLSIZE + CUSTOM_COLOR)
   
   -- 4. SENSOR Zeile 1.Spalte ======================================================================
   -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)  
-  lcd.drawText(wgt.zone.x+005, wgt.zone.y+110, "sinken max", SMLSIZE + CUSTOM_COLOR)
-    
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+  lcd.drawText(wgt.zone.x+000, wgt.zone.y+120,"VSpd (km/h)", SMLSIZE + CUSTOM_COLOR)
+  
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if Altmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+100, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+155, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+112, "- - ", CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+128, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+100, wgt.zone.y+110, round(VSpdminsave,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+155, wgt.zone.y+110, round(mskmh(VSpdminsave),0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+120, round(mskmh(VSpd),0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+112, round(mskmh(VSpdminsave),0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+128, round(mskmh(VSpdmaxsave),0), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+101, wgt.zone.y+108, "m/s", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+156, wgt.zone.y+108, "km/h", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+156, wgt.zone.y+117, "max", SMLSIZE + CUSTOM_COLOR)
+ 
   
   -- 4. SENSOR Zeile 2.Spalte ======================================================================
   -- =============================================================================================== 
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+110, "", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+120, "", SMLSIZE + CUSTOM_COLOR)
     
   -- if nodataTmp1 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   -- if Tmp1maxsave == 0 then
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+330, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+390, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
   -- else
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+110, round(Tmp1,0), CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+110, round(Tmp1maxsave,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+330, wgt.zone.y+120, round(Tmp1,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+390, wgt.zone.y+120, round(Tmp1maxsave,0), CUSTOM_COLOR + RIGHT)
   -- end
-  -- lcd.drawText(wgt.zone.x+291, wgt.zone.y+108, "", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+108, "", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+356, wgt.zone.y+117, "", SMLSIZE + CUSTOM_COLOR)
   
   -- 5. SENSOR Zeile 1.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)  
-  lcd.drawText(wgt.zone.x+05, wgt.zone.y+140, "", SMLSIZE + CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+000, wgt.zone.y+150, "", SMLSIZE + CUSTOM_COLOR)
     
   -- if nodataAlt == 1 or nodataAmp ==1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   -- if Altmaxsave == 0 then
-  -- lcd.drawText(wgt.zone.x+100, wgt.zone.y+140, "- - ", CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+155, wgt.zone.y+140, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   -- else
-  -- lcd.drawText(wgt.zone.x+100, wgt.zone.y+140, round(VSpdminsave,0), CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+155, wgt.zone.y+140, round(mskmh(VSpdminsave),0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, round(VSpdminsave,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, round(mskmh(VSpdminsave),0), CUSTOM_COLOR + RIGHT)
   -- end
-  -- lcd.drawText(wgt.zone.x+101, wgt.zone.y+138, "m/s", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+156, wgt.zone.y+138, "km/h", SMLSIZE + CUSTOM_COLOR)
-  -- lcd.drawText(wgt.zone.x+156, wgt.zone.y+147, "max", SMLSIZE + CUSTOM_COLOR)
   
   -- 5. SENSOR Zeile 2.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+140, "", CUSTOM_COLOR)
+  lcd.drawText(wgt.zone.x+200, wgt.zone.y+150, "", SMLSIZE + CUSTOM_COLOR)
     
   if nodataAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   if Altmaxsave == 0 then
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+140, "- - ", CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+140, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+330, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  -- lcd.drawText(wgt.zone.x+290, wgt.zone.y+140, round(RPM,0), CUSTOM_COLOR + RIGHT)
-  -- lcd.drawText(wgt.zone.x+355, wgt.zone.y+140, round(RPMmaxsave,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+330, wgt.zone.y+150, round(RPM,0), CUSTOM_COLOR + RIGHT)
+  -- lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, round(RPMmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
-  lcd.drawText(wgt.zone.x+291, wgt.zone.y+138, "", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+138, "", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+356, wgt.zone.y+147, "", SMLSIZE + CUSTOM_COLOR)
 
   -- ===============================================================================================
   -- ===============================================================================================

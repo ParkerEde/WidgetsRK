@@ -1,47 +1,52 @@
+Version 1.1.06
+==============
+RK01-RK03 Darstellung vereinfacht und Einheiten vereinfacht.
+Es wird nun auch den Sensorname "Kapa" für den Verbrauch berücksichtigt.
+
 Version 1.1.05
-=============
+==============
 RK04, RK01, RK02 und RK03 schreiben nun nacheinander in eine TXT-Datei mit allen ermittelten Daten, sobald der Motor gesichert wurde. 
 Der Motorschutzschalter muss dafür mindestens 30 Sekunden frei gegeben gewesen sein. RK04 ist dafür inital erforderlich, denn hier wird der Dateiname und Datum/Uhrzeit festgelegt.
 Das Schreiben erfolgt nacheinander. Erst RK04, dann RK01, dann RK02, dann RK03. 
 Wird ein Widget z.B. RK02 nicht genutzt (keinem Vollbildscreen zugewiesen), werden Daten von RK03 auch nicht in die TXT-Datei geschrieben auch wenn RK03 genutzt wird.
 
 Version 1.1.04
-=============
+==============
 RK04 neu eingeführt für TOP-Bar. Hiermit kann RSSI und optional VFR angezeigt werden. Der RSSI Alarm wird nur noch vom RK04 ausgeführt.
 
 Version 1.1.03
-=============
+==============
 RK01, RK02 und RK03 prüfen nun die gelesenen Sensordaten auf Plausibilität, bevor sie als min/max gespeichert werden. 
 Bugfix aus 1.1.01, die Kapazität wurde nur berechnet, wenn RK01 im Vordergrund war. 
 
 Version 1.1.02
-=============
+==============
 Die Zellenermittlung gibt es nur noch auf RK01. Diese wird auch nur noch ausgeführt, wenn der Motor gesichert ist. InversZeile überarbeitet
 
 Version 1.1.01
-=============
+==============
 RK01 RK02 und RK03 so umgebaut, dass nun mehr Daten auf den Screen passen. Nun wird auch Tmp1 und RPM, als auch die verbrauchte Kapazität auf RK01 mit angezeigt.
 TOP Bar Widgets werden nicht mehr unterstützt, nur noch Vollbild
 
 Version 1.0.13
-=============
+==============
 in RK01 in den Widgeteinstellungen kann nun der VFAS Wert geglättet werden. Der Wert "SmoothVFAS" kann zwischen 1 und 10 liegen. 1 bedeutet keine Glättung, 
 2 bedeutet, dass ein Mittelwert aus den letzten 2 Messungen berechnet wird. 3 = letzten 3 Werte usw...
 Je höher der Wert, desto glatter der VFAS  der SpannungsWert, reagiert aber aber auch träger auf Änderungen. 
 Nach Änderung des Wertes "SmoothVFAS" muss der Sender einmal neu gestartet werden, damit die Änderung greift.
 
 Version 1.0.12
-=============
+==============
 Die verbrauchte Kapazität wird nun aus den Sensoren A4, EscC, Capa oder 5123 gelesen. Der jeweilige + (also Max) Wert, wird nun nicht mehr eingelesen.
 
 Version 1.0.11
-=============
+==============
 "Tmp1" und "Tmp2" werden nun nicht mehr als Satellitenanzahl und PDOP verwendet. 
 Nun müssen die Sensoren entweder "5100" oder "Sats" für die Satellitenanzahl und "5101" oder "PDOP" für PDOP heißen.
 
 
 Version 1.0.10
-=============
+==============
 - RK02: RSSI Warnung refaktoriert und kleinen Bugfix
 
 Version 1.0.9
