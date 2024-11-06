@@ -66,60 +66,14 @@ end
 local nodataCels1 = 1
 local Cels1table = {}
 local Pack1 = 0
-local Pack1minsave = 0
-local Pack1Zelle1 = 0
-local Pack1Zelle1raw = 0
-local Pack1Zelle1min = 0
-local Pack1Zelle1minsave = 0
-local Pack1Zelle2 = 0
-local Pack1Zelle2raw = 0
-local Pack1Zelle2min = 0
-local Pack1Zelle2minsave = 0
-local Pack1Zelle3 = 0
-local Pack1Zelle3raw = 0
-local Pack1Zelle3min = 0
-local Pack1Zelle3minsave = 0
-local Pack1Zelle4 = 0
-local Pack1Zelle4raw = 0
-local Pack1Zelle4min = 0
-local Pack1Zelle4minsave = 0
-local Pack1Zelle5 = 0
-local Pack1Zelle5raw = 0
-local Pack1Zelle5min = 0
-local Pack1Zelle5minsave = 0
-local Pack1Zelle6 = 0
-local Pack1Zelle6raw = 0
-local Pack1Zelle6min = 0
-local Pack1Zelle6minsave = 0
+local Pack1Zelle = {0, 0, 0, 0, 0, 0}
+local Pack1ZelleMinSave = {0, 0, 0, 0, 0, 0}
 
 local nodataCels2 = 1
 local Cels2table = {}
 local Pack2 = 0
-local Pack2minsave = 0
-local Pack2Zelle1 = 0
-local Pack2Zelle1raw = 0
-local Pack2Zelle1min = 0
-local Pack2Zelle1minsave = 0
-local Pack2Zelle2 = 0
-local Pack2Zelle2raw = 0
-local Pack2Zelle2min = 0
-local Pack2Zelle2minsave = 0
-local Pack2Zelle3 = 0
-local Pack2Zelle3raw = 0
-local Pack2Zelle3min = 0
-local Pack2Zelle3minsave = 0
-local Pack2Zelle4 = 0
-local Pack2Zelle4raw = 0
-local Pack2Zelle4min = 0
-local Pack2Zelle4minsave = 0
-local Pack2Zelle5 = 0
-local Pack2Zelle5raw = 0
-local Pack2Zelle5min = 0
-local Pack2Zelle5minsave = 0
-local Pack2Zelle6 = 0
-local Pack2Zelle6raw = 0
-local Pack2Zelle6min = 0
-local Pack2Zelle6minsave = 0
+local Pack2Zelle = {0, 0, 0, 0, 0, 0}
+local Pack2ZelleMinSave = {0, 0, 0, 0, 0, 0}
 
 local ModelRxID = -1
 local ModelRxID2 = -1
@@ -153,82 +107,44 @@ local function getSensors(wgt)
 	-- printTable (Cels1table)
 	if Cels1table ~= nil then
 		if type(Cels1table) == "table" then
-			if Cels1table[1] ~= nil then
-				Pack1Zelle1raw = Cels1table[1]
-				-- print ("Zelle 1: " .. Pack1Zelle1raw)
-				if Pack1Zelle1raw < 1000 then Pack1Zelle1 = Pack1Zelle1raw end
-				nodataCels1 = 0
-			end
-			if Cels1table[2] ~= nil then
-				Pack1Zelle2raw = Cels1table[2]
-				-- print ("Zelle 2: " .. Pack1Zelle2raw)
-				if Pack1Zelle2raw < 1000 then Pack1Zelle2 = Pack1Zelle2raw end
-			end
-			if Cels1table[3] ~= nil then			
-				Pack1Zelle3raw = Cels1table[3]
-				-- print ("Zelle 3: " .. Pack1Zelle3raw)
-				if Pack1Zelle3raw < 1000 then Pack1Zelle3 = Pack1Zelle3raw end
-			end
-			if Cels1table[4] ~= nil then
-				Pack1Zelle4raw = Cels1table[4]
-				-- print ("Zelle 4: " .. Pack1Zelle4raw)
-				if Pack1Zelle4raw < 1000 then Pack1Zelle4 = Pack1Zelle4raw end
-			end
-			if Cels1table[5] ~= nil then
-				Pack1Zelle5raw = Cels1table[5]
-				-- print ("Zelle 5: " .. Pack1Zelle5raw)
-				if Pack1Zelle5raw < 1000 then Pack1Zelle5 = Pack1Zelle5raw end
-			end
-			if Cels1table[6] ~= nil then 
-				Pack1Zelle6raw = Cels1table[6]
-				-- print ("Zelle 6: " .. Pack1Zelle6raw)
-				if Pack1Zelle6raw < 1000 then Pack1Zelle6 = Pack1Zelle6raw end
+			nodataCels1 = 0
+			for i = 1, 6 do
+				if Cels1table[i] ~= nil then
+					local rawValue = Cels1table[i]
+					-- print ("Zelle " .. i .. ": " .. rawValue)
+					if rawValue < 1000 then
+						Pack1Zelle[i] = rawValue
+						
+					end
+				end
 			end
 		else
-		nodataCels1 = 1
-		end	
+			nodataCels1 = 1
+		end
 	end
+	-- printTable(Pack1Zelle)
 	
 	Cels2table = getValue("Cel2")
 	-- print("===============CEL2================")
 	-- printTable (Cels2table)
-	if Cels2table ~= nil then
+		if Cels2table ~= nil then
 		if type(Cels2table) == "table" then
-			if Cels2table[1] ~= nil then
-				Pack2Zelle1raw = Cels2table[1]
-				-- print ("Zelle 1: " .. Pack2Zelle1raw)
-				if Pack2Zelle1raw < 1000 then Pack2Zelle1 = Pack2Zelle1raw end
-				nodataCels2 = 0
-			end
-			if Cels2table[2] ~= nil then
-				Pack2Zelle2raw = Cels2table[2]
-				-- print ("Zelle 2: " .. Pack2Zelle2raw)
-				if Pack2Zelle2raw < 1000 then Pack2Zelle2 = Pack2Zelle2raw end
-			end
-			if Cels2table[3] ~= nil then			
-				Pack2Zelle3raw = Cels2table[3]
-				-- print ("Zelle 3: " .. Pack2Zelle3raw)
-				if Pack2Zelle3raw < 1000 then Pack2Zelle3 = Pack2Zelle3raw end
-			end
-			if Cels2table[4] ~= nil then
-				Pack2Zelle4raw = Cels2table[4]
-				-- print ("Zelle 4: " .. Pack2Zelle4raw)
-				if Pack2Zelle4raw < 1000 then Pack2Zelle4 = Pack2Zelle4raw end
-			end
-			if Cels2table[5] ~= nil then
-				Pack2Zelle5raw = Cels2table[5]
-				-- print ("Zelle 5: " .. Pack2Zelle5raw)
-				if Pack2Zelle5raw < 1000 then Pack2Zelle5 = Pack2Zelle5raw end
-			end
-			if Cels2table[6] ~= nil then 
-				Pack2Zelle6raw = Cels2table[6]
-				-- print ("Zelle 6: " .. Pack2Zelle6raw)
-				if Pack2Zelle6raw < 1000 then Pack2Zelle6 = Pack2Zelle6raw end
+			nodataCels2 = 0
+			for i = 1, 6 do
+				if Cels2table[i] ~= nil then
+					local rawValue = Cels2table[i]
+					-- print ("Zelle " .. i .. ": " .. rawValue)
+					if rawValue < 1000 then
+						Pack2Zelle[i] = rawValue
+						
+					end
+				end
 			end
 		else
-		nodataCels2 = 1
-		end	
-	end	
+			nodataCels2 = 1
+		end
+	end
+	-- printTable(Pack2Zelle)
 end
 
 
@@ -245,33 +161,11 @@ local function resetvalues(wgt)
 		if reset > 0 or ModelRxIDVorher ~= ModelRxIDNachher then		
 			timestamp = 0
 
-			Pack1minsave = 0
-			Pack1Zelle1 = 0
-			Pack1Zelle1minsave = 0
-			Pack1Zelle2 = 0
-			Pack1Zelle2minsave = 0
-			Pack1Zelle3 = 0
-			Pack1Zelle3minsave = 0
-			Pack1Zelle4 = 0
-			Pack1Zelle4minsave = 0
-			Pack1Zelle5 = 0
-			Pack1Zelle5minsave = 0
-			Pack1Zelle6 = 0
-			Pack1Zelle6minsave = 0
+			Pack1Zelle = {0, 0, 0, 0, 0, 0}
+			Pack1ZelleMinSave = {0, 0, 0, 0, 0, 0}
 			
-			Pack2minsave = 0
-			Pack2Zelle1 = 0
-			Pack2Zelle1minsave = 0
-			Pack2Zelle2 = 0
-			Pack2Zelle2minsave = 0
-			Pack2Zelle3 = 0
-			Pack2Zelle3minsave = 0
-			Pack2Zelle4 = 0
-			Pack2Zelle4minsave = 0
-			Pack2Zelle5 = 0
-			Pack2Zelle5minsave = 0
-			Pack2Zelle6 = 0
-			Pack2Zelle6minsave = 0
+			Pack2Zelle = {0, 0, 0, 0, 0, 0}
+			Pack2ZelleMinSave = {0, 0, 0, 0, 0, 0}
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -300,111 +194,38 @@ local function savevalues(wgt)
 		-- print("------------------------")
 		timestamprefresh = newtimerefresh
 		getSensors(wgt)  
-	
-		if Pack1Zelle1 ~= 0 then
-			if Pack1Zelle1 < Pack1Zelle1minsave then
-				Pack1Zelle1minsave = Pack1Zelle1			
-			end
-			if Pack1Zelle1minsave < 2.1 then
-				Pack1Zelle1minsave = Pack1Zelle1
-			end
-		end
-		if Pack1Zelle2 ~= 0 then
-			if Pack1Zelle2 < Pack1Zelle2minsave then
-				Pack1Zelle2minsave = Pack1Zelle2			
-			end
-			if Pack1Zelle2minsave < 2.1 then
-				Pack1Zelle2minsave = Pack1Zelle2
-			end
-		end
-		if Pack1Zelle3 ~= 0 then
-			if Pack1Zelle3 < Pack1Zelle3minsave then
-				Pack1Zelle3minsave = Pack1Zelle3			
-			end
-			if Pack1Zelle3minsave < 2.1 then
-				Pack1Zelle3minsave = Pack1Zelle3
-			end
-		end
-		if Pack1Zelle4 ~= 0 then
-			if Pack1Zelle4 < Pack1Zelle4minsave then
-				Pack1Zelle4minsave = Pack1Zelle4			
-			end
-			if Pack1Zelle4minsave < 2.1 then
-				Pack1Zelle4minsave = Pack1Zelle4
-			end
-		end
-		if Pack1Zelle5 ~= 0 then
-			if Pack1Zelle5 < Pack1Zelle5minsave then
-				Pack1Zelle5minsave = Pack1Zelle5			
-			end
-			if Pack1Zelle5minsave < 2.1 then
-				Pack1Zelle5minsave = Pack1Zelle5
-			end
-		end
-		if Pack1Zelle6 ~= 0 then
-			if Pack1Zelle6 < Pack1Zelle6minsave then
-				Pack1Zelle6minsave = Pack1Zelle6			
-			end
-			if Pack1Zelle6minsave < 2.1 then
-				Pack1Zelle6minsave = Pack1Zelle6
+
+		for i = 1, #Pack1Zelle do
+			if Pack1Zelle[i] ~= 0 then
+				if Pack1Zelle[i] < Pack1ZelleMinSave[i] then
+					Pack1ZelleMinSave[i] = Pack1Zelle[i]
+				end
+				if Pack1ZelleMinSave[i] < 2.1 then
+					Pack1ZelleMinSave[i] = Pack1Zelle[i]
+				end
 			end
 		end
 		
-		if Pack2Zelle1 ~= 0 then
-			if Pack2Zelle1 < Pack2Zelle1minsave then
-				Pack2Zelle1minsave = Pack2Zelle1			
-			end
-			if Pack2Zelle1minsave < 2.1 then
-				Pack2Zelle1minsave = Pack2Zelle1
-			end
-		end
-		if Pack2Zelle2 ~= 0 then
-			if Pack2Zelle2 < Pack2Zelle2minsave then
-				Pack2Zelle2minsave = Pack2Zelle2			
-			end
-			if Pack2Zelle2minsave < 2.1 then
-				Pack2Zelle2minsave = Pack2Zelle2
-			end
-		end
-		if Pack2Zelle3 ~= 0 then
-			if Pack2Zelle3 < Pack2Zelle3minsave then
-				Pack2Zelle3minsave = Pack2Zelle3			
-			end
-			if Pack2Zelle3minsave < 2.1 then
-				Pack2Zelle3minsave = Pack2Zelle3
-			end
-		end
-		if Pack2Zelle4 ~= 0 then
-			if Pack2Zelle4 < Pack2Zelle4minsave then
-				Pack2Zelle4minsave = Pack2Zelle4			
-			end
-			if Pack2Zelle4minsave < 2.1 then
-				Pack2Zelle4minsave = Pack2Zelle4
-			end
-		end
-		if Pack2Zelle5 ~= 0 then
-			if Pack2Zelle5 < Pack2Zelle5minsave then
-				Pack2Zelle5minsave = Pack2Zelle5			
-			end
-			if Pack2Zelle5minsave < 2.1 then
-				Pack2Zelle5minsave = Pack2Zelle5
-			end
-		end
-		if Pack2Zelle6 ~= 0 then
-			if Pack2Zelle6 < Pack2Zelle6minsave then
-				Pack2Zelle6minsave = Pack2Zelle6			
-			end
-			if Pack2Zelle6minsave < 2.1 then
-				Pack2Zelle6minsave = Pack2Zelle6
-			end
-		end
+		-- =============================================
 		
-		Pack1 = Pack1Zelle1 + Pack1Zelle2 + Pack1Zelle3 + Pack1Zelle4 + Pack1Zelle5 + Pack1Zelle6
-		Pack1minsave = Pack1Zelle1minsave + Pack1Zelle2minsave + Pack1Zelle3minsave + Pack1Zelle4minsave + Pack1Zelle5minsave + Pack1Zelle6minsave
+		for i = 1, #Pack2Zelle do
+			if Pack2Zelle[i] ~= 0 then
+				if Pack2Zelle[i] < Pack2ZelleMinSave[i] then
+					Pack2ZelleMinSave[i] = Pack2Zelle[i]
+				end
+				if Pack2ZelleMinSave[i] < 2.1 then
+					Pack2ZelleMinSave[i] = Pack2Zelle[i]
+				end
+			end
+		end
+		-- =============================================
+		
+		Pack1 = Pack1Zelle[1] + Pack1Zelle[2] + Pack1Zelle[3] + Pack1Zelle[4] + Pack1Zelle[5] + Pack1Zelle[6]
+		Pack1minsave = Pack1ZelleMinSave[1] + Pack1ZelleMinSave[2] + Pack1ZelleMinSave[3] + Pack1ZelleMinSave[4] + Pack1ZelleMinSave[5] + Pack1ZelleMinSave[6]
 		-- print("Pack1: " .. Pack1)
 		-- print("Pack1minsave: " .. Pack1minsave)
-		Pack2 = Pack2Zelle1 + Pack2Zelle2 + Pack2Zelle3 + Pack2Zelle4 + Pack2Zelle5 + Pack2Zelle6
-		Pack2minsave = Pack2Zelle1minsave + Pack2Zelle2minsave + Pack2Zelle3minsave + Pack2Zelle4minsave + Pack2Zelle5minsave + Pack2Zelle6minsave
+		Pack2 = Pack2Zelle[1] + Pack2Zelle[2] + Pack2Zelle[3] + Pack2Zelle[4] + Pack2Zelle[5] + Pack2Zelle[6]
+		Pack2minsave = Pack2ZelleMinSave[1] + Pack2ZelleMinSave[2] + Pack2ZelleMinSave[3] + Pack2ZelleMinSave[4] + Pack2ZelleMinSave[5] + Pack2ZelleMinSave[6]
 		-- print("Pack2: " .. Pack2)
 		-- print("Pack2minsave: " .. Pack2minsave)
 		
@@ -412,8 +233,8 @@ local function savevalues(wgt)
 		if not trackswitchcondition and RK03readysaved == 1 then
 			local file, err = io.open(filename, "a")
 			if file then
-				io.write(file, "Pack 1 (V)             : " .. round(Pack1,2) .. "\n  Pack1 Zelle1 (V)     : " .. round(Pack1Zelle1minsave,2) .. "\n  Pack1 Zelle2 (V)     : " .. round(Pack1Zelle2minsave,2) .. "\n  Pack1 Zelle3 (V)     : " .. round(Pack1Zelle3minsave,2) .. "\n  Pack1 Zelle4 (V)     : " .. round(Pack1Zelle4minsave,2) .. "\n  Pack1 Zelle5 (V)     : " .. round(Pack1Zelle5minsave,2) .. "\n  Pack1 Zelle6 (V)     : " .. round(Pack1Zelle6minsave,2) .. "\n")
-				io.write(file, "Pack 2 (V)             : " .. round(Pack2,2) .. "\n  Pack2 Zelle1 (V)     : " .. round(Pack2Zelle1minsave,2) .. "\n  Pack2 Zelle2 (V)     : " .. round(Pack2Zelle2minsave,2) .. "\n  Pack2 Zelle3 (V)     : " .. round(Pack2Zelle3minsave,2) .. "\n  Pack2 Zelle4 (V)     : " .. round(Pack2Zelle4minsave,2) .. "\n  Pack2 Zelle5 (V)     : " .. round(Pack2Zelle5minsave,2) .. "\n  Pack2 Zelle6 (V)     : " .. round(Pack2Zelle6minsave,2) .. "\n")
+				io.write(file, "Pack 1 min(V)          : " .. round(Pack1,2) .. "\n  Pack1 Zelle1 min(V)  : " .. round(Pack1ZelleMinSave[1],2) .. "\n  Pack1 Zelle2 min(V)  : " .. round(Pack1ZelleMinSave[2],2) .. "\n  Pack1 Zelle3 min(V)  : " .. round(Pack1ZelleMinSave[3],2) .. "\n  Pack1 Zelle4 min(V)  : " .. round(Pack1ZelleMinSave[4],2) .. "\n  Pack1 Zelle5 min(V)  : " .. round(Pack1ZelleMinSave[5],2) .. "\n  Pack1 Zelle6 min(V)  : " .. round(Pack1ZelleMinSave[6],2) .. "\n")
+				io.write(file, "Pack 2 min(V)          : " .. round(Pack2,2) .. "\n  Pack2 Zelle1 min(V)  : " .. round(Pack2ZelleMinSave[1],2) .. "\n  Pack2 Zelle2 min(V)  : " .. round(Pack2ZelleMinSave[2],2) .. "\n  Pack2 Zelle3 min(V)  : " .. round(Pack2ZelleMinSave[3],2) .. "\n  Pack2 Zelle4 min(V)  : " .. round(Pack2ZelleMinSave[4],2) .. "\n  Pack2 Zelle5 min(V)  : " .. round(Pack2ZelleMinSave[5],2) .. "\n  Pack2 Zelle6 min(V)  : " .. round(Pack2ZelleMinSave[6],2) .. "\n")
 				io.close(file)
 				RK01readysaved = 0
 				RK02readysaved = 0
@@ -515,26 +336,26 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+000, wgt.zone.y+050, "Zelle 01 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels1 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack1Zelle1minsave == 0 then
+  if Pack1ZelleMinSave[1] == 0 then
   lcd.drawText(wgt.zone.x+130, wgt.zone.y+050, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+190, wgt.zone.y+050, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+050, round(Pack1Zelle1,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+050, round(Pack1Zelle1minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+050, round(Pack1Zelle[1],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+050, round(Pack1ZelleMinSave[1],2), CUSTOM_COLOR + RIGHT)
   end
-  
+ 
   -- 2. SENSOR Zeile 2.Spalte ======================================================================
   -- ===============================================================================================
   lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
   lcd.drawText(wgt.zone.x+200, wgt.zone.y+050, "Zelle 01 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels2 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack2Zelle1minsave == 0 then
+  if Pack2ZelleMinSave[1] == 0 then
   lcd.drawText(wgt.zone.x+330, wgt.zone.y+050, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+390, wgt.zone.y+050, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+330, wgt.zone.y+050, round(Pack2Zelle1,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+050, round(Pack2Zelle1minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+330, wgt.zone.y+050, round(Pack2Zelle[1],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y+050, round(Pack2ZelleMinSave[1],2), CUSTOM_COLOR + RIGHT)
   end
 
   -- 3. SENSOR Zeile 1.Spalte ======================================================================
@@ -543,12 +364,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+000, wgt.zone.y+070,"Zelle 02 (V)", SMLSIZE + CUSTOM_COLOR)
   
   if nodataCels1 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack1Zelle2minsave == 0 then
+  if Pack1ZelleMinSave[2] == 0 then
   lcd.drawText(wgt.zone.x+130, wgt.zone.y+070, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+190, wgt.zone.y+070, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+070, round(Pack1Zelle2,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+070, round(Pack1Zelle2minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+070, round(Pack1Zelle[2],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+070, round(Pack1ZelleMinSave[2],2), CUSTOM_COLOR + RIGHT)
   end
   
   -- 3. SENSOR Zeile 2.Spalte ======================================================================
@@ -557,12 +378,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+200, wgt.zone.y+070, "Zelle 02 (V)", SMLSIZE + CUSTOM_COLOR)
   
   if nodataCels2 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack2Zelle2minsave == 0 then
+  if Pack2ZelleMinSave[2] == 0 then
   lcd.drawText(wgt.zone.x+330, wgt.zone.y+070, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+390, wgt.zone.y+070, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+330, wgt.zone.y+070, round(Pack2Zelle2,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+070, round(Pack2Zelle2minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+330, wgt.zone.y+070, round(Pack2Zelle[2],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y+070, round(Pack2ZelleMinSave[2],2), CUSTOM_COLOR + RIGHT)
   end
 
   
@@ -572,12 +393,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+000, wgt.zone.y+090, "Zelle 03 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels1 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack1Zelle3minsave == 0 then
+  if Pack1ZelleMinSave[3] == 0 then
   lcd.drawText(wgt.zone.x+130, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+190, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+090, round(Pack1Zelle3,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+090, round(Pack1Zelle3minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+090, round(Pack1Zelle[3],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+090, round(Pack1ZelleMinSave[3],2), CUSTOM_COLOR + RIGHT)
   end
   
   -- 4. SENSOR Zeile 2.Spalte ======================================================================
@@ -586,12 +407,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+200, wgt.zone.y+090, "Zelle 03 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels2 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack2Zelle3minsave == 0 then
+  if Pack2ZelleMinSave[3] == 0 then
   lcd.drawText(wgt.zone.x+330, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+390, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+330, wgt.zone.y+090, round(Pack2Zelle3,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+090, round(Pack2Zelle3minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+330, wgt.zone.y+090, round(Pack2Zelle[3],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y+090, round(Pack2ZelleMinSave[3],2), CUSTOM_COLOR + RIGHT)
   end
   
   -- 5. SENSOR Zeile 1.Spalte ======================================================================
@@ -600,12 +421,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+000, wgt.zone.y+110, "Zelle 04 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels1 == 1 or nodataAmp ==1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack1Zelle4minsave == 0 then
+  if Pack1ZelleMinSave[4] == 0 then
   lcd.drawText(wgt.zone.x+130, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+190, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+110, round(Pack1Zelle4,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+110, round(Pack1Zelle4minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+110, round(Pack1Zelle[4],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+110, round(Pack1ZelleMinSave[4],2), CUSTOM_COLOR + RIGHT)
   end
   
   -- 5. SENSOR Zeile 2.Spalte ======================================================================
@@ -614,12 +435,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+200, wgt.zone.y+110, "Zelle 04 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels2 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack2Zelle4minsave == 0 then
+  if Pack2ZelleMinSave[4] == 0 then
   lcd.drawText(wgt.zone.x+330, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+390, wgt.zone.y+110, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+330, wgt.zone.y+110, round(Pack2Zelle4,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+110, round(Pack2Zelle4minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+330, wgt.zone.y+110, round(Pack2Zelle[4],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y+110, round(Pack2ZelleMinSave[4],2), CUSTOM_COLOR + RIGHT)
   end
 
   -- 6. SENSOR Zeile 1.Spalte ======================================================================
@@ -628,12 +449,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+000, wgt.zone.y+130, "Zelle 05 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels1 == 1 or nodataAmp ==1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack1Zelle5minsave == 0 then
+  if Pack1ZelleMinSave[5] == 0 then
   lcd.drawText(wgt.zone.x+130, wgt.zone.y+130, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+190, wgt.zone.y+130, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+130, round(Pack1Zelle5,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+130, round(Pack1Zelle5minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+130, round(Pack1Zelle[5],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+130, round(Pack1ZelleMinSave[5],2), CUSTOM_COLOR + RIGHT)
   end
   
   -- 6. SENSOR Zeile 2.Spalte ======================================================================
@@ -642,12 +463,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+200, wgt.zone.y+130, "Zelle 05 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels2 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack2Zelle5minsave == 0 then
+  if Pack2ZelleMinSave[5] == 0 then
   lcd.drawText(wgt.zone.x+330, wgt.zone.y+130, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+390, wgt.zone.y+130, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+330, wgt.zone.y+130, round(Pack2Zelle5,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+130, round(Pack2Zelle5minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+330, wgt.zone.y+130, round(Pack2Zelle[5],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y+130, round(Pack2ZelleMinSave[5],2), CUSTOM_COLOR + RIGHT)
   end
   
   -- 7. SENSOR Zeile 1.Spalte ======================================================================
@@ -656,12 +477,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+000, wgt.zone.y+150, "Zelle 06 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels1 == 1 or nodataAmp ==1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack1Zelle6minsave == 0 then
+  if Pack1ZelleMinSave[6] == 0 then
   lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, round(Pack1Zelle6,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, round(Pack1Zelle6minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, round(Pack1Zelle[6],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, round(Pack1ZelleMinSave[6],2), CUSTOM_COLOR + RIGHT)
   end
   
   -- 7. SENSOR Zeile 2.Spalte ======================================================================
@@ -670,12 +491,12 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+200, wgt.zone.y+150, "Zelle 06 (V)", SMLSIZE + CUSTOM_COLOR)
     
   if nodataCels2 == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if Pack2Zelle6minsave == 0 then
+  if Pack2ZelleMinSave[6] == 0 then
   lcd.drawText(wgt.zone.x+330, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+330, wgt.zone.y+150, round(Pack2Zelle6,2), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, round(Pack2Zelle6minsave,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+330, wgt.zone.y+150, round(Pack2Zelle[6],2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, round(Pack2ZelleMinSave[6],2), CUSTOM_COLOR + RIGHT)
   end
   -- ===============================================================================================
   -- ===============================================================================================
