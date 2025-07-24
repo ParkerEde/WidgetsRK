@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.07"
+local RKWidgetVersion = "1.1.08"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -291,15 +291,20 @@ local function savevalues(wgt)
 	end
 	
 	if Sats > 0 then 
-		Satssave = Sats - 100
-		if Satssave < 0 then
-			Satssave = 0
+		if Sats == 100 or Sats >= 200 then
+			Satssave = Sats *0.01
+		else
+			if Sats >100 then
+				Satssave = Sats - 100
+			else
+				Satssave = Sats
+			end
 		end
 		SatsSeen = 1
 	end
 
 	if PDOP > 0 then 
-		PDOPsave = PDOP /10
+		PDOPsave = PDOP *0.01
 		PDOPSeen = 1
 	end
 
@@ -366,7 +371,7 @@ local function savevalues(wgt)
 		if not trackswitchcondition and RK02readysaved == 1 then
 			local file, err = io.open(filename, "a")
 			if file then
-				io.write(file, "GSpdmax (km/h)         : " .. round(GSpdmaxsave,0) .. "\nGAltmax NN (m)         : " .. round(GAltmaxsave,0) .. "\nGAltmax Grund (m)      : " .. round(GAl2maxsave,0) .. "\nDistanz Grund (m)      : " .. DisGmaxsave .. "\nDistanz Modell (m)     : " .. DisMmaxsave .. "\nStart Position         : " .. gpsValuelat1 .. ", " .. gpsValuelon1 .. "\nModell Position        : " .. gpsValuelat2 .. ", " .. gpsValuelon2 .. "\ngeflogene Strecke (m)  : " .. round(Track,0) .. "\nAnzahl Satelliten      : " .. Satssave .. "\nPDOP (ideal <2.00)     : " .. round((PDOPsave/255)*25.5,2) .. "\n")
+				io.write(file, "GSpdmax (km/h)         : " .. round(GSpdmaxsave,0) .. "\nGAltmax NN (m)         : " .. round(GAltmaxsave,0) .. "\nGAltmax Grund (m)      : " .. round(GAl2maxsave,0) .. "\nDistanz Grund (m)      : " .. round(DisGmaxsave,0) .. "\nDistanz Modell (m)     : " .. round(DisMmaxsave,0) .. "\nStart Position         : " .. gpsValuelat1 .. ", " .. gpsValuelon1 .. "\nModell Position        : " .. gpsValuelat2 .. ", " .. gpsValuelon2 .. "\ngeflogene Strecke (m)  : " .. round(Track,0) .. "\nAnzahl Satelliten      : " .. round(Satssave,0) .. "\nPDOP (ideal <2.00)     : " .. round(PDOPsave,2) .. "\n")
 				io.close(file)
 				RK01readysaved = 0
 				RK02readysaved = 0
@@ -530,8 +535,8 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+130, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+190, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+120, DisG, CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+120, DisGmaxsave, CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+120, round(DisG,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+120, round(DisGmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
   
   -- 4. SENSOR Zeile 2.Spalte ======================================================================
@@ -543,7 +548,7 @@ local function refreshZoneXLarge(wgt)
   if SatsSeen ~= 1 then
   lcd.drawText(wgt.zone.x+390, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+120, Satssave, CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y+120, round(Satssave,0), CUSTOM_COLOR + RIGHT)
   end
   
   -- 5. SENSOR Zeile 1.Spalte ======================================================================
@@ -556,8 +561,8 @@ local function refreshZoneXLarge(wgt)
   lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, DisM, CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, DisMmaxsave, CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, round(DisM,0), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, round(DisMmaxsave,0), CUSTOM_COLOR + RIGHT)
   end
   
   -- 5. SENSOR Zeile 2.Spalte ======================================================================
@@ -569,7 +574,7 @@ local function refreshZoneXLarge(wgt)
   if PDOPSeen ~= 1 then
   lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
   else
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, round((PDOPsave/255)*25.5,2), CUSTOM_COLOR + RIGHT)
+  lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, round(PDOPsave,2), CUSTOM_COLOR + RIGHT)
   end
 
   -- ===============================================================================================

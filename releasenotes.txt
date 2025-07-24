@@ -1,3 +1,9 @@
+
+Version 1.1.08
+==============
+Erweiterung, damit auch Sensoren vom MSRC Projekt verarbeitet werden können
+PDOP Berechnung vereinfacht
+
 Version 1.1.07
 ==============
 RK05 neu eingeführt. Darstellung der echten Einzelzellenspannung sofern Frsky MLVSS, FLVSS oder FLVS-ADV vorhanden sind.
