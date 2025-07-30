@@ -1,3 +1,8 @@
+Version 1.1.09
+==============
+RQly = Receive Quality	Sender -> Empfänger (RC)
+TQly = Transmit Quality (Telemetry)	Empfänger -> Sender (Telem.)
+werden nun angezeigt, wenn mit ELRS gearbeitet wird. Anstelle von RSSI und VFR.
 
 Version 1.1.08
 ==============

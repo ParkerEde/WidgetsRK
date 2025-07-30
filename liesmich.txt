@@ -19,7 +19,7 @@ Sensoreinrichtung:
 5. den "GSpd" Sensor editieren und auf die Einheit "kmh" ändern
 
 HINWEIS: es können natürlich auch andere Sensoren angeschlossen werden. Hier die Liste, mit welchen Sensornamen die Widgets arbeiten:
-RSSI, RxBt, VFR, VFAS, Curr, A4 oder EscC oder Capa oder Kapa oder 5123, Alt, VSpd, GPS, GAlt, GSpd, Tmp1, RPM, Sats oder 5100, PDOP oder 5101, Cels, Cel2
+RSSI, RxBt, VFR, VFAS, Curr, A4 oder EscC oder Capa oder Kapa oder 5123, Alt, VSpd, GPS, GAlt, GSpd, Tmp1, RPM, Sats oder 5100, PDOP oder 5101, Cels, Cel2, RQly, TQly
 
 
 RSSI = RSSI, Received Signal Strength Indication (Empfänger)
@@ -39,6 +39,8 @@ RPM = Drehzal des Motors
 Tmp1 = Temperatur1 (z.B. vom ESC) 
 Cels = Einzelzellen (z.B. Frsky MLVSS, FLVSS oder FLVS-ADV)
 Cel2 = Einzelzellen (z.B. Frsky FLVSS oder FLVS)
+RQly = Receive Quality	Sender -> Empfänger (RC)
+TQly = Transmit Quality (Telemetry)	Empfänger -> Sender (Telem.)
 
 Features RK01, RK02, RK03, RK04, RK05 Widgets:
 ==================================

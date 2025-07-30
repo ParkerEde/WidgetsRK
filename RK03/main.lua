@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.08"
+local RKWidgetVersion = "1.1.09"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -116,7 +116,14 @@ local function round(num, decimal)
 end
 	
 local function getSensors(wgt)
-	RSSI = getValue("RSSI")
+
+	if getValue("TQly-") > 0 then
+		RSSI = getValue("TQly")
+	else
+		RSSI = getValue("RSSI")
+
+	end
+	
 	GSpdraw = getValue("GSpd")
 	if GSpdraw < 300 then GSpd = GSpdraw end
 	

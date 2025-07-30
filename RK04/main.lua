@@ -1,4 +1,4 @@
-local RKWidgetVersion = "1.1.08"
+local RKWidgetVersion = "1.1.09"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 
@@ -50,7 +50,7 @@ local options = {
   { "TextColor", COLOR, WHITE },
   { "NoDataColor", COLOR, BLACK },
   { "RSSIWarning", BOOL, 1},
-  { "ShowVFR", BOOL, 0}
+  { "ShowVFR", BOOL, 0},
   }
 
 local function update(wgt, options)
@@ -66,7 +66,8 @@ local function create(zone, options)
   return wgt
 end
 
-
+-- local rssilabel="RSSI"
+-- local vfrlabel="VFR"
 
 local nodataRSSI =1
 local RSSI = 0
@@ -117,10 +118,33 @@ local function getFormattedDateTime()
 end
 
 local function getSensors(wgt)
-	RSSI = getValue("RSSI")
-	RSSImin = getValue("RSSI-")
-	VFR = getValue("VFR")
-	VFRmin = getValue("VFR-")
+	if getValue("RQly-") > 0 then
+		RSSI = getValue("RQly")
+		RSSImin = getValue("RQly-")
+		rssilabel="RQly"
+	else
+		RSSI = getValue("RSSI")
+		RSSImin = getValue("RSSI-")
+		if rssilabel=="RQly" then
+			print ""
+		else
+			rssilabel="RSSI"
+		end
+	end
+	
+	if getValue("TQly-") > 0 then
+		VFR = getValue("TQly")
+		VFRmin = getValue("TQly-")
+		vfrlabel="TQly"
+	else
+		VFR = getValue("VFR")
+		VFRmin = getValue("VFR-")
+		if vfrlabel=="TQly" then
+			print ""
+		else
+			vfrlabel="VFR "
+		end
+	end
 end
 
 local function rssiwarning(wgt)
@@ -176,6 +200,8 @@ local function resetvalues(wgt)
 		if reset > 0 or ModelRxIDVorher ~= ModelRxIDNachher then
 			RSSIminsave = 0	
 			VFRminsave = 0
+			rssilabel="RSSI"
+			vfrlabel="VFR "
 		end
 	end
 	ModelRxID = model.getModule(0)
@@ -221,7 +247,7 @@ local function savevalues(wgt)
 			filename = string.format("/LOGS/%s-%s-%s_RK-Widget.txt", namemodel, date, time)
 			local file, err = io.open(filename, "w")
 			if file then
-				io.write(file, "Modell                 : " .. namemodel .. "\nDateiname              : " .. namefile .. "\nRSSImin (dB)           : " .. round(RSSIminsave,0) .. "\nVFRmin (%)             : " .. round(VFRminsave,0) .. "\n")
+				io.write(file, "Modell                 : " .. namemodel .. "\nDateiname              : " .. namefile .. "\n"..rssilabel.."min                : " .. round(RSSIminsave,0) .. "\n"..vfrlabel.."min                : " .. round(VFRminsave,0) .. "\n")
 				io.close(file)
 				RK04readysaved = 1
 				-- print("Datei erfolgreich gespeichert: " .. filename)
@@ -241,16 +267,16 @@ local function refreshZoneTiny(wgt)
   ShowRSSIMin = wgt.options.ShowRSSIMin
   -- print("ShowRSSIMin"..ShowRSSIMin)
   if wgt.options.ShowVFR ~= 1 then
-	lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-00, "RSSI  "..round(RSSI,0), CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+16, "RSSI- "..round(RSSIminsave,0), CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-00, rssilabel.."  "..round(RSSI,0), CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+16, rssilabel.."- "..round(RSSIminsave,0), CUSTOM_COLOR)
   end
   
   if nodataVFR == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
   ShowVFR = wgt.options.ShowVFR
   -- print("ShowVFR"..ShowVFR)
   if wgt.options.ShowVFR == 1 then
-	lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-00, "VFR  "..round(VFR,0), CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+16, "VFR- "..round(VFRminsave,0), CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+ 0, wgt.zone.y-00, vfrlabel.."  "..round(VFR,0), CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+ 0, wgt.zone.y+16, vfrlabel.."- "..round(VFRminsave,0), CUSTOM_COLOR)
   end
 end
 
