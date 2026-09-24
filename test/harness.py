@@ -18,6 +18,9 @@ jedes ALT durch NEU ersetzt, bevor verglichen wird. Beispiel:
 Mit --sichtbar wird nur verglichen, was tatsächlich sichtbar gezeichnet wird: lcd.setColor-Aufrufe
 entfallen, dafür trägt jeder Zeichenbefehl die dann gültige Farbe; drawText mit leerem Text entfällt.
 So fallen weggelassene Leer-Aufrufe (Platzhalter) nicht als Unterschied auf.
+
+Mit -x "ZEILE" werden Aufzeichnungszeilen, die genau ZEILE lauten, in beiden Fassungen
+entfernt, z. B. -x "print | " für weggefallene leere print-Ausgaben.
 """
 import sys, difflib, pathlib, subprocess, tarfile, tempfile, io
 from lupa.lua52 import LuaRuntime
@@ -71,6 +74,11 @@ def main():
         alt, neu = args[i + 1].split("=>", 1)
         repl.append((alt, neu))
         del args[i:i + 2]
+    drop = []
+    while "-x" in args:
+        i = args.index("-x")
+        drop.append(args[i + 1])
+        del args[i:i + 2]
     scenario = args[0]
     ref = args[1] if len(args) > 1 else "main"
     with tempfile.TemporaryDirectory() as old:
@@ -80,6 +88,10 @@ def main():
         t_old = [l.replace(alt, neu) for l in t_old]
         print(f"Gewollte Änderung ausgeblendet: {alt!r} -> {neu!r}")
     t_new, f_new = run(REPO, scenario)
+    for d in drop:
+        t_old = [l for l in t_old if l != d]
+        t_new = [l for l in t_new if l != d]
+        print(f"Zeilen entfernt: {d!r}")
     if sichtbar:
         t_old, t_new = visible(t_old), visible(t_new)
         print("Vergleich nur der sichtbaren Zeichenbefehle (--sichtbar)")

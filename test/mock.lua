@@ -32,7 +32,11 @@ function getFieldInfo(n)
 	return nil
 end
 function getTime() return NOW end
-function getDateTime() return { year = 2026, mon = 9, day = 24, hour = 14, min = 5, sec = 9 } end
+-- Uhrzeit läuft mit NOW mit (NOW in 10 ms), damit Log-Dateinamen sich unterscheiden
+function getDateTime()
+	local s = math.floor(NOW / 100)
+	return { year = 2026, mon = 9, day = 24, hour = 14 + math.floor(s / 3600) % 10, min = math.floor(s / 60) % 60, sec = s % 60 }
+end
 
 model = {
 	getModule = function(i) return { modelId = RXID[i] } end,
