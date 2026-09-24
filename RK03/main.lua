@@ -1,3 +1,5 @@
+-- RK Widgets – Copyright (C) 2022-2026 Ralf Kruse
+-- SPDX-License-Identifier: GPL-3.0-or-later
 local RKWidgetVersion = "1.2.0"
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++
 local settings, err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")

@@ -1,3 +1,5 @@
+-- RK Widgets – Copyright (C) 2022-2026 Ralf Kruse
+-- SPDX-License-Identifier: GPL-3.0-or-later
 -- +++++++++++ RK-Lib: gemeinsame Funktionen der RK-Widgets +++++++++++
 -- Wird von jedem Widget per loadScript("/WIDGETS/RK-Lib/RK-Lib.lua")() geladen
 -- und liefert eine Tabelle mit den Funktionen zurück.

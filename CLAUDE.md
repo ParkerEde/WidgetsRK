@@ -88,6 +88,7 @@ SD-Karte: `/WIDGETS/RK01..RK05/main.lua`, `/WIDGETS/RK-Lib/RK-Lib.lua`, `/WIDGET
   - `voiceoutput` spielt die Ansagen per `playFile`/`playNumber`.
   - `refreshZone*` zeichnet. Im Vollbild ist jede der 5×2 Zeilen ein Aufruf von `lib.drawRow`/`lib.drawValue`. Freie Plätze stehen als auskommentierte Vorlage `-- lib.drawRow(wgt, x, y, "Label", nodataX, X, Xmaxsave, 0)` da.
   - `refresh` und `background` rufen dieselben Sammelfunktionen auf, damit auch im Hintergrund Werte erfasst werden.
+  - Jede Lua-Datei beginnt mit dem Lizenzkopf `-- RK Widgets – Copyright (C) 2022-2026 Ralf Kruse` / `-- SPDX-License-Identifier: GPL-3.0-or-later`. Die Lizenz ist GPLv3 oder später, siehe `LICENSE`.
   - Variablen sind `local`. Global sind nur die Settings-Variablen, `trackswitchcondition`, `filename` und `RKxxreadysaved`.
   - Auskommentierte `-- print(...)`-Zeilen und die auskommentierten Vorlagen sind gewollt und bleiben stehen. Der Nutzer nutzt sie zum Debuggen.
 - **Sensornamen mit Alternativen**: z. B. Kapazität aus `A4` / `EscC` / `Capa` / `Kapa` / `5123`, Sats aus `Sats` / `5100`, PDOP aus `PDOP` / `5101`.

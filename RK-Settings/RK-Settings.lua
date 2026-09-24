@@ -1,3 +1,5 @@
+-- RK Widgets – Copyright (C) 2022-2026 Ralf Kruse
+-- SPDX-License-Identifier: GPL-3.0-or-later
 -- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
 -- es müssen kleine Buchstaben verwendet werden! Die Angabe muss in Anführungszeichen eingefasst sein!
 

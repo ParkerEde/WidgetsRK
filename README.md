@@ -34,3 +34,9 @@ Jede Version ist ein Commit mit Tag `vX.Y.Z`. Was sich geändert hat:
 - Code-Unterschied zwischen zwei Versionen: z. B. [v1.1.08...v1.1.09](../../compare/v1.1.08...v1.1.09)
 
 Die Historie vor V1.0.0 (Februar 2022 bis Januar 2023) ist als einzelne Commits ohne Tag enthalten.
+
+## Lizenz
+
+Copyright (C) 2022-2026 Ralf Kruse
+
+Dieses Programm ist freie Software: Du kannst es unter den Bedingungen der GNU General Public License, Version 3 oder (nach deiner Wahl) jeder späteren Version, weitergeben und/oder ändern. Es wird in der Hoffnung verbreitet, dass es nützlich ist, aber ohne jede Gewährleistung. Details stehen in [LICENSE](LICENSE).
