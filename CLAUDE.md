@@ -45,7 +45,7 @@ Der Nutzer testet jede Änderung am Sender. Davor läuft der Vergleichstest unte
      - Innerhalb einer Reihe das PDF der Reihe neu erzeugen.
    - Erzeugen: `%TEMP%\rk-luatest\Scripts\python tools\md2pdf.py "docs\RK01-05 Widgets Doku.md" "docs\RK01-05 Widgets Doku x.y.x.pdf" --version x.y.z`. Das Skript geht über Markdown → HTML → Edge/Chrome headless und braucht das Paket `markdown` in der Test-Umgebung.
    - Das PDF der aktuellen Reihe wird ans Release angehängt.
-4. Commit mit der Betreffzeile `Vx.y.z: <Kurzbeschreibung>`. Den Release-Notes-Text in den Commit-Body übernehmen. Danach den annotierten Tag `vx.y.z` setzen.
+4. Commit mit der Betreffzeile `Vx.y.z: <Kurzbeschreibung>`. Generell gilt für Commits und PRs: **keine** `Co-Authored-By: Claude`- oder „Generated with Claude Code“-Zeilen, das ist Wunsch des Autors. Den Release-Notes-Text in den Commit-Body übernehmen. Danach den annotierten Tag `vx.y.z` setzen.
 5. GitHub Release zum Tag anlegen. Dafür die GitHub CLI `gh` nutzen. Wo sie liegt, hängt vom Rechner ab, sie ist ggf. nicht im PATH.
    - Anhängen: `RK Widgets Vx.y.z Installation.zip`, `RK Widgets Vx.y.z Update.zip` und die PDF-Doku.
    - **Installation.zip** enthält: `liesmich.txt`, `RK-Lib/`, `RK-Settings/`, alle `RKxx/`, `SOUNDS de Sprachdateien/`, `releasenotes.txt`.
