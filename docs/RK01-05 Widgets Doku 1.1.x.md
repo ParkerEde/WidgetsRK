@@ -1,6 +1,6 @@
 # RK01 – RK05 Widgets
 
-> Automatisch aus `RK01-05 Widgets Doku 1.1.x.docx` erzeugt, damit Änderungen an der Doku in GitHub zeilenweise nachvollziehbar sind. Maßgeblich ist die Word- bzw. PDF-Datei in diesem Ordner.
+> Diese Datei ist die Quelle der Doku. Das PDF wird daraus erzeugt (`tools/md2pdf.py`).
 
 
 ## Darstellungsvariante der Kopfzeile

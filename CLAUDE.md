@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 EdgeTX-Lua-Telemetrie-Widgets RK01–RK05 für Sender mit Farbdisplay (FrSky Horus X10/X12, TX16S), ab EdgeTX 2.10.0. Texte, Kommentare und Doku sind auf Deutsch.
 
 - Repo: `ParkerEde/WidgetsRK` (privat)
-- Die Historie wurde aus den früheren Versionsordnern in `C:\MP-Repos\Widgets RK01-05` rekonstruiert. Jeder Ordner ist ein Commit, jede Version ab V1.0.0 hat einen Tag `vX.Y.Z` und ein GitHub Release. Die Ordner bleiben als Archiv liegen und werden nicht mehr gepflegt.
+- Die Historie wurde aus den früheren lokalen Versionsordnern (`NN Vx.y.z <Beschreibung>`) rekonstruiert. Jeder Ordner ist ein Commit, jede Version ab V1.0.0 hat einen Tag `vX.Y.Z` und ein GitHub Release. Die Ordner bleiben als Archiv liegen und werden nicht mehr gepflegt.
 
 ## Build / Test
 
@@ -37,10 +37,11 @@ Der Nutzer testet jede Änderung am Sender. Davor läuft der Vergleichstest unte
 1. Die Version an **sechs** Stellen gleich anheben: `local RKWidgetVersion = "x.y.z"` in allen `RKxx/main.lua` und `lib.version = "x.y.z"` in `RK-Lib/RK-Lib.lua`. Weichen sie ab, zeigt jedes Widget nur den roten Lib-Hinweis. Die Nummer steht in der Kopfzeile jedes Widgets.
 2. Einen neuen Eintrag oben in `releasenotes.txt` im bestehenden Format (`Version x.y.z` / `=====`) anlegen. Bei geänderten Features oder Sensoren auch `liesmich.txt` anpassen.
 3. Doku geändert?
-   - Die Quelle ist `docs/RK01-05 Widgets Doku 1.1.x.docx`, dazu gehört das PDF.
-   - Die `.md`-Fassung wurde mit mammoth daraus erzeugt und von Hand nachbearbeitet. Sie muss mitgepflegt werden.
+   - Die einzige Quelle ist `docs/RK01-05 Widgets Doku 1.1.x.md`, Bilder unter `docs/img/`. Word-Dateien gibt es seit V1.2.0 nicht mehr.
+   - Das PDF wird daraus erzeugt: `%TEMP%\rk-luatest\Scripts\python tools\md2pdf.py "docs\RK01-05 Widgets Doku 1.1.x.md" --version x.y.z`. Das Skript geht über Markdown → HTML → Edge/Chrome headless und braucht das Paket `markdown` in der Test-Umgebung.
+   - Das erzeugte PDF liegt im Repo neben der md-Datei und wird ans Release angehängt.
 4. Commit mit der Betreffzeile `Vx.y.z: <Kurzbeschreibung>`. Den Release-Notes-Text in den Commit-Body übernehmen. Danach den annotierten Tag `vx.y.z` setzen.
-5. GitHub Release zum Tag anlegen. gh liegt unter `C:\Progs\gh-cli\bin\gh.exe`, nicht im PATH.
+5. GitHub Release zum Tag anlegen. Dafür die GitHub CLI `gh` nutzen. Wo sie liegt, hängt vom Rechner ab, sie ist ggf. nicht im PATH.
    - Anhängen: `RK Widgets Vx.y.z Installation.zip`, `RK Widgets Vx.y.z Update.zip` und die PDF-Doku.
    - **Installation.zip** enthält: `liesmich.txt`, `RK-Lib/`, `RK-Settings/`, alle `RKxx/`, `SOUNDS de Sprachdateien/`, `releasenotes.txt`.
    - **Update.zip** enthält: alle `RKxx/`, `RK-Lib/`, `liesmich.txt`, `releasenotes.txt`. Ohne `RK-Settings`, damit die Einstellungen der Nutzer erhalten bleiben.
