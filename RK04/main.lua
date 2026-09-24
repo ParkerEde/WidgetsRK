@@ -288,7 +288,7 @@ local function refreshZoneXLarge(wgt)
 	if nodataVFR == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
 	if VFRminsave == 0 then
 		lcd.drawText(wgt.zone.x+290, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
-		lcd.drawText(wgt.zone.x+345, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
+		lcd.drawText(wgt.zone.x+355, wgt.zone.y+20, "- - ", CUSTOM_COLOR + RIGHT)
 	else
 		lcd.drawText(wgt.zone.x+290, wgt.zone.y+20, round(VFR,0), CUSTOM_COLOR + RIGHT)
 		lcd.drawText(wgt.zone.x+355, wgt.zone.y+20, round(VFRminsave,0), CUSTOM_COLOR + RIGHT)
