@@ -14,10 +14,12 @@ for step = 1, 140 do
 		SENSORS.Cels = { 4.20 - d, 4.18 - d, 4.21 - d, 4.19 - d }
 		if step == 20 then SENSORS.Cels[2] = 1500 end   -- Mondwert
 		if step == 22 then SENSORS.Cels[3] = 1.9 end    -- sehr niedrig
+		if step >= 32 and step < 40 then for i = 1, 4 do SENSORS.Cels[i] = SENSORS.Cels[i] + 0.15 end end  -- Erholung nach Last
 	elseif step >= 60 and step < 70 then
 		SENSORS.Cels = 0                                 -- Telemetrie weg
 	elseif step >= 70 then
 		SENSORS.Cels = { 3.9, 3.8, 3.85, 3.7, 3.75, 3.95 }
+		if step >= 85 and step < 100 then for i = 1, 6 do SENSORS.Cels[i] = SENSORS.Cels[i] - 0.3 end end  -- Last
 	end
 	if step >= 40 and step < 120 then
 		local d = step * 0.005

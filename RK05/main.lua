@@ -162,8 +162,8 @@ local function savevalues(wgt)
 		if not trackswitchcondition and RK03readysaved == 1 then
 			local file, err = io.open(filename, "a")
 			if file then
-				io.write(file, "Pack 1 min(V)          : " .. round(Pack1,2) .. "\n  Pack1 Zelle1 min(V)  : " .. round(Pack1ZelleMinSave[1],2) .. "\n  Pack1 Zelle2 min(V)  : " .. round(Pack1ZelleMinSave[2],2) .. "\n  Pack1 Zelle3 min(V)  : " .. round(Pack1ZelleMinSave[3],2) .. "\n  Pack1 Zelle4 min(V)  : " .. round(Pack1ZelleMinSave[4],2) .. "\n  Pack1 Zelle5 min(V)  : " .. round(Pack1ZelleMinSave[5],2) .. "\n  Pack1 Zelle6 min(V)  : " .. round(Pack1ZelleMinSave[6],2) .. "\n")
-				io.write(file, "Pack 2 min(V)          : " .. round(Pack2,2) .. "\n  Pack2 Zelle1 min(V)  : " .. round(Pack2ZelleMinSave[1],2) .. "\n  Pack2 Zelle2 min(V)  : " .. round(Pack2ZelleMinSave[2],2) .. "\n  Pack2 Zelle3 min(V)  : " .. round(Pack2ZelleMinSave[3],2) .. "\n  Pack2 Zelle4 min(V)  : " .. round(Pack2ZelleMinSave[4],2) .. "\n  Pack2 Zelle5 min(V)  : " .. round(Pack2ZelleMinSave[5],2) .. "\n  Pack2 Zelle6 min(V)  : " .. round(Pack2ZelleMinSave[6],2) .. "\n")
+				io.write(file, "Pack 1 min(V)          : " .. round(Pack1minsave,2) .. "\n  Pack1 Zelle1 min(V)  : " .. round(Pack1ZelleMinSave[1],2) .. "\n  Pack1 Zelle2 min(V)  : " .. round(Pack1ZelleMinSave[2],2) .. "\n  Pack1 Zelle3 min(V)  : " .. round(Pack1ZelleMinSave[3],2) .. "\n  Pack1 Zelle4 min(V)  : " .. round(Pack1ZelleMinSave[4],2) .. "\n  Pack1 Zelle5 min(V)  : " .. round(Pack1ZelleMinSave[5],2) .. "\n  Pack1 Zelle6 min(V)  : " .. round(Pack1ZelleMinSave[6],2) .. "\n")
+				io.write(file, "Pack 2 min(V)          : " .. round(Pack2minsave,2) .. "\n  Pack2 Zelle1 min(V)  : " .. round(Pack2ZelleMinSave[1],2) .. "\n  Pack2 Zelle2 min(V)  : " .. round(Pack2ZelleMinSave[2],2) .. "\n  Pack2 Zelle3 min(V)  : " .. round(Pack2ZelleMinSave[3],2) .. "\n  Pack2 Zelle4 min(V)  : " .. round(Pack2ZelleMinSave[4],2) .. "\n  Pack2 Zelle5 min(V)  : " .. round(Pack2ZelleMinSave[5],2) .. "\n  Pack2 Zelle6 min(V)  : " .. round(Pack2ZelleMinSave[6],2) .. "\n")
 				io.close(file)
 				RK01readysaved = 0
 				RK02readysaved = 0
