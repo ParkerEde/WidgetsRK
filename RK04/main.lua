@@ -266,7 +266,7 @@ local function refreshZoneXLarge(wgt)
 	-- 1. SENSOR Zeile 1.Spalte ======================================================================
 	-- ===============================================================================================
 	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+005, wgt.zone.y+20, "RSSI", CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+005, wgt.zone.y+20, rssilabel, CUSTOM_COLOR)
 
 	if nodataRSSI == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
 	if RSSIminsave == 0 then
@@ -283,7 +283,7 @@ local function refreshZoneXLarge(wgt)
 	-- 1. SENSOR Zeile 2.Spalte ======================================================================
 	-- ===============================================================================================
 	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+200, wgt.zone.y+20, "VFR", CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+200, wgt.zone.y+20, vfrlabel, CUSTOM_COLOR)
 
 	if nodataVFR == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
 	if VFRminsave == 0 then
