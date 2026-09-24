@@ -38,7 +38,9 @@ Der Nutzer testet jede Änderung am Sender. Davor läuft der Vergleichstest unte
 2. Einen neuen Eintrag oben in `releasenotes.txt` im bestehenden Format (`Version x.y.z` / `=====`) anlegen. Bei geänderten Features oder Sensoren auch `liesmich.txt` anpassen.
 3. Doku geändert?
    - Die einzige Quelle ist `docs/RK01-05 Widgets Doku.md` (ohne Version im Namen), Bilder unter `docs/img/`. Word-Dateien gibt es seit V1.2.0 nicht mehr.
-   - Die PDFs sind Momentaufnahmen je Versionsreihe x.Y: `docs/RK01-05 Widgets Doku 1.2.x.pdf` usw. PDFs älterer Reihen (`…1.0.x.pdf`, `…1.1.x.pdf`) nie überschreiben.
+   - **Bildschirmfotos vor dem Einchecken auf persönliche Daten prüfen**, vor allem auf echte GPS-Koordinaten (RK03-Seite, Log-Dateien). Im Zweifel fiktive Werte einsetzen.
+     - Die Word-/PDF-Doku bis V1.1.x wurde deshalb am 2026-09-25 komplett aus der Historie entfernt, und die Historie wurde neu geschrieben. `bild07`/`bild11` zeigen fiktive Koordinaten.
+   - Die PDFs sind Momentaufnahmen je Versionsreihe x.Y: `docs/RK01-05 Widgets Doku 1.2.x.pdf` usw. PDFs älterer Reihen nie überschreiben.
      - Bei einer neuen Reihe (z. B. 1.3.0) ein neues PDF anlegen.
      - Innerhalb einer Reihe das PDF der Reihe neu erzeugen.
    - Erzeugen: `%TEMP%\rk-luatest\Scripts\python tools\md2pdf.py "docs\RK01-05 Widgets Doku.md" "docs\RK01-05 Widgets Doku x.y.x.pdf" --version x.y.z`. Das Skript geht über Markdown → HTML → Edge/Chrome headless und braucht das Paket `markdown` in der Test-Umgebung.
