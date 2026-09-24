@@ -6,7 +6,7 @@ local lib = {}
 
 -- Muss mit RKWidgetVersion in jedem RKxx/main.lua übereinstimmen,
 -- sonst zeigt das Widget nur einen Hinweis an.
-lib.version = "1.1.10"
+lib.version = "1.2.0"
 
 function lib.printTable( t )
 

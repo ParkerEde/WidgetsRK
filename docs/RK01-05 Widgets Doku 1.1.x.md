@@ -102,7 +102,8 @@ Verfügbar in RK01, RK02
 - ein logischer Schalter, der zum resetten benutzt wird   
 (standardmäßig wird auf LS61 reagiert, ist aber in der "RK-Settings\RK-Settings.lua" über PC änderbar)
 - das int. oder ext. HF-Modul muss aktiv sein und die Empfänger ID darf nicht 0 sein, damit der manuelle Reset bzw. der Autoreset (beim Modellwechsel) funktioniert
-- die Verzeichnisse "RK01", "RK02", "RK03", "RK04", "RK05" und "RK-Settings" müssen auf die SD-Karte in das "WIDGETS" Verzeichnis kopiert werden
+- die Verzeichnisse "RK01", "RK02", "RK03", "RK04", "RK05", "RK-Lib" und "RK-Settings" müssen auf die SD-Karte in das "WIDGETS" Verzeichnis kopiert werden
+- "RK-Lib" enthält gemeinsame Funktionen aller Widgets und muss dieselbe Version haben wie die Widgets (ab 1.2.0). Fehlt sie oder passt die Version nicht, zeigt jedes Widget einen roten Hinweis statt der Werte.
 -  aus dem Verzeichnis "SOUNDS de Sprachdateien" müssen die WAV-Dateien auf die SD-Karte ins Verzeichnis "SOUNDS\de" kopiert werden
 - die vier Widgets RK01, RK02, RK03 und RK05 müssen jeweils einem Vollbildscreen zugewiesen werden
 - RK04 ist geeignet, um auf die „Top-Bar“ hinzugefügt zu werden. Hier können RSSI und VFR (momentan und minimal Werte) angezeigt werden. Außerdem kann RK04 auch die akustische Warnung bei schlechtem RSSI-Wert übernehmen. Diese wird dann verzögert ausgegeben, da das interne System oft zu schnell die akustische Warnung ausgibt. Dann muss allerdings auf der Telemetrie-Seite des Modellspeichers die Systemeigene RSSI-Warnung deaktiviert werden, indem die Werte für Warnung Kritsch auf 1 gesetzt werden. Die Schwellen für die RSSI-Warnung sind 35 Warnung und 32 für Kritisch.

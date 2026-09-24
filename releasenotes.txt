@@ -1,3 +1,13 @@
+Version 1.2.0
+==============
+Neu: gemeinsame Funktionsbibliothek RK-Lib. Der Ordner "RK-Lib" muss mit auf die SD-Karte in das "WIDGETS" Verzeichnis (auch beim Update).
+Jedes Widget prüft beim Laden, ob RK-Lib vorhanden ist und die gleiche Version hat. Sonst erscheint ein roter Hinweis statt der Werte.
+RK01-RK05 intern überarbeitet (doppelten Code zusammengefasst, Aufräumarbeiten). Anzeige, Ansagen und Log bleiben gleich.
+RK02: max-Wert bei VSpd (m/s) sitzt 1 Pixel tiefer, einheitlich mit km/h.
+RK04: im Vollbild werden bei ELRS jetzt RQly/TQly statt RSSI/VFR angezeigt; "- -" bei VFR min richtig ausgerichtet.
+RK04: wertet den Motorschutzschalter selbst aus. Die Log-Datei wird jetzt auch angelegt, wenn RK01, RK03 und RK05 auf keinem Screen liegen.
+RK05: im Log steht bei "Pack 1/2 min(V)" jetzt die minimale statt der aktuellen Packspannung.
+
 Version 1.1.10
 ==============
 Alle Lua- und Textdateien sind nun einheitlich UTF-8 kodiert (vorher ISO-8859-1). Die Funktion der Widgets ändert sich dadurch nicht.

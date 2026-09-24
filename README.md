@@ -15,11 +15,12 @@ Telemetrie-Widgets für EdgeTX-Sender mit Farbdisplay (FrSky Horus X10(S)/X12(S)
 Die fertigen Pakete gibt es unter **[Releases](../../releases)**:
 
 - **Installation.zip**: vollständiges Paket für die Erstinstallation
-- **Update.zip**: nur die Widgets, ohne `RK-Settings`, damit die eigenen Einstellungen erhalten bleiben
+- **Update.zip**: nur die Widgets und `RK-Lib`, ohne `RK-Settings`, damit die eigenen Einstellungen erhalten bleiben
 
 Auf die SD-Karte kopieren:
 
-- `RK01` … `RK05` und `RK-Settings` nach `/WIDGETS/`
+- `RK01` … `RK05`, `RK-Lib` und `RK-Settings` nach `/WIDGETS/`
+- `RK-Lib` enthält die gemeinsamen Funktionen und muss immer dieselbe Version wie die Widgets haben. Sonst zeigen die Widgets einen roten Hinweis.
 - den Inhalt von `SOUNDS de Sprachdateien` nach `/SOUNDS/de/`
 
 Voraussetzungen, Sensoreinrichtung und alle Funktionen stehen in [liesmich.txt](liesmich.txt) und in der [Dokumentation](docs/RK01-05%20Widgets%20Doku%201.1.x.md). Die Word- und PDF-Fassung liegt im Ordner [docs](docs).
