@@ -15,10 +15,11 @@ Es gibt kein Build-System, keinen Linter und keine Tests. Getestet wird nur auf 
 
 ## Kodierung – wichtig
 
-- `*.lua` und `*.txt` liegen im Arbeitsverzeichnis als **ISO-8859-1 mit CRLF** vor, so wie sie auf den Sender kommen.
-- Ausnahme: `RK-Settings/RK-Settings.lua` ist UTF-8.
-- `.gitattributes` (`working-tree-encoding`) speichert die Dateien im Repo als UTF-8, damit GitHub die Umlaute richtig anzeigt.
-- Beim Bearbeiten Kodierung und Zeilenenden beibehalten, nicht auf UTF-8 umstellen.
+- Alle `*.lua` und `*.txt` sind **UTF-8 ohne BOM mit CRLF**. Das gilt im Repo und auf dem Sender.
+- **Kein BOM**: Es ist nicht geklärt, ob der Lua-Lader von EdgeTX ein BOM überspringt.
+- Die Zeilenenden setzt `.gitattributes` (`eol=crlf`).
+- Bis V1.1.09 waren die Dateien ISO-8859-1. Ausnahme war `RK-Settings.lua`, die schon UTF-8 war. Die UTF-8-Fassung wurde am Sender getestet. Die Widgets laden normal, und `°C` steht im Flug-Log richtig.
+- Auf dem Display gibt EdgeTX keine Umlaute richtig aus. Deshalb in angezeigten Texten keine Umlaute verwenden. In Kommentaren, `print` und Log-Texten sind sie erlaubt.
 
 ## Neue Version veröffentlichen
 
@@ -32,6 +33,7 @@ Es gibt kein Build-System, keinen Linter und keine Tests. Getestet wird nur auf 
    - Anhängen: `RK Widgets Vx.y.z Installation.zip`, `RK Widgets Vx.y.z Update.zip` und die PDF-Doku.
    - **Installation.zip** enthält: `liesmich.txt`, `RK-Settings/`, alle `RKxx/`, `SOUNDS de Sprachdateien/`, `releasenotes.txt`.
    - **Update.zip** enthält: alle `RKxx/`, `liesmich.txt`, `releasenotes.txt`. Ohne `RK-Settings`, damit die Einstellungen der Nutzer erhalten bleiben.
+   - Die Ordner liegen direkt auf der obersten Ebene des ZIPs, ohne umschließenden Ordner.
    - Die bisherigen ZIPs enthielten zusätzlich die vom Sender erzeugten `main.luac`.
 
 ## Architektur
@@ -45,7 +47,7 @@ SD-Karte: `/WIDGETS/RK01..RK05/main.lua`, `/WIDGETS/RK-Settings/RK-Settings.lua`
 - **Aufgaben der Widgets**:
   - RK01: Akku, Strom, Kapazität, RPM, Tmp1. Erkennt als einziges die Zellenzahl, nur bei gesichertem Motor. Gibt den Unterspannungsalarm aus.
   - RK02: Höhe und Vario.
-  - RK03: GPS, Entfernung, Sats/PDOP.
+  - RK03: GPS, Entfernung, Sats/PDOP. Nutzt die Linkqualität (RSSI bzw. TQly bei ELRS) zur Prüfung, ob Telemetrie da ist.
   - RK04: Top-Bar-Widget für RSSI/VFR bzw. RQly/TQly bei ELRS. Gibt den RSSI-Alarm aus.
   - RK05: Einzelzellen.
   - RK01–03 und RK05 funktionieren nur im Vollbild, kleinere Zonen zeigen „nur Vollbild“.

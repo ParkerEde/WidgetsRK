@@ -1,3 +1,8 @@
+Version 1.1.10
+==============
+Alle Lua- und Textdateien sind nun einheitlich UTF-8 kodiert (vorher ISO-8859-1). Die Funktion der Widgets ändert sich dadurch nicht.
+liesmich.txt: RK05 in der Installationsanleitung ergänzt.
+
 Version 1.1.09
 ==============
 RQly = Receive Quality	Sender -> Empfänger (RC)

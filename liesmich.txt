@@ -4,9 +4,9 @@ Voraussetzung:
 - FrSky Horus X10(S) oder Horus X12(S) mit EdgeTx 2.10.0 oder neuer.
 - ein logischer Schalter, der zum resetten benutzt wird (standardmäßig wird auf LS61 reagiert, ist aber in der "RK-Settings\RK-Settings.lua" über PC änderbar)
 - das int. oder ext. HF Modul muss aktiv sein und die Empfänger ID darf nicht 0 sein, damit der manuelle Reset bzw. der Autoreset (beim Modellwechsel) funktioniert
-- die Verzeichnisse "RK01", "RK02", "RK03", "RK04" und "RK-Settings" müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
+- die Verzeichnisse "RK01", "RK02", "RK03", "RK04", "RK05" und "RK-Settings" müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
 - aus dem Verzeichnis "SOUNDS de Sprachdateien" müssen die WAV Dateien auf die SD Karte ins Verzeichnis "SOUNDS\de" kopiert werden
-- die drei Widgets RK01, RK02, RK03 und RK05 müssen jeweils einem Vollbildscreen zugewiesen werden. RK04 2mal einem TOP-BAR Feld.
+- die vier Widgets RK01, RK02, RK03 und RK05 müssen jeweils einem Vollbildscreen zugewiesen werden. RK04 2mal einem TOP-BAR Feld.
 
 
 Sensoreinrichtung:
