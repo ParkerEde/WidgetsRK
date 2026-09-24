@@ -7,8 +7,9 @@ Einrichtung (einmalig, außerhalb des Repos, dieselbe Umgebung wie für test/):
     %TEMP%\\rk-luatest\\Scripts\\python -m pip install markdown
 
 Aufruf aus dem Repo-Ordner:
-    %TEMP%\\rk-luatest\\Scripts\\python tools\\md2pdf.py "docs\\RK01-05 Widgets Doku 1.1.x.md" [ziel.pdf] [--version 1.2.0]
-Ohne Ziel wird das PDF neben die Markdown-Datei gelegt.
+    %TEMP%\\rk-luatest\\Scripts\\python tools\\md2pdf.py "docs\\RK01-05 Widgets Doku.md" --version 1.2.0
+Ohne Ziel entsteht neben der Markdown-Datei "<Name> 1.2.x.pdf" (Versionsreihe aus --version).
+PDFs älterer Reihen werden dadurch nicht überschrieben.
 """
 import sys, pathlib, subprocess, tempfile, shutil, datetime
 import markdown
@@ -43,7 +44,13 @@ def main():
         version = args[i + 1]
         del args[i:i + 2]
     src = pathlib.Path(args[0]).resolve()
-    dst = pathlib.Path(args[1]).resolve() if len(args) > 1 else src.with_suffix(".pdf")
+    if len(args) > 1:
+        dst = pathlib.Path(args[1]).resolve()
+    elif version:
+        reihe = ".".join(version.split(".")[:2]) + ".x"
+        dst = src.with_name(f"{src.stem} {reihe}.pdf")
+    else:
+        sys.exit("Bitte Ziel-PDF oder --version angeben.")
     browser = next((b for b in BROWSER if pathlib.Path(b).exists()), None)
     if browser is None:
         sys.exit("Kein Edge/Chrome gefunden.")

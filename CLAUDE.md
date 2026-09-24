@@ -37,9 +37,12 @@ Der Nutzer testet jede Änderung am Sender. Davor läuft der Vergleichstest unte
 1. Die Version an **sechs** Stellen gleich anheben: `local RKWidgetVersion = "x.y.z"` in allen `RKxx/main.lua` und `lib.version = "x.y.z"` in `RK-Lib/RK-Lib.lua`. Weichen sie ab, zeigt jedes Widget nur den roten Lib-Hinweis. Die Nummer steht in der Kopfzeile jedes Widgets.
 2. Einen neuen Eintrag oben in `releasenotes.txt` im bestehenden Format (`Version x.y.z` / `=====`) anlegen. Bei geänderten Features oder Sensoren auch `liesmich.txt` anpassen.
 3. Doku geändert?
-   - Die einzige Quelle ist `docs/RK01-05 Widgets Doku 1.1.x.md`, Bilder unter `docs/img/`. Word-Dateien gibt es seit V1.2.0 nicht mehr.
-   - Das PDF wird daraus erzeugt: `%TEMP%\rk-luatest\Scripts\python tools\md2pdf.py "docs\RK01-05 Widgets Doku 1.1.x.md" --version x.y.z`. Das Skript geht über Markdown → HTML → Edge/Chrome headless und braucht das Paket `markdown` in der Test-Umgebung.
-   - Das erzeugte PDF liegt im Repo neben der md-Datei und wird ans Release angehängt.
+   - Die einzige Quelle ist `docs/RK01-05 Widgets Doku.md` (ohne Version im Namen), Bilder unter `docs/img/`. Word-Dateien gibt es seit V1.2.0 nicht mehr.
+   - Die PDFs sind Momentaufnahmen je Versionsreihe x.Y: `docs/RK01-05 Widgets Doku 1.2.x.pdf` usw. PDFs älterer Reihen (`…1.0.x.pdf`, `…1.1.x.pdf`) nie überschreiben.
+     - Bei einer neuen Reihe (z. B. 1.3.0) ein neues PDF anlegen.
+     - Innerhalb einer Reihe das PDF der Reihe neu erzeugen.
+   - Erzeugen: `%TEMP%\rk-luatest\Scripts\python tools\md2pdf.py "docs\RK01-05 Widgets Doku.md" "docs\RK01-05 Widgets Doku x.y.x.pdf" --version x.y.z`. Das Skript geht über Markdown → HTML → Edge/Chrome headless und braucht das Paket `markdown` in der Test-Umgebung.
+   - Das PDF der aktuellen Reihe wird ans Release angehängt.
 4. Commit mit der Betreffzeile `Vx.y.z: <Kurzbeschreibung>`. Den Release-Notes-Text in den Commit-Body übernehmen. Danach den annotierten Tag `vx.y.z` setzen.
 5. GitHub Release zum Tag anlegen. Dafür die GitHub CLI `gh` nutzen. Wo sie liegt, hängt vom Rechner ab, sie ist ggf. nicht im PATH.
    - Anhängen: `RK Widgets Vx.y.z Installation.zip`, `RK Widgets Vx.y.z Update.zip` und die PDF-Doku.

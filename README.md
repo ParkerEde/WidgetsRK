@@ -23,7 +23,7 @@ Auf die SD-Karte kopieren:
 - `RK-Lib` enthält die gemeinsamen Funktionen und muss immer dieselbe Version wie die Widgets haben. Sonst zeigen die Widgets einen roten Hinweis.
 - den Inhalt von `SOUNDS de Sprachdateien` nach `/SOUNDS/de/`
 
-Voraussetzungen, Sensoreinrichtung und alle Funktionen stehen in [liesmich.txt](liesmich.txt) und in der [Dokumentation](docs/RK01-05%20Widgets%20Doku%201.1.x.md). Eine PDF-Fassung liegt im Ordner [docs](docs) und hängt an jedem Release.
+Voraussetzungen, Sensoreinrichtung und alle Funktionen stehen in [liesmich.txt](liesmich.txt) und in der [Dokumentation](docs/RK01-05%20Widgets%20Doku.md). Eine PDF-Fassung je Versionsreihe liegt im Ordner [docs](docs) und hängt am jeweiligen Release.
 
 ## Versionen
 
