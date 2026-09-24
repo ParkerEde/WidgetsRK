@@ -379,19 +379,6 @@ local function refreshZoneMedium(wgt) lib.drawNurVollbild(wgt) end
 --- Size is 192x152 1/2
 local function refreshZoneLarge(wgt) lib.drawNurVollbild(wgt) end
 
--- Rechte Spalte: Label und ein Wert rechtsbündig bei x+390, "- - " wenn leer
-local function drawValue(wgt, y, label, nodata, leer, value, decimal)
-	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawText(wgt.zone.x+200, wgt.zone.y+y, label, SMLSIZE + CUSTOM_COLOR)
-
-	if nodata == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-	if leer then
-		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y, "- - ", CUSTOM_COLOR + RIGHT)
-	else
-		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y, round(value,decimal), CUSTOM_COLOR + RIGHT)
-	end
-end
-
 -- Rechte Spalte: Label und GPS-Position (lat über lon) rechtsbündig bei x+390
 local function drawPosition(wgt, y, label, nodata, leer, lat, lon)
 	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
@@ -443,7 +430,7 @@ local function refreshZoneXLarge(wgt)
 
 	-- 3. SENSOR Zeile 2.Spalte ======================================================================
 	-- ===============================================================================================
-	drawValue(wgt, 090, "geflogene Strecke (m)", nodataGAlt, keinFix, Track, 0)
+	lib.drawValue(wgt, 090, "geflogene Strecke (m)", nodataGAlt, keinFix, Track, 0)
 	-- lcd.drawText(wgt.zone.x+376, wgt.zone.y+093, "m", SMLSIZE + CUSTOM_COLOR)
 
 	-- 4. SENSOR Zeile 1.Spalte ======================================================================
@@ -452,7 +439,7 @@ local function refreshZoneXLarge(wgt)
 
 	-- 4. SENSOR Zeile 2.Spalte ======================================================================
 	-- ===============================================================================================
-	drawValue(wgt, 120, "Satelliten", nodataGAlt, SatsSeen ~= 1, Satssave, 0)
+	lib.drawValue(wgt, 120, "Satelliten", nodataGAlt, SatsSeen ~= 1, Satssave, 0)
 
 	-- 5. SENSOR Zeile 1.Spalte ======================================================================
 	-- ===============================================================================================
@@ -460,7 +447,7 @@ local function refreshZoneXLarge(wgt)
 
 	-- 5. SENSOR Zeile 2.Spalte ======================================================================
 	-- ===============================================================================================
-	drawValue(wgt, 150, "PDOP (ideal <2.00)", nodataGAlt, PDOPSeen ~= 1, PDOPsave, 2)
+	lib.drawValue(wgt, 150, "PDOP (ideal <2.00)", nodataGAlt, PDOPSeen ~= 1, PDOPsave, 2)
 
 	-- ===============================================================================================
 	-- ===============================================================================================

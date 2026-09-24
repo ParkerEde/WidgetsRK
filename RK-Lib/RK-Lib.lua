@@ -112,4 +112,17 @@ function lib.drawRow(wgt, x, y, label, nodata, current, saved, decimal, leer)
 	end
 end
 
+-- Rechte Spalte: Label und ein einzelner Wert rechtsbündig bei x+390, "- - " wenn leer
+function lib.drawValue(wgt, y, label, nodata, leer, value, decimal)
+	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+	lcd.drawText(wgt.zone.x+200, wgt.zone.y+y, label, SMLSIZE + CUSTOM_COLOR)
+
+	if nodata == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+	if leer then
+		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y, "- - ", CUSTOM_COLOR + RIGHT)
+	else
+		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y, lib.round(value,decimal), CUSTOM_COLOR + RIGHT)
+	end
+end
+
 return lib
