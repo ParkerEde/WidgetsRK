@@ -1,7 +1,9 @@
+Neueste Version, Doku und Fehlermeldungen: https://github.com/ParkerEde/WidgetsRK
+
 Voraussetzung:
 ==============
 
-- FrSky Horus X10(S) oder Horus X12(S) mit EdgeTx 2.10.0 oder neuer.
+- Radiomaster TX16S, FrSky Horus X10(S) oder X12(S) (oder ein anderer Sender mit 480x272 Farbdisplay) mit EdgeTx 2.10.0 oder neuer.
 - ein logischer Schalter, der zum resetten benutzt wird (standardmäßig wird auf LS61 reagiert, ist aber in der "RK-Settings\RK-Settings.lua" über PC änderbar)
 - das int. oder ext. HF Modul muss aktiv sein und die Empfänger ID darf nicht 0 sein, damit der manuelle Reset bzw. der Autoreset (beim Modellwechsel) funktioniert
 - die Verzeichnisse "RK01", "RK02", "RK03", "RK04", "RK05", "RK-Lib" und "RK-Settings" müssen auf die SD Karte in das "WIDGETS" Verzeichnis kopiert werden
