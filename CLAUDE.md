@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 EdgeTX-Lua-Telemetrie-Widgets RK01–RK05 für Sender mit Farbdisplay (FrSky Horus X10/X12, TX16S), ab EdgeTX 2.10.0. Texte, Kommentare und Doku sind auf Deutsch.
 
-- Repo: `ParkerEde/WidgetsRK` (privat)
-- Die Historie wurde aus den früheren lokalen Versionsordnern (`NN Vx.y.z <Beschreibung>`) rekonstruiert. Jeder Ordner ist ein Commit, jede Version ab V1.0.0 hat einen Tag `vX.Y.Z` und ein GitHub Release. Die Ordner bleiben als Archiv liegen und werden nicht mehr gepflegt.
+- Repo: `ParkerEde/WidgetsRK`, **öffentlich** seit V1.2.0. Alles, was gepusht wird, ist sofort öffentlich.
+- Die Historie wurde aus den früheren lokalen Versionsordnern (`NN Vx.y.z <Beschreibung>`) rekonstruiert. Jeder Ordner ist ein Commit, jede Version ab V1.0.0 hat einen Tag `vX.Y.Z` und ein GitHub Release. Die Ordner gibt es nicht mehr. Die Versionsgeschichte steckt nur noch in Git und in den Releases.
 
 ## Build / Test
 
