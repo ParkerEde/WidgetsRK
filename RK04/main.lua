@@ -202,6 +202,8 @@ local function savevalues(wgt)
 			nodataVFR = 1
 		end
 
+		-- Motorschutzschalter selbst auswerten, damit das Log auch ohne RK01/RK03/RK05 angelegt wird
+		trackswitchcondition = lib.getTrackSwitchCondition()
 		if trackswitchcondition then logsaved = logsaved +1 end
 		-- print("logsaved "..logsaved)
 		if not trackswitchcondition and logsaved < 30 then logsaved=0 end

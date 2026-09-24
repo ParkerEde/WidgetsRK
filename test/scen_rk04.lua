@@ -5,6 +5,7 @@ local _, nowarn = makeWidget("RK04", { x = 0, y = 0, w = 70, h = 36 }, { RSSIWar
 local _, full = makeWidget("RK04", { x = 0, y = 0, w = 392, h = 172 })
 local _, small = makeWidget("RK04", { x = 0, y = 0, w = 160, h = 32 })
 
+SENSORS.sb = -1024  -- Motor gesichert
 trackswitchcondition = false
 
 local function setLink(rssi, vfr)
@@ -37,13 +38,14 @@ for step = 1, 260 do
 		SENSORS.TQly = 0; SENSORS["TQly-"] = 0
 		setLink(66, 88)
 	end
-	-- Motor frei: einmal zu kurz (unter 30 s), einmal lang genug
-	if step == 75 then trackswitchcondition = true end
-	if step == 100 then trackswitchcondition = false end
-	if step == 105 then trackswitchcondition = true end
-	if step == 180 then trackswitchcondition = false end
-	if step == 185 then trackswitchcondition = true end
-	if step == 250 then trackswitchcondition = false end
+	-- Motor frei: einmal zu kurz (unter 30 s), einmal lang genug.
+	-- trackswitchcondition wird zusätzlich gesetzt, wie es RK01/RK03/RK05 tun würden.
+	if step == 75 then SENSORS.sb = 1024; trackswitchcondition = true end
+	if step == 100 then SENSORS.sb = -1024; trackswitchcondition = false end
+	if step == 105 then SENSORS.sb = 1024; trackswitchcondition = true end
+	if step == 180 then SENSORS.sb = -1024; trackswitchcondition = false end
+	if step == 185 then SENSORS.sb = 1024; trackswitchcondition = true end
+	if step == 250 then SENSORS.sb = -1024; trackswitchcondition = false end
 	-- Reset und Modellwechsel
 	SENSORS.ls61 = (step == 120) and 100 or 0
 	if step == 130 then RXID[0] = 0; RXID[1] = 7 end
