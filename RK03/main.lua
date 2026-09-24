@@ -1,81 +1,70 @@
 local RKWidgetVersion = "1.1.10"
--- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++ 
-settings,err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
-
+-- +++++++++++ KONFIGURATIONSTEIL Anfang +++++++++++
+local settings, err = loadScript ("/WIDGETS/RK-Settings/RK-Settings.lua")
 if (settings ~= nil) then
-     settings()
-  else
-     print(err)
-  end
--- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++ 
-local function printTable( t )
- 
-    local printTable_cache = {}
- 
-    local function sub_printTable( t, indent )
- 
-        if ( printTable_cache[tostring(t)] ) then
-            print( indent .. "*" .. tostring(t) )
-        else
-            printTable_cache[tostring(t)] = true
-            if ( type( t ) == "table" ) then
-                for pos,val in pairs( t ) do
-                    if ( type(val) == "table" ) then
-                        print( indent .. "[" .. pos .. "] => " .. tostring( t ).. " {" )
-                        sub_printTable( val, indent .. string.rep( " ", string.len(pos)+8 ) )
-                        print( indent .. string.rep( " ", string.len(pos)+6 ) .. "}" )
-                    elseif ( type(val) == "string" ) then
-                        print( indent .. "[" .. pos .. '] => "' .. val .. '"' )
-                    else
-                        print( indent .. "[" .. pos .. "] => " .. tostring(val) )
-                    end
-                end
-            else
-                print( indent..tostring(t) )
-            end
-        end
-    end
- 
-    if ( type(t) == "table" ) then
-        print( tostring(t) .. " {" )
-        sub_printTable( t, "  " )
-        print( "}" )
-    else
-        sub_printTable( t, "  " )
-    end
+	settings()
+else
+	print(err)
+end
+-- +++++++++++ KONFIGURATIONSTEIL Ende +++++++++++
+
+-- gemeinsame Funktionen aller RK-Widgets
+-- libfehler ist nil, wenn die RK-Lib geladen ist und zur Widget-Version passt
+local lib, liberr = loadScript ("/WIDGETS/RK-Lib/RK-Lib.lua")
+local libfehler = nil
+if (lib ~= nil) then
+	lib = lib()
+	if lib.version ~= RKWidgetVersion then
+		libfehler = "RK-Lib V" .. tostring(lib.version or "?") .. " passt nicht zu V" .. RKWidgetVersion
+	end
+else
+	libfehler = "RK-Lib fehlt"
+	print(liberr)
+end
+if libfehler ~= nil then print("RK03: " .. libfehler) end
+local printTable, round
+if libfehler == nil then
+	printTable = lib.printTable
+	round = lib.round
+end
+
+-- Hinweis statt der Werte, wenn die RK-Lib fehlt oder nicht passt
+local function drawLibFehler(wgt)
+	lcd.setColor(CUSTOM_COLOR, RED)
+	if wgt.zone.w > 380 then
+		lcd.drawText(wgt.zone.x, wgt.zone.y, "RK03: " .. libfehler, SMLSIZE + CUSTOM_COLOR)
+	else
+		lcd.drawText(wgt.zone.x, wgt.zone.y, "RK-Lib Fehler", SMLSIZE + CUSTOM_COLOR)
+	end
 end
 
 local options = {
-  { "TextColor", COLOR, WHITE },
-  { "NoDataColor", COLOR, BLACK }
-  }
+	{ "TextColor", COLOR, WHITE },
+	{ "NoDataColor", COLOR, BLACK }
+}
 
 local function update(wgt, options)
-  if (wgt==nil) then
-    print("update(nil)")
-    return
-  end
-  wgt.options = options
+	if (wgt==nil) then
+		print("update(nil)")
+		return
+	end
+	wgt.options = options
 end
 
 local function create(zone, options)
-  local wgt  = { zone=zone, options=options}
-  return wgt
+	local wgt  = { zone=zone, options=options}
+	return wgt
 end
 
-local ModelRxID = -1
-local ModelRxID2 = -1
 local ModelRxIDVorher = -1
-local ModelRxIDNachher = -1
-local Modelname = 0
+
+local RSSI = 0
 
 local GSpd = 0
-local GSpdraw = 0
 local GSpdmaxsave = 0
 
 local nodataGAlt = 1
 local GAlt = 0
-local GAltraw = 0
 local GAltmaxsave = 0
 local GAltOffsetdone = 0
 local GAltOffset = 0
@@ -88,12 +77,8 @@ local DisG = 0
 local DisMmaxsave = 0
 local DisGmaxsave = 0
 
-local timestamp = 0
-local newtime = 0
 local gpsfixmessagedone = 0
 local Track = 0
-local Track_switch = 0
-local Track_switch_pos = 0
 
 local Sats = 0
 local Satsraw = 0
@@ -108,13 +93,6 @@ local PDOPSensor = -1
 
 local timestamprefresh = 0
 
-local function round(num, decimal)
-	if     decimal == 0 then return (string.format("%.0f", num))
-	elseif decimal == 1 then return (string.format("%.1f", num))
-	elseif decimal == 2 then return (string.format("%.2f", num))
-	end
-end
-	
 local function getSensors(wgt)
 
 	if getValue("TQly-") > 0 then
@@ -123,16 +101,16 @@ local function getSensors(wgt)
 		RSSI = getValue("RSSI")
 
 	end
-	
-	GSpdraw = getValue("GSpd")
+
+	local GSpdraw = getValue("GSpd")
 	if GSpdraw < 300 then GSpd = GSpdraw end
-	
-	GAltraw = getValue("GAlt")
+
+	local GAltraw = getValue("GAlt")
 	if GAltraw < 10000 then GAlt = GAltraw end
-	
+
 	if getValue("Sats") > 0
 	then
-		Satsraw = getValue("Sats") 
+		Satsraw = getValue("Sats")
 	else
 		if SatsSensor == -1 then
 			SatsSensor = getSourceIndex(CHAR_TELEMETRY.."5100")
@@ -141,8 +119,8 @@ local function getSensors(wgt)
 		end
 	end
 	if Satsraw < 10000 then Sats = Satsraw end
-	
-	if getValue("PDOP") > 0 
+
+	if getValue("PDOP") > 0
 	then
 		PDOPraw = getValue("PDOP")
 	else
@@ -153,24 +131,15 @@ local function getSensors(wgt)
 		end
 	end
 	if PDOPraw < 10000 then PDOP = PDOPraw end
-	
-	Track_switch = getValue(activate_tracking_switch)
-	Track_switch_pos = activate_tracking_switch_position
-	-- print("Track_switch: " .. Track_switch)
-	-- print("Track_switch_pos: " .. Track_switch_pos)
-  
-	if activate_tracking_switch_invers == 0 then
-		trackswitchcondition = Track_switch == Track_switch_pos
-	else
-		trackswitchcondition = Track_switch ~= Track_switch_pos
-	end
-	
+
+	trackswitchcondition = lib.getTrackSwitchCondition()
+
 end
 
 
 
-  -- GPS Daten ermitteln und DisG und DisM berechnen ========================================
-  -- <BEGIN> ================================================================================
+	-- GPS Daten ermitteln und DisG und DisM berechnen ========================================
+	-- <BEGIN> ================================================================================
 local gpsValuelat1 = "no Data"
 local gpsValuelon1 = "no Data"
 local gpsValuelat2 = "no Data"
@@ -178,79 +147,82 @@ local gpsValuelon2 = "no Data"
 local gpsValuelat3 = "no Data"
 local gpsValuelon3 = "no Data"
 
+local timestampgps
+
 local function rnd(v,d)
-    if d then
-     return math.floor((v*10^d)+0.5)/(10^d)
-    else
-     return math.floor(v+0.5)
-    end
+	if d then
+		return math.floor((v*10^d)+0.5)/(10^d)
+	else
+		return math.floor(v+0.5)
+	end
 end
 
 local function getTelemetryId(name)
-    field = getFieldInfo(name)
-    if field then
-      return field.id
-    else
-      return -1
-    end
+	local field = getFieldInfo(name)
+	if field then
+		return field.id
+	else
+		return -1
+	end
 end
 
 local function GetGPSData(wgt)
- newtimegps = math.floor(getTime()/100)
- if newtimegps ~= timestampgps then
- timestampgps = newtimegps
+	local newtimegps = math.floor(getTime()/100)
+	if newtimegps ~= timestampgps then
+		timestampgps = newtimegps
 
-	local gpsId = getTelemetryId("GPS")
-	gpsLatLon = getValue(gpsId)
-	if (type(gpsLatLon) == "table") then
-		gpsValuelat2 = rnd(gpsLatLon["lat"],6)
-		gpsValuelon2 = rnd(gpsLatLon["lon"],6)
-    	if gpsValuelat1 == "no Data" or gpsValuelat1 == 0 then
-			gpsValuelat1 = rnd(gpsLatLon["lat"],6)
-		end	
-		if gpsValuelon1 == "no Data" or gpsValuelon1 == 0 then
-			gpsValuelon1 = rnd(gpsLatLon["lon"],6)
-		end
-		if trackswitchcondition then
-			if (gpsValuelat3 == "no Data" or gpsValuelat3 == 0) then
-				gpsValuelat3 = rnd(gpsLatLon["lat"],6)
+		local gpsId = getTelemetryId("GPS")
+		local gpsLatLon = getValue(gpsId)
+		if (type(gpsLatLon) == "table") then
+			gpsValuelat2 = rnd(gpsLatLon["lat"],6)
+			gpsValuelon2 = rnd(gpsLatLon["lon"],6)
+			if gpsValuelat1 == "no Data" or gpsValuelat1 == 0 then
+				gpsValuelat1 = rnd(gpsLatLon["lat"],6)
 			end
-			if (gpsValuelon3 == "no Data" or gpsValuelon3 == 0) then 
-				gpsValuelon3 = rnd(gpsLatLon["lon"],6)
+			if gpsValuelon1 == "no Data" or gpsValuelon1 == 0 then
+				gpsValuelon1 = rnd(gpsLatLon["lon"],6)
+			end
+			if trackswitchcondition then
+				if (gpsValuelat3 == "no Data" or gpsValuelat3 == 0) then
+					gpsValuelat3 = rnd(gpsLatLon["lat"],6)
+				end
+				if (gpsValuelon3 == "no Data" or gpsValuelon3 == 0) then
+					gpsValuelon3 = rnd(gpsLatLon["lon"],6)
+				end
 			end
 		end
 	end
- end
-end  
+end
+
+-- Entfernung zweier GPS-Positionen in Metern (Näherung für kurze Strecken)
+local function distance(lat1, lon1, lat2, lon2)
+	local lat = math.cos((lat1 + lat2) / 2 * 0.01745)
+	local dx = math.abs(111.3 * lat * (lon1 - lon2))
+	local dy = math.abs(111.3 * (lat1 - lat2))
+	return math.sqrt(dx*dx + dy*dy) * 1000
+end
 
 local function calcDisG(lat1, lon1, lat2, lon2)
-    if gpsValuelat1 ~= "no Data" and gpsValuelon1 ~= "no Data" and gpsValuelat2 ~= "no Data" and gpsValuelon2 ~= "no Data" then
-		local lat = math.cos((lat1 + lat2) / 2 * 0.01745)
-		local dx = math.abs(111.3 * lat * (lon1 - lon2))
-		local dy = math.abs(111.3 * (lat1 - lat2))
-		return math.sqrt(dx*dx + dy*dy) * 1000
+	if lat1 ~= "no Data" and lon1 ~= "no Data" and lat2 ~= "no Data" and lon2 ~= "no Data" then
+		return distance(lat1, lon1, lat2, lon2)
 	else
 		return 0
 	end
 end
 
 local function calcDisM(a,b)
-    if a ~= 0 or b ~= 0 then
+	if a ~= 0 or b ~= 0 then
 		return math.sqrt((a*a) + (b*b))
-    else
+	else
 		return 0
 	end
 end
 
-  -- GPS Daten ermitteln und DisG und DisM berechnen ========================================
-  -- <END> ==================================================================================
+	-- GPS Daten ermitteln und DisG und DisM berechnen ========================================
+	-- <END> ==================================================================================
 
 local function resetvalues(wgt)
-	ModelRxID2 = model.getModule(0)
-	if ModelRxID2.modelId == 0 then
-		ModelRxID2 = model.getModule(1)
-	end
-	ModelRxIDNachher = ModelRxID2.modelId
+	local ModelRxIDNachher = lib.getRxID()
 	if ModelRxIDVorher ~= -1 then
 		local reset = getValue(resetswitch)
 		if reset > 0 or ModelRxIDVorher ~= ModelRxIDNachher then
@@ -266,7 +238,7 @@ local function resetvalues(wgt)
 			GAl2 = 0
 			GAl2maxsave = 0
 			DisMmaxsave = 0
-			DisGmaxsave = 0	
+			DisGmaxsave = 0
 			gpsfixmessagedone = 0
 			Track = 0
 			Sats = 0
@@ -279,102 +251,97 @@ local function resetvalues(wgt)
 			PDOPSensor = -1
 		end
 	end
-	ModelRxID = model.getModule(0)
-	if ModelRxID.modelId == 0 then
-		ModelRxID = model.getModule(1)
-	end
-	ModelRxIDVorher = ModelRxID.modelId
+	ModelRxIDVorher = ModelRxIDNachher
 end
 
 local function savevalues(wgt)
-  newtimerefresh = math.floor(getTime()/100)
+	local newtimerefresh = math.floor(getTime()/100)
 
-  if newtimerefresh ~= timestamprefresh then
-	timestamprefresh = newtimerefresh
-  	getSensors(wgt) 
+	if newtimerefresh ~= timestamprefresh then
+		timestamprefresh = newtimerefresh
+		getSensors(wgt)
 
-	if GSpd > GSpdmaxsave then 
-		GSpdmaxsave = GSpd
-	end
-	
-	if Sats > 0 then 
-		if Sats == 100 or Sats >= 200 then
-			Satssave = Sats *0.01
-		else
-			if Sats >100 then
-				Satssave = Sats - 100
+		if GSpd > GSpdmaxsave then
+			GSpdmaxsave = GSpd
+		end
+
+		if Sats > 0 then
+			if Sats == 100 or Sats >= 200 then
+				Satssave = Sats *0.01
 			else
-				Satssave = Sats
+				if Sats >100 then
+					Satssave = Sats - 100
+				else
+					Satssave = Sats
+				end
+			end
+			SatsSeen = 1
+		end
+
+		if PDOP > 0 then
+			PDOPsave = PDOP *0.01
+			PDOPSeen = 1
+		end
+
+		if GAlt > GAltmaxsave then
+			GAltmaxsave = GAlt
+		else
+			if GAltmaxsave == 0 then
+				nodataGAlt = 1
 			end
 		end
-		SatsSeen = 1
-	end
 
-	if PDOP > 0 then 
-		PDOPsave = PDOP *0.01
-		PDOPSeen = 1
-	end
+		if GAltOffsetdone == 0 and GAlt > 0 then
+			GAltOffset = GAlt
+			GAltOffsetdone = 1
+			nodataGAlt = 0
+		end
 
-	if GAlt > GAltmaxsave then
-		GAltmaxsave = GAlt
-	else
-		if GAltmaxsave == 0 then
+		if GAltOffsetdone == 1 and RSSI > 0 then
+			GAl2 = GAlt - GAltOffset
+		end
+		if RSSI == 0 then
+			GAl2 = 0
+			DisG = 0
+			DisM = 0
 			nodataGAlt = 1
+			GAltOffsetdone = 0
 		end
-    end
 
-	if GAltOffsetdone == 0 and GAlt > 0 then
-		GAltOffset = GAlt
-		GAltOffsetdone = 1
-		nodataGAlt = 0
-	end
-  
-	if GAltOffsetdone == 1 and RSSI > 0 then
-		GAl2 = GAlt - GAltOffset
-	end	
-	if RSSI == 0 then
-	GAl2 = 0
-	DisG = 0
-	DisM = 0
-	nodataGAlt = 1
-	GAltOffsetdone = 0
-	end
-	
-	if GAl2 > GAl2maxsave and GAl2 < 10000 then
-		GAl2maxsave = GAl2
-    end
-	
-	if calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2) < 10000 then
-		DisG = rnd(calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2),0)
-		if DisG > DisGmaxsave then
-			DisGmaxsave = DisG
+		if GAl2 > GAl2maxsave and GAl2 < 10000 then
+			GAl2maxsave = GAl2
 		end
-	end
-	if calcDisM(DisG,GAl2) < 10000	then
-		DisM = rnd(calcDisM(DisG,GAl2), 0)
-		if DisM > DisMmaxsave then
-			DisMmaxsave = DisM
-		end
-	end
-	
-	if trackswitchcondition then
-		if gpsValuelat2 ~= "no Data" and gpsValuelon2 ~= "no Data" and gpsValuelat3 ~= "no Data" and gpsValuelon3 ~= "no Data" then
-			-- print("Track vorher: " .. Track)
-			local lat = math.cos((gpsValuelat3 + gpsValuelat2) / 2 * 0.01745)
-			local dx = math.abs(111.3 * lat * (gpsValuelon3 - gpsValuelon2))
-			local dy = math.abs(111.3 * (gpsValuelat3 - gpsValuelat2))
-			local Tracknew = math.sqrt(dx*dx + dy*dy) * 1000
-			if Tracknew < 1000 then
-				Track = Track + Tracknew
+
+		local disg = calcDisG(gpsValuelat1,gpsValuelon1,gpsValuelat2,gpsValuelon2)
+		if disg < 10000 then
+			DisG = rnd(disg,0)
+			if DisG > DisGmaxsave then
+				DisGmaxsave = DisG
 			end
-			gpsValuelat3 = gpsValuelat2
-			gpsValuelon3 = gpsValuelon2
-			-- print("Track nachher: " .. Track)			
 		end
-	else
-		gpsValuelat3 = "no Data"
-		gpsValuelon3 = "no Data"
-	end
+		local dism = calcDisM(DisG,GAl2)
+		if dism < 10000	then
+			DisM = rnd(dism, 0)
+			if DisM > DisMmaxsave then
+				DisMmaxsave = DisM
+			end
+		end
+
+		if trackswitchcondition then
+			if gpsValuelat2 ~= "no Data" and gpsValuelon2 ~= "no Data" and gpsValuelat3 ~= "no Data" and gpsValuelon3 ~= "no Data" then
+				-- print("Track vorher: " .. Track)
+				local Tracknew = distance(gpsValuelat3, gpsValuelon3, gpsValuelat2, gpsValuelon2)
+				if Tracknew < 1000 then
+					Track = Track + Tracknew
+				end
+				gpsValuelat3 = gpsValuelat2
+				gpsValuelon3 = gpsValuelon2
+				-- print("Track nachher: " .. Track)
+			end
+		else
+			gpsValuelat3 = "no Data"
+			gpsValuelon3 = "no Data"
+		end
 		if not trackswitchcondition and RK02readysaved == 1 then
 			local file, err = io.open(filename, "a")
 			if file then
@@ -388,7 +355,7 @@ local function savevalues(wgt)
 				print("Fehler beim Öffnen der Datei: " .. tostring(err))
 			end
 		end
-  end
+	end
 end
 
 local function gpsfixmessage(wgt)
@@ -401,251 +368,164 @@ end
 ------------------------------------------------------------
 
 -- This size is for top bar wgts
-local function refreshZoneTiny(wgt)
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText (wgt.zone.x, wgt.zone.y, "nur Vollbild", SMLSIZE + CUSTOM_COLOR)
-end
+local function refreshZoneTiny(wgt) lib.drawNurVollbild(wgt) end
 
 --- Size is 160x32 1/8th
-local function refreshZoneSmall(wgt)
-  -- print("small 1/8")
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x, wgt.zone.y, "nur Vollbild", SMLSIZE + CUSTOM_COLOR)
-end
+local function refreshZoneSmall(wgt) lib.drawNurVollbild(wgt) end
 
 --- Size is 225x98 1/4th  (no sliders/trim)
-local function refreshZoneMedium(wgt)
-  -- print("medium 1/4")
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText (wgt.zone.x, wgt.zone.y, "nur Vollbild", SMLSIZE + CUSTOM_COLOR)
-end
+local function refreshZoneMedium(wgt) lib.drawNurVollbild(wgt) end
 
 --- Size is 192x152 1/2
-local function refreshZoneLarge(wgt)
-  -- print("large 1/2")
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText (wgt.zone.x, wgt.zone.y, "nur Vollbild", SMLSIZE + CUSTOM_COLOR)
-	
+local function refreshZoneLarge(wgt) lib.drawNurVollbild(wgt) end
 
+-- Rechte Spalte: Label und ein Wert rechtsbündig bei x+390, "- - " wenn leer
+local function drawValue(wgt, y, label, nodata, leer, value, decimal)
+	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+	lcd.drawText(wgt.zone.x+200, wgt.zone.y+y, label, SMLSIZE + CUSTOM_COLOR)
+
+	if nodata == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+	if leer then
+		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y, "- - ", CUSTOM_COLOR + RIGHT)
+	else
+		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y, round(value,decimal), CUSTOM_COLOR + RIGHT)
+	end
+end
+
+-- Rechte Spalte: Label und GPS-Position (lat über lon) rechtsbündig bei x+390
+local function drawPosition(wgt, y, label, nodata, leer, lat, lon)
+	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
+	lcd.drawText(wgt.zone.x+200, wgt.zone.y+y, label, SMLSIZE + CUSTOM_COLOR)
+
+	if nodata == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
+	if leer then
+		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y, "- - ", CUSTOM_COLOR + RIGHT)
+		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y+15, "- - ", CUSTOM_COLOR + RIGHT)
+	else
+		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y, lat, SMLSIZE + CUSTOM_COLOR + RIGHT)
+		lcd.drawText(wgt.zone.x+390, wgt.zone.y+y+15, lon, SMLSIZE + CUSTOM_COLOR + RIGHT)
+	end
 end
 
 
 --- Size is 390x172 1/1
 --- Size is 460x252 1/1 (no sliders/trim/topbar)
 local function refreshZoneXLarge(wgt)
-	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-	lcd.drawFilledRectangle(wgt.zone.x+00, wgt.zone.y, 109, 19, CUSTOM_COLOR)
-	Modelname = model.getInfo()
-	lcd.drawText(wgt.zone.x+00, wgt.zone.y, Modelname.name, SMLSIZE + INVERS + CUSTOM_COLOR)
-	mytimer1=model.getTimer(0).value
-	lcd.drawText(wgt.zone.x+115, wgt.zone.y,"Motor:   ", SMLSIZE + INVERS + CUSTOM_COLOR)
-	lcd.drawTimer(wgt.zone.x+160, wgt.zone.y,mytimer1, SMLSIZE + INVERS + CUSTOM_COLOR)
-	lcd.drawFilledRectangle(wgt.zone.x+199, wgt.zone.y, 49, 19, CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+199, wgt.zone.y,"RxID: " .. ModelRxIDVorher, SMLSIZE + INVERS + CUSTOM_COLOR)
-	lcd.drawFilledRectangle(wgt.zone.x+252, wgt.zone.y, 140, 19, CUSTOM_COLOR)
-	lcd.drawText(wgt.zone.x+254, wgt.zone.y,"RK03-Widget V" .. RKWidgetVersion, SMLSIZE + INVERS + CUSTOM_COLOR)
-  --lcd.drawLine(45, 72, 435, 72, 255, 0)
-  
-  lcd.drawFilledRectangle(wgt.zone.x+194, wgt.zone.y+22, 2, 150, CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+140, wgt.zone.y+016, "min/max", SMLSIZE + CUSTOM_COLOR)
-  lcd.drawText(wgt.zone.x+070, wgt.zone.y+016, "momentan", SMLSIZE + CUSTOM_COLOR)
-  -- 1. SENSOR Zeile 1.Spalte ======================================================================
-  -- =============================================================================================== 
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+000, wgt.zone.y+030, "GSpd (km/h)", SMLSIZE + CUSTOM_COLOR)
-    
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+030, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+030, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+030, round(GSpd,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+030, round(GSpdmaxsave,0), CUSTOM_COLOR + RIGHT)
-  end
-  
-  -- 1. SENSOR Zeile 2.Spalte ======================================================================
-  -- =============================================================================================== 
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+030, "Start-Position", SMLSIZE + CUSTOM_COLOR)
-    
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if gpsValuelat1 == "no Data" then
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+030, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+045, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+030, gpsValuelat1, SMLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+045, gpsValuelon1, SMLSIZE + CUSTOM_COLOR + RIGHT)
-  end
-    
-  -- 2. SENSOR Zeile 1.Spalte ======================================================================
-  -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+000, wgt.zone.y+060, "GAlt NN (m)", SMLSIZE + CUSTOM_COLOR)
-    
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+060, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+060, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+060, round(GAlt,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+060, round(GAltmaxsave,0), CUSTOM_COLOR + RIGHT)
-  end
-  
-  -- 2. SENSOR Zeile 2.Spalte ======================================================================
-  -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+060, "Modell-Position", SMLSIZE + CUSTOM_COLOR)
-    
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if gpsValuelat1 == "no Data" then
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+060, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+075, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+060, gpsValuelat2, SMLSIZE + CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+075, gpsValuelon2, SMLSIZE + CUSTOM_COLOR + RIGHT)
-  end
+	lib.drawHeader(wgt, "RK03", RKWidgetVersion, ModelRxIDVorher)
+	--lcd.drawLine(45, 72, 435, 72, 255, 0)
 
-  -- 3. SENSOR Zeile 1.Spalte ======================================================================
-  -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+000, wgt.zone.y+090,"GAlt Gnd (m)", SMLSIZE + CUSTOM_COLOR)
-  
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+090, round(GAl2,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+090, round(GAl2maxsave,0), CUSTOM_COLOR + RIGHT)
-  end
-  
-  -- 3. SENSOR Zeile 2.Spalte ======================================================================
-  -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+090, "geflogene Strecke (m)", SMLSIZE + CUSTOM_COLOR)
-  
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+090, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+090, round(Track,0), CUSTOM_COLOR + RIGHT)
-  end
-  -- lcd.drawText(wgt.zone.x+376, wgt.zone.y+093, "m", SMLSIZE + CUSTOM_COLOR)
-  
-  -- 4. SENSOR Zeile 1.Spalte ======================================================================
-  -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)  
-  lcd.drawText(wgt.zone.x+000, wgt.zone.y+120, "Dist Gnd (m)", SMLSIZE + CUSTOM_COLOR)
-    
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+120, round(DisG,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+120, round(DisGmaxsave,0), CUSTOM_COLOR + RIGHT)
-  end
-  
-  -- 4. SENSOR Zeile 2.Spalte ======================================================================
-  -- =============================================================================================== 
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+120, "Satelliten", SMLSIZE + CUSTOM_COLOR)
-    
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if SatsSeen ~= 1 then
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+120, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+120, round(Satssave,0), CUSTOM_COLOR + RIGHT)
-  end
-  
-  -- 5. SENSOR Zeile 1.Spalte ======================================================================
-  -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)  
-  lcd.drawText(wgt.zone.x+000, wgt.zone.y+150, "Dist Mod (m)", SMLSIZE + CUSTOM_COLOR)
-    
-  if nodataGAlt == 1 or nodataAmp ==1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if GAltmaxsave == 0 then
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+130, wgt.zone.y+150, round(DisM,0), CUSTOM_COLOR + RIGHT)
-  lcd.drawText(wgt.zone.x+190, wgt.zone.y+150, round(DisMmaxsave,0), CUSTOM_COLOR + RIGHT)
-  end
-  
-  -- 5. SENSOR Zeile 2.Spalte ======================================================================
-  -- ===============================================================================================
-  lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
-  lcd.drawText(wgt.zone.x+200, wgt.zone.y+150, "PDOP (ideal <2.00)", SMLSIZE + CUSTOM_COLOR)
-    
-  if nodataGAlt == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-  if PDOPSeen ~= 1 then
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, "- - ", CUSTOM_COLOR + RIGHT)
-  else
-  lcd.drawText(wgt.zone.x+390, wgt.zone.y+150, round(PDOPsave,2), CUSTOM_COLOR + RIGHT)
-  end
+	lcd.drawFilledRectangle(wgt.zone.x+194, wgt.zone.y+22, 2, 150, CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+140, wgt.zone.y+016, "min/max", SMLSIZE + CUSTOM_COLOR)
+	lcd.drawText(wgt.zone.x+070, wgt.zone.y+016, "momentan", SMLSIZE + CUSTOM_COLOR)
 
-  -- ===============================================================================================
-  -- ===============================================================================================
+	-- "- - " in der linken Spalte, solange es keinen GPS-Fix gab
+	local keinFix = (GAltmaxsave == 0)
 
+	-- 1. SENSOR Zeile 1.Spalte ======================================================================
+	-- ===============================================================================================
+	lib.drawRow(wgt, 000, 030, "GSpd (km/h)", nodataGAlt, GSpd, GSpdmaxsave, 0, keinFix)
+
+	-- 1. SENSOR Zeile 2.Spalte ======================================================================
+	-- ===============================================================================================
+	drawPosition(wgt, 030, "Start-Position", nodataGAlt, gpsValuelat1 == "no Data", gpsValuelat1, gpsValuelon1)
+
+	-- 2. SENSOR Zeile 1.Spalte ======================================================================
+	-- ===============================================================================================
+	lib.drawRow(wgt, 000, 060, "GAlt NN (m)", nodataGAlt, GAlt, GAltmaxsave, 0, keinFix)
+
+	-- 2. SENSOR Zeile 2.Spalte ======================================================================
+	-- ===============================================================================================
+	drawPosition(wgt, 060, "Modell-Position", nodataGAlt, gpsValuelat1 == "no Data", gpsValuelat2, gpsValuelon2)
+
+	-- 3. SENSOR Zeile 1.Spalte ======================================================================
+	-- ===============================================================================================
+	lib.drawRow(wgt, 000, 090, "GAlt Gnd (m)", nodataGAlt, GAl2, GAl2maxsave, 0, keinFix)
+
+	-- 3. SENSOR Zeile 2.Spalte ======================================================================
+	-- ===============================================================================================
+	drawValue(wgt, 090, "geflogene Strecke (m)", nodataGAlt, keinFix, Track, 0)
+	-- lcd.drawText(wgt.zone.x+376, wgt.zone.y+093, "m", SMLSIZE + CUSTOM_COLOR)
+
+	-- 4. SENSOR Zeile 1.Spalte ======================================================================
+	-- ===============================================================================================
+	lib.drawRow(wgt, 000, 120, "Dist Gnd (m)", nodataGAlt, DisG, DisGmaxsave, 0, keinFix)
+
+	-- 4. SENSOR Zeile 2.Spalte ======================================================================
+	-- ===============================================================================================
+	drawValue(wgt, 120, "Satelliten", nodataGAlt, SatsSeen ~= 1, Satssave, 0)
+
+	-- 5. SENSOR Zeile 1.Spalte ======================================================================
+	-- ===============================================================================================
+	lib.drawRow(wgt, 000, 150, "Dist Mod (m)", nodataGAlt, DisM, DisMmaxsave, 0, keinFix)
+
+	-- 5. SENSOR Zeile 2.Spalte ======================================================================
+	-- ===============================================================================================
+	drawValue(wgt, 150, "PDOP (ideal <2.00)", nodataGAlt, PDOPSeen ~= 1, PDOPsave, 2)
+
+	-- ===============================================================================================
+	-- ===============================================================================================
 
 end
 
-function refresh(wgt)
+local function refresh(wgt)
 
-  if (wgt==nil) then
-    print("refresh(nil)")
-    return
-  end
+	if (wgt==nil) then
+		print("refresh(nil)")
+		return
+	end
 
-  if (wgt.options==nil) then
-    print("refresh(wgt.options=nil)")
-    return
-  end
+	if (wgt.options==nil) then
+		print("refresh(wgt.options=nil)")
+		return
+	end
 
-  
-  -- MinMax Werte im Vordergrund sichern ===========================================================
-  -- ===============================================================================================
-  savevalues(wgt)
-  
-  -- RESET nach "LS61" oder Modellwechsel eigener Screen ============================================
-  -- ===============================================================================================
-  resetvalues(wgt)
-  
-  -- GPS Daten im Vordergrund ermitteln ============================================================
-  -- ===============================================================================================      
-  GetGPSData(wgt)
-  
-  -- GPS Fix Soundmessage ==========================================================================
-  -- ===============================================================================================  
-  gpsfixmessage(wgt)
-  
- 
+	if libfehler ~= nil then
+		drawLibFehler(wgt)
+		return
+	end
 
-  if     wgt.zone.w  > 380 and wgt.zone.h > 165 then refreshZoneXLarge(wgt)
-  elseif wgt.zone.w  > 180 and wgt.zone.h > 145 then refreshZoneLarge(wgt)
-  elseif wgt.zone.w  > 170 and wgt.zone.h >  65 then refreshZoneMedium(wgt)
-  elseif wgt.zone.w  > 150 and wgt.zone.h >  28 then refreshZoneSmall(wgt)
-  elseif wgt.zone.w  >  65 and wgt.zone.h >  35 then refreshZoneTiny(wgt)
-  end
- 
+	-- MinMax Werte im Vordergrund sichern ===========================================================
+	-- ===============================================================================================
+	savevalues(wgt)
+
+	-- RESET nach "LS61" oder Modellwechsel eigener Screen ============================================
+	-- ===============================================================================================
+	resetvalues(wgt)
+
+	-- GPS Daten im Vordergrund ermitteln ============================================================
+	-- ===============================================================================================
+	GetGPSData(wgt)
+
+	-- GPS Fix Soundmessage ==========================================================================
+	-- ===============================================================================================
+	gpsfixmessage(wgt)
+
+	if     wgt.zone.w  > 380 and wgt.zone.h > 165 then refreshZoneXLarge(wgt)
+	elseif wgt.zone.w  > 180 and wgt.zone.h > 145 then refreshZoneLarge(wgt)
+	elseif wgt.zone.w  > 170 and wgt.zone.h >  65 then refreshZoneMedium(wgt)
+	elseif wgt.zone.w  > 150 and wgt.zone.h >  28 then refreshZoneSmall(wgt)
+	elseif wgt.zone.w  >  65 and wgt.zone.h >  35 then refreshZoneTiny(wgt)
+	end
 end
 
 local function background(wgt)
-  -- MinMax Werte im Hintergrund speichern =========================================================
-  -- ===============================================================================================   
-  savevalues(wgt)  
-  
-  -- RESET nach "LS61" wenn im Hintergrund ==========================================================
-  -- ===============================================================================================
-  resetvalues(wgt)
+	if libfehler ~= nil then return end
 
-  -- GPS Daten im Hintergrund ermitteln ============================================================
-  -- ===============================================================================================      
-  GetGPSData(wgt)
-  
-  -- GPS Fix Soundmessage ==========================================================================
-  -- ===============================================================================================  
-  gpsfixmessage(wgt)
+	-- MinMax Werte im Hintergrund speichern =========================================================
+	-- ===============================================================================================
+	savevalues(wgt)
+
+	-- RESET nach "LS61" wenn im Hintergrund ==========================================================
+	-- ===============================================================================================
+	resetvalues(wgt)
+
+	-- GPS Daten im Hintergrund ermitteln ============================================================
+	-- ===============================================================================================
+	GetGPSData(wgt)
+
+	-- GPS Fix Soundmessage ==========================================================================
+	-- ===============================================================================================
+	gpsfixmessage(wgt)
 end
 
 return { name="RK03", options=options, create=create, update=update, refresh=refresh, background=background}

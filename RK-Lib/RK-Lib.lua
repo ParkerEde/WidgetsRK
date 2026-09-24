@@ -95,13 +95,15 @@ end
 
 -- Eine Wertezeile im Vollbild: Label, aktueller Wert und min/max-Wert.
 -- x ist der Spaltenanfang (0 = linke, 200 = rechte Spalte).
--- Ist saved 0, wird "- - " statt der Werte angezeigt.
-function lib.drawRow(wgt, x, y, label, nodata, current, saved, decimal)
+-- Ist saved 0, wird "- - " statt der Werte angezeigt. Mit leer (true/false)
+-- lässt sich stattdessen eine eigene Bedingung dafür vorgeben.
+function lib.drawRow(wgt, x, y, label, nodata, current, saved, decimal, leer)
+	if leer == nil then leer = (saved == 0) end
 	lcd.setColor(CUSTOM_COLOR, wgt.options.TextColor)
 	lcd.drawText(wgt.zone.x+x, wgt.zone.y+y, label, SMLSIZE + CUSTOM_COLOR)
 
 	if nodata == 1 then lcd.setColor(CUSTOM_COLOR, wgt.options.NoDataColor) end
-	if saved == 0 then
+	if leer then
 		lcd.drawText(wgt.zone.x+x+130, wgt.zone.y+y, "- - ", CUSTOM_COLOR + RIGHT)
 		lcd.drawText(wgt.zone.x+x+190, wgt.zone.y+y, "- - ", CUSTOM_COLOR + RIGHT)
 	else
